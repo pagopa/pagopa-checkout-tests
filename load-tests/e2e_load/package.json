@@ -1,0 +1,17 @@
+{
+  "name": "user-interface-tests",
+  "version": "1.0.0",
+  "description": "Test automation for io-pay",
+  "author": "Simone Infante",
+  "license": "MIT",
+  "scripts": {
+    "env": "export $(grep -v '^#' .env | xargs)",
+    "lint": "eslint . -c .eslintrc.json"
+  },
+  "devDependencies": {
+    "puppeteer-loadtest": "^2.2.0"
+  },
+  "dependencies": {
+    "puppeteer": "^10.4.0"
+  }
+}
