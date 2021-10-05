@@ -1,0 +1,22 @@
+{
+  "name": "user-interface-tests",
+  "version": "1.0.0",
+  "description": "Test automation for io-pay",
+  "author": "Simone Infante",
+  "license": "MIT",
+  "scripts": {
+    "env": "export $(grep -v '^#' .env | xargs)",
+    "test": "dotenv -e .env jest --detectOpenHandles --reporters=jest-junit",
+    "lint": "eslint . -c .eslintrc.json"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.15.4",
+    "dotenv": "^10.0.0",
+    "dotenv-cli": "^4.0.0",
+    "eslint": "^7.32.0",
+    "jest": "^27.1.0",
+    "jest-junit": "^12.2.0",
+    "puppeteer": "^9.0.0",
+    "puppeteer-cluster": "^0.22.0"
+  }
+}
