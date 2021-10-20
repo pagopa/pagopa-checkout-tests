@@ -8,11 +8,11 @@ export let options = {
             startRate: 50,
             timeUnit: '1s',
             preAllocatedVUs: 50,
-            maxVUs: 100,
+            maxVUs: 400,
             stages: [
-              { duration: '20s', target: 100 },
               { duration: '20s', target: 200 },
-              { duration: '20s', target: 100 },
+              { duration: '20s', target: 400 },
+              { duration: '20s', target: 200 },
             ]
         }
     },
@@ -45,7 +45,9 @@ export default function (data) {
     var verifyResponse = http.get(`${urlBasePath}/api/payportal/v1/payment-requests/${validRptId}?recaptchaResponse=token`, headersParams, {
         tags: tagVerify
     });
-    
+    if (verifyResponse.status != 200){
+        console.log(verifyResponse.status)
+    }
     check(verifyResponse, { 'status is 200': (r) => r.status === 200 }, tagVerify);
 
 }
