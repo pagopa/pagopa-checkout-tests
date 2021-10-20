@@ -32,6 +32,7 @@ export default function (data) {
     const validRptId = "01199250158002721253546529490";
     
     const headersParams = {
+
         headers: {
             'Content-Type': 'application/json',
         },
@@ -46,4 +47,5 @@ export default function (data) {
     });
     
     check(verifyResponse, { 'status is 200': (r) => r.status === 200 }, tagVerify);
+
 }
