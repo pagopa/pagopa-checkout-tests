@@ -1,0 +1,76 @@
+# Azure DevOps pipeline to build, check source codes and run tests.
+#
+# To make Danger JS run on a pull request you need to add the following pipeline 
+# variable and set it with a GitHub access token (scope public_repo); otherwise 
+# set its value to 'skip' without marking it secret: 
+# - DANGER_GITHUB_API_TOKEN
+# 
+
+# Automatically triggered on PR
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema#pr-trigger
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+parameters:
+
+stages:
+  - stage: Setup_Project
+    dependsOn: []
+    jobs:
+      - job: setup
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+        - checkout: self
+          displayName: 'Checkout'
+
+  - stage: API_Tests_Checkout
+    pool:
+      vmImage: 'ubuntu-latest'
+    dependsOn: Setup_Project
+    jobs:
+      - job: api_tests
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
+
+          - script: |
+              newman run api-tests/io-pay-portal.api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
+            displayName: 'Run api test'
+            continueOnError: true 
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*-TEST.xml' 
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+
+  - stage: E2E_Tests_Checkout
+    pool:
+      vmImage: 'ubuntu-latest'
+    dependsOn: Setup_Project
+    jobs:
+      - job: e2e_tests
+        steps:
+          - script: |
+             docker build -t ui_test e2e-tests
+            displayName: 'Build test image'
+
+          - script: |
+              docker run --env USER_TOKEN=${{ parameters.user_token }} --name=ui_test ui_test
+            displayName: 'Run UI test container'
+            continueOnError: true 
+
+          - script: |
+              docker cp ui_test:/puppeteer/test_reports  test_reports
+            displayName: 'Copy test result'
+            continueOnError: true 
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*-TEST.xml' 
+              searchFolder: '$(System.DefaultWorkingDirectory)'
