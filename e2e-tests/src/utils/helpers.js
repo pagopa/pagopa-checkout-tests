@@ -145,3 +145,11 @@ export const verifyPaymentAndGetError = async (noticeCode, fiscalCodePa) => {
 
   return errorDescription;
 };
+
+export const acceptCookiesBanner = async() => {
+  const cookiesBanner = '#onetrust-banner-sdk';
+  const cookiesBannerAcceptBtn = '#onetrust-accept-btn-handler';
+
+  await page.waitForSelector(cookiesBanner);
+  await page.click(cookiesBannerAcceptBtn);
+};

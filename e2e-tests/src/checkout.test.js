@@ -1,6 +1,6 @@
-import { activatePayment, payAndGetSuccessMessage } from './utils/helpers.js';
+import { activatePayment, payAndGetSuccessMessage, acceptCookiesBanner } from './utils/helpers.js';
 
-describe('io-pay-portal & io-pay tests', () => {
+describe('checkout tests', () => {
   /**
    * Test input and configuration
    */
@@ -22,12 +22,15 @@ describe('io-pay-portal & io-pay tests', () => {
   beforeEach(async () => {
     await page.goto(IO_PAY_PORTAL_URL);
     await page.setViewport({ width: 1200, height: 907 });
+    
   });
 
   it('Should complete the payment 3ds2 when valid credit card is entered', async () => {
+    await acceptCookiesBanner();
     /**
      * 1. Payment Activation - io-pay-portal
-     *  */
+     *  
+     */
     await activatePayment(VALID_NOTICE_CODE, VALID_FISCAL_CODE_PA);
 
     await page.waitForNavigation();

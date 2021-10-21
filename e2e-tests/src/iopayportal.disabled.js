@@ -1,4 +1,6 @@
 import { verifyPaymentAndGetError } from './utils/helpers.js';
+import { acceptCookiesBanner } from './utils/helpers.js'
+
 
 describe('io-pay-portal tests', () => {
   /**
@@ -17,6 +19,7 @@ describe('io-pay-portal tests', () => {
   beforeEach(async () => {
     await page.goto(IO_PAY_PORTAL_URL);
     await page.setViewport({ width: 1200, height: 907 });
+    await acceptCookiesBanner();
   });
 
   it('Should return a message indicating duplicate payment if the notice_code has already been paid', async () => {
