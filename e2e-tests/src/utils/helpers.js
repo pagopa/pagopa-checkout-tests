@@ -13,11 +13,14 @@ export const activatePayment = async (validNoticeCode, validFiscalCodePa) => {
   await page.waitForSelector(verifyButton);
   await page.click(verifyButton);
 
+<<<<<<< HEAD
 
   await page.waitForResponse(
     response => response.request().method() === 'GET' && /payment-requests/.test(response.request().url()),
   );
 
+=======
+>>>>>>> main
   const infoImporto = '#importo';
   await page.waitForSelector(infoImporto);
   await page.click(infoImporto);
@@ -37,15 +40,22 @@ export const payAndGetSuccessMessage = async (
   /**
    * 1. index page
    */
+<<<<<<< HEAD
   await page.waitForResponse(
     response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
   );
+=======
+>>>>>>> main
   const usetMailTextInput = '#useremail';
   await page.waitForSelector(usetMailTextInput);
   await page.click(usetMailTextInput);
   await page.keyboard.type(validUserMail);
 
+<<<<<<< HEAD
   const emailButton = '#emailform > div.windowcont__bottom > div > div > button';
+=======
+  const emailButton = '#emailform > .windowcont__bottom > .container > .windowcont__bottom__wrap > .btn-primary';
+>>>>>>> main
   await page.waitForSelector(emailButton);
   await page.click(emailButton);
 
@@ -145,13 +155,18 @@ export const verifyPaymentAndGetError = async (noticeCode, fiscalCodePa) => {
   const verifyButton = '#verify';
   await page.waitForSelector(verifyButton);
   await page.click(verifyButton);
+<<<<<<< HEAD
                      
+=======
+  
+>>>>>>> main
   const errorText = 'body > div.tingle-modal.tingle-modal--visible > div > div.tingle-modal-box__content > div.d-flex > h4';
   await page.waitForSelector(errorText);
   const element = await page.$(errorText);
   const errorDescription = await page.evaluate(el => el.textContent, element);
 
   return errorDescription;
+<<<<<<< HEAD
 };
 
 export const verifyPaymentAndGetErrorCode = async (noticeCode, fiscalCodePa) => {
@@ -212,3 +227,6 @@ export const showCookiesPreferences = async() => {
 
   await page.waitForSelector(preferencesDialog, {visible: true})
 };
+=======
+};
+>>>>>>> main
