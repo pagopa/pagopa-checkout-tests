@@ -13,6 +13,11 @@ export const activatePayment = async (validNoticeCode, validFiscalCodePa) => {
   await page.waitForSelector(verifyButton);
   await page.click(verifyButton);
 
+
+  await page.waitForResponse(
+    response => response.request().method() === 'GET' && /payment-requests/.test(response.request().url()),
+  );
+
   const infoImporto = '#importo';
   await page.waitForSelector(infoImporto);
   await page.click(infoImporto);
@@ -32,12 +37,15 @@ export const payAndGetSuccessMessage = async (
   /**
    * 1. index page
    */
+  await page.waitForResponse(
+    response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
+  );
   const usetMailTextInput = '#useremail';
   await page.waitForSelector(usetMailTextInput);
   await page.click(usetMailTextInput);
   await page.keyboard.type(validUserMail);
 
-  const emailButton = '#emailform > .windowcont__bottom > .container > .windowcont__bottom__wrap > .btn-primary';
+  const emailButton = '#emailform > div.windowcont__bottom > div > div > button';
   await page.waitForSelector(emailButton);
   await page.click(emailButton);
 
@@ -137,8 +145,32 @@ export const verifyPaymentAndGetError = async (noticeCode, fiscalCodePa) => {
   const verifyButton = '#verify';
   await page.waitForSelector(verifyButton);
   await page.click(verifyButton);
-  
+                     
   const errorText = 'body > div.tingle-modal.tingle-modal--visible > div > div.tingle-modal-box__content > div.d-flex > h4';
+  await page.waitForSelector(errorText);
+  const element = await page.$(errorText);
+  const errorDescription = await page.evaluate(el => el.textContent, element);
+
+  return errorDescription;
+};
+
+export const verifyPaymentAndGetErrorCode = async (noticeCode, fiscalCodePa) => {
+
+  const noticeCodeTextInput = '#paymentNoticeCode';
+  await page.waitForSelector(noticeCodeTextInput);
+  await page.click(noticeCodeTextInput);
+  await page.keyboard.type(noticeCode);
+
+  const fiscalCodePaTextInput = '#organizationId';
+  await page.waitForSelector(fiscalCodePaTextInput);
+  await page.click(fiscalCodePaTextInput);
+  await page.keyboard.type(fiscalCodePa);
+
+  const verifyButton = '#verify';
+  await page.waitForSelector(verifyButton);
+  await page.click(verifyButton);
+                     
+  const errorText = 'body > div.tingle-modal.tingle-modal--visible > div > div.tingle-modal-box__content > div.mb-3.modalwindow__content > div > div > b';
   await page.waitForSelector(errorText);
   const element = await page.$(errorText);
   const errorDescription = await page.evaluate(el => el.textContent, element);
@@ -149,7 +181,34 @@ export const verifyPaymentAndGetError = async (noticeCode, fiscalCodePa) => {
 export const acceptCookiesBanner = async() => {
   const cookiesBanner = '#onetrust-banner-sdk';
   const cookiesBannerAcceptBtn = '#onetrust-accept-btn-handler';
+  const overlayFilter = '#onetrust-consent-sdk > div.onetrust-pc-dark-filter.ot-fade-in'
+  checkCookieBanner();
 
-  await page.waitForSelector(cookiesBanner);
   await page.click(cookiesBannerAcceptBtn);
+  
+  await page.waitForResponse(
+    response => response.request().method() === 'POST' && /consentreceipts/.test(response.request().url()),
+  );
+
+  /*
+  * Wait until the banner is no more visible
+  */
+  await page.waitForSelector(cookiesBanner, {visible: false})
+  await page.waitForSelector(overlayFilter, {hidden: true})
+};
+
+export const checkCookieBanner = async() => {
+  const cookiesBanner = '#onetrust-banner-sdk';
+  
+  await page.waitForSelector(cookiesBanner, {visible: true});
+};
+
+export const showCookiesPreferences = async() => {
+  const showPreferencesBtn = '#onetrust-pc-btn-handler';
+  const preferencesDialog = '#onetrust-pc-sdk'
+
+  await page.waitForSelector(showPreferencesBtn, {visible: true});
+  await page.click(showPreferencesBtn);
+
+  await page.waitForSelector(preferencesDialog, {visible: true})
 };

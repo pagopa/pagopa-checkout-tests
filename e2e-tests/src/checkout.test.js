@@ -12,7 +12,7 @@ describe('checkout tests', () => {
   const CREDIT_CARD_NUMBER = process.env.CREDIT_CARD_NUMBER;
   const CREDIT_CARD_EXPIRATION_DATE = process.env.CREDIT_CARD_EXPIRATION_DATE;
   const CREDIT_CARD_SECURE_CODE = process.env.CREDIT_CARD_SECURE_CODE;
-
+  
   /**
    * Increase default test timeout (5000ms)
    * to support entire payment flow
@@ -26,17 +26,21 @@ describe('checkout tests', () => {
   });
 
   it('Should complete the payment 3ds2 when valid credit card is entered', async () => {
+    
+    /*
+    * 0. Accept the cookies policies banner
+    **/
     await acceptCookiesBanner();
+
     /**
-     * 1. Payment Activation - io-pay-portal
-     *  
+     * 1. Payment Activation
      */
     await activatePayment(VALID_NOTICE_CODE, VALID_FISCAL_CODE_PA);
 
     await page.waitForNavigation();
 
     /**
-     * 2. Pay - IO-Pay
+     * 2. Pay - Payment
      *  */
     const successMessage = await payAndGetSuccessMessage(
       VALID_USER_MAIL,
