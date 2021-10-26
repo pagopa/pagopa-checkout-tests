@@ -49,7 +49,7 @@ stages:
             displayName: 'Build test image'
 
           - script: |
-              docker run --env USER_TOKEN=${{ parameters.user_token }} --name=ui_test ui_test
+              docker run --name=ui_test ui_test
             displayName: 'Run UI test container'
             continueOnError: true 
 
