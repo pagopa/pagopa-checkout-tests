@@ -178,17 +178,17 @@
 			"response": []
 		},
 		{
-			"name": "Payment Verify - PAA_PAGAMENTO_DUPLICATO",
+			"name": "Payment Verify - PPT_STAZIONE_INT_PA_SCONOSCIUTA",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400 with detail_v2 equals to PAA_PAGAMENTO_DUPLICATO\", function(){",
+							"pm.test(\"Status code is 400 with detail equals to PPT_STAZIONE_INT_PA_SCONOSCIUTA\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
-							"    pm.expect(responseJson.detail_v2).equals(\"PAA_PAGAMENTO_DUPLICATO\");",
+							"    pm.expect(responseJson.detail).equals(\"PPT_STAZIONE_INT_PA_SCONOSCIUTA\");",
 							"",
 							"    pm.response.to.have.status(400);",
 							"});"
@@ -204,7 +204,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/checkout/api/v1/payment-requests/{{PAID_FISCAL_CODE_PA}}{{PAID_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/checkout/api/v1/payment-requests/{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -213,7 +213,7 @@
 						"api",
 						"v1",
 						"payment-requests",
-						"{{PAID_FISCAL_CODE_PA}}{{PAID_NOTICE_CODE}}"
+						"{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}"
 					],
 					"query": [
 						{
@@ -232,11 +232,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400 with detail_v2 equals to PAA_PAGAMENTO_IN_CORSO\", function(){",
+							"pm.test(\"Status code is 400 with detail equals to PAA_PAGAMENTO_IN_CORSO\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
-							"    pm.expect(responseJson.detail_v2).equals(\"PAA_PAGAMENTO_IN_CORSO\");",
+							"    pm.expect(responseJson.detail).to.include(\"PAGAMENTO_IN_CORSO\");",
 							"",
 							"    pm.response.to.have.status(400);",
 							"});"
@@ -252,7 +252,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/checkout/api/v1/payment-requests/{{IN_PROGRESS_FISCAL_CODE_PA}}{{IN_PROGRESS_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/checkout/api/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -261,7 +261,7 @@
 						"api",
 						"v1",
 						"payment-requests",
-						"{{IN_PROGRESS_FISCAL_CODE_PA}}{{IN_PROGRESS_NOTICE_CODE}}"
+						"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}"
 					],
 					"query": [
 						{
@@ -274,17 +274,17 @@
 			"response": []
 		},
 		{
-			"name": "Payment Verify - PAA_PAGAMENTO_SCONOSCIUTO",
+			"name": "Payment Verify - PPT_DOMINIO_SCONOSCIUTO",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400 with detail_v2 equals to PAA_PAGAMENTO_SCONOSCIUTO\", function(){",
+							"pm.test(\"Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
-							"    pm.expect(responseJson.detail_v2).equals(\"PAA_PAGAMENTO_SCONOSCIUTO\");",
+							"    pm.expect(responseJson.detail).to.include(\"PPT_DOMINIO_SCONOSCIUTO\");",
 							"",
 							"    pm.response.to.have.status(400);",
 							"});"

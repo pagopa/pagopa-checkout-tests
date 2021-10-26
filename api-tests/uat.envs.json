@@ -48,8 +48,18 @@
             "enabled": true
         },
         {
-            "key": "UNKNOWN_FISCAL_COE_PA",
+            "key": "UNKNOWN_FISCAL_CODE_PA",
             "value": "00000000000",
+            "enabled": true
+        },
+        {
+            "key": "UNKNOWN_STAZIONE_NOTICE_CODE",
+            "value": "002720356512737953",
+            "enabled": true
+        },
+        {
+            "key": "UNKNOWN_STAZIONE_FISCAL_CODE_PA",
+            "value": "77777777777",
             "enabled": true
         }
     ],
