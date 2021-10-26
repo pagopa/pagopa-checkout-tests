@@ -27,7 +27,7 @@ stages:
             displayName: 'newman installation'
 
           - script: |
-              newman run api-tests/checkout-api.tests --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
+              newman run api-tests/checkout-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
             displayName: 'Run api test'
             continueOnError: true 
 
