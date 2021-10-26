@@ -1,14 +1,5 @@
-# Azure DevOps pipeline to build, check source codes and run tests.
-#
-# To make Danger JS run on a pull request you need to add the following pipeline 
-# variable and set it with a GitHub access token (scope public_repo); otherwise 
-# set its value to 'skip' without marking it secret: 
-# - DANGER_GITHUB_API_TOKEN
-# 
-
-# Automatically triggered on PR
-# https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema%2Cparameter-schema#pr-trigger
 trigger: none
+pr: none
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -38,7 +29,7 @@ stages:
             displayName: 'newman installation'
 
           - script: |
-              newman run api-tests/io-pay-portal.api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
+              newman run api-tests/checkout-api.tests --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
             displayName: 'Run api test'
             continueOnError: true 
 
