@@ -6,12 +6,12 @@ describe('Checkout payment activation tests', () => {
   /**
    * Test input and configuration
    */
-  const IO_PAY_PORTAL_URL = process.env.IO_PAY_PORTAL_URL;
-  const PAID_NOTICE_CODE = process.env.PAID_NOTICE_CODE;
-  const PAID_FISCAL_CODE_PA = process.env.PAID_FISCAL_CODE_PA;
-  const INVALID_NOTICE_CODE = process.env.INVALID_NOTICE_CODE;
-  const INVALID_FISCAL_CODE_PA = process.env.INVALID_FISCAL_CODE_PA;
-  const VALID_NOTICE_CODE = process.env.VALID_NOTICE_CODE;
+  const IO_PAY_PORTAL_URL = "https://api.uat.platform.pagopa.it";
+  const PAID_NOTICE_CODE = "002720356866984253";
+  const PAID_FISCAL_CODE_PA = "01199250158";
+  const INVALID_NOTICE_CODE = "002720356512737953";
+  const INVALID_FISCAL_CODE_PA = "77777777777";
+  const VALID_NOTICE_CODE = Math.floor(Math.random() * (302001999999999999 - 302001000000000000 + 1) + 302001000000000000);
 
   /**
    * Increase default test timeout (5000ms)

@@ -4,15 +4,14 @@ describe('checkout tests', () => {
   /**
    * Test input and configuration
    */
-  const IO_PAY_PORTAL_URL = process.env.IO_PAY_PORTAL_URL;
-  const VALID_NOTICE_CODE = process.env.VALID_NOTICE_CODE;
-  const VALID_FISCAL_CODE_PA = process.env.VALID_FISCAL_CODE_PA;
-  const VALID_USER_MAIL = process.env.VALID_USER_MAIL;
-  const CREDIT_CARD_HOLDER = process.env.CREDIT_CARD_HOLDER;
-  const CREDIT_CARD_NUMBER = process.env.CREDIT_CARD_NUMBER;
-  const CREDIT_CARD_EXPIRATION_DATE = process.env.CREDIT_CARD_EXPIRATION_DATE;
-  const CREDIT_CARD_SECURE_CODE = process.env.CREDIT_CARD_SECURE_CODE;
-  
+  const IO_PAY_PORTAL_URL = "https://api.uat.platform.pagopa.it";
+  const VALID_NOTICE_CODE = Math.floor(Math.random() * (302001999999999999 - 302001000000000000 + 1) + 302001000000000000);
+  const VALID_FISCAL_CODE_PA = "77777777777";
+  const VALID_USER_MAIL = "test@test.it";
+  const CREDIT_CARD_HOLDER = "Mario Rossi";
+  const CREDIT_CARD_NUMBER = "5111114000023477";
+  const CREDIT_CARD_EXPIRATION_DATE = "12/30";
+  const CREDIT_CARD_SECURE_CODE = "123";
   /**
    * Increase default test timeout (5000ms)
    * to support entire payment flow
