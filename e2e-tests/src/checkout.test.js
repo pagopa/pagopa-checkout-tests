@@ -4,8 +4,8 @@ describe('checkout tests', () => {
   /**
    * Test input and configuration
    */
-  const IO_PAY_PORTAL_URL = "https://api.uat.platform.pagopa.it";
-  const VALID_NOTICE_CODE = Math.floor(Math.random() * (302001999999999999 - 302001000000000000 + 1) + 302001000000000000);
+  const IO_PAY_PORTAL_URL = "https://uat.checkout.pagopa.it/";
+  const VALID_NOTICE_CODE = Math.floor(Math.random() * (302001999999999999 - 302001000000000000 + 1) + 302001000000000000).toString();
   const VALID_FISCAL_CODE_PA = "77777777777";
   const VALID_USER_MAIL = "test@test.it";
   const CREDIT_CARD_HOLDER = "Mario Rossi";

@@ -4,7 +4,7 @@ describe('checkout tests', () => {
   /**
    * Test input and configuration
    */
-  const IO_PAY_PORTAL_URL = process.env.IO_PAY_PORTAL_URL;
+  const IO_PAY_PORTAL_URL = "https://uat.checkout.pagopa.it/";
 
   /**
    * Increase default test timeout (5000ms)
