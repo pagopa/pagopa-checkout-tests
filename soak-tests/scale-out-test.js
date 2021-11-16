@@ -26,8 +26,7 @@ export default function () {
     const getInfo = http.get(`${urlBasePath}/api/checkout/payments/v1/browsers/current/info`);
 
     if ( getInfo.status != 200 ) {
-        console.log("verifyResponse: " + verifyResponse.status);
-        console.log(JSON.stringify(verifyResponse.json()));
+        console.log("getCurrentInfo: " + getInfo.status);
     }
 
 }
