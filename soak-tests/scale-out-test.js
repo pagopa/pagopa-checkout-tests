@@ -18,10 +18,16 @@ export let options = {
     stages: [
         { 
             executor: 'constant-arrival-rate',
-            target: 70,
-            rate: 100, // 100 RPS, since timeUnit is the default 1s
+            target: 100,
+            rate: 50, // 100 RPS, since timeUnit is the default 1s
             duration: '5m',
-            preAllocatedVUs: 50,
+            maxVUs: 100,
+        }, 
+        { 
+            executor: 'constant-arrival-rate',
+            target: 100,
+            rate: 50, // 100 RPS, since timeUnit is the default 1s
+            duration: '30m',
             maxVUs: 100,
         }, 
       ],
