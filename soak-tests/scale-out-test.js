@@ -19,15 +19,16 @@ export let options = {
         { 
             executor: 'constant-arrival-rate',
             target: 100,
-            rate: 50, // 100 RPS, since timeUnit is the default 1s
+            rate: 25, // 25 RPS, since timeUnit is the default 1s
             duration: '5m',
             maxVUs: 100,
+            preAllocatedVUs: 20,
         }, 
         { 
             executor: 'constant-arrival-rate',
             target: 100,
-            rate: 50, // 100 RPS, since timeUnit is the default 1s
-            duration: '30m',
+            rate: 25, // 25 RPS, since timeUnit is the default 1s
+            duration: '10m',
             maxVUs: 100,
         }, 
       ],

@@ -4,10 +4,10 @@ import { sleep } from 'k6';
 
 export let options = {
     stages: [
-      { duration: '1m', target: 70 }, // ramp up to 70 users
-      { duration: '28m', target: 70 }, // stay at 70 for ~30 min
-      { duration: '1m', target: 0 }, // scale down. (optional)
-    ],
+        { duration: '1m', target: 100 }, // ramp up to 100 users
+        { duration: '13m', target: 100 }, // stay at 100 for 28 min
+        { duration: '1m', target: 0 }, // scale down. (optional)
+      ],
   };
 
 
@@ -20,7 +20,7 @@ export default function () {
 
     const min = 302001000000000000;
     const max = 302001999999999999;
-    const urlBasePath = "https://api.io.italia.it";
+    const urlBasePath = "https://api.uat.platform.pagopa.it";
     const rptId = `77777777777${ Math.floor(Math.random() * (max - min + 1) + min)}`;
 
     const headersParams = {
@@ -33,7 +33,7 @@ export default function () {
     const tagVerify = {
         pagoPaMethod: "GetPaymentInfo",
     };
-    const verifyResponse = http.get(`${urlBasePath}/api/payportal/v1/payment-requests/${rptId}?recaptchaResponse=token`, headersParams, {
+    const verifyResponse = http.get(`${urlBasePath}/api/checkout/payments/v1/payment-requests/${rptId}?recaptchaResponse=token`, headersParams, {
         tags: tagVerify
     });
 
@@ -53,7 +53,7 @@ export default function () {
         };
         
         const activationResponse = http.post(
-            `${urlBasePath}/api/payportal/v1/payment-activations`,
+            `${urlBasePath}/api/checkout/payments/v1/payment-activations`,
             JSON.stringify({ 
             rptId, 
             codiceContestoPagamento,
@@ -84,7 +84,7 @@ export default function () {
             let activationStatusResponse;
 
             while ( !activationCompleted && checks < maxCheck ){
-                activationStatusResponse = http.get(`${urlBasePath}/api/payportal/v1/payment-activations/${codiceContestoPagamento}`, {
+                activationStatusResponse = http.get(`${urlBasePath}/api/checkout/payments/v1/payment-activations/${codiceContestoPagamento}`, {
                     tags: tagActivationStatus,
                 });
                 checks++;
