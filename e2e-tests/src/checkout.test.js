@@ -24,7 +24,7 @@ describe('checkout tests', () => {
     
   });
 
-  it('Should complete the payment 3ds2 when valid credit card is entered', async () => {
+  it('Should complete the payment 3ds2 when valid credit card is entered - xpay', async () => {
     
     /*
     * 0. Accept the cookies policies banner
