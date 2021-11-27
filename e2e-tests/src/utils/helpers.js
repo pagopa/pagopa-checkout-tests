@@ -99,10 +99,26 @@ export const payAndGetSuccessMessage = async (
 
   expect(pay3ds2Response.status()).toEqual(200);
 
+  // Polling to wait final transaction result
+  let waitForXpayHtmlUrl = true;
+  while (waitForXpayHtmlUrl) {
+    const [transactionCheck] = await Promise.all([
+      page.waitForResponse(
+        response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
+      ),
+    ]);
+    const jsonResponse = (await transactionCheck.json());
+
+    // eslint-disable-next-line no-undef
+    waitForXpayHtmlUrl = jsonResponse.data.finalStatus === false && !jsonResponse.data.xpayHtml;
+  }
+
+  // Polling to wait final transaction result
+  let waitForFinalStatus = true;
+
   /**
    * 4. response page - polling
    */
-  let waitForFinalStatus = true;
   let jsonResponse = undefined;
   while (waitForFinalStatus) {
     const [transactionCheck] = await Promise.all([

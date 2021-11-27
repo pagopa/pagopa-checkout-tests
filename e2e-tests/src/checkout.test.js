@@ -16,7 +16,7 @@ describe('checkout tests', () => {
    * Increase default test timeout (5000ms)
    * to support entire payment flow
    */
-  jest.setTimeout(30000);
+  jest.setTimeout(60000);
 
   beforeEach(async () => {
     await page.goto(IO_PAY_PORTAL_URL);
