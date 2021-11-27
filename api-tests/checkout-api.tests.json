@@ -12,7 +12,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200 with valid json response\", function(){",
+							"pm.test(\"Payment Verify - Status code is 200 with valid json response\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -78,7 +78,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200 with valid json response\", function(){",
+							"pm.test(\"Payment Activation - Status code is 200 with valid json response\", function(){",
 							"",
 							"    pm.response.to.have.status(200);",
 							"});"
@@ -134,7 +134,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200 with valid json response\", function(){",
+							"pm.test(\"Payment Activation Polling - Status code is 200 with valid json response\", function(){",
 							"    ",
 							"    pm.response.to.have.status(200);",
 							"});"
@@ -187,7 +187,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400 with detail equals to PPT_STAZIONE_INT_PA_SCONOSCIUTA\", function(){",
+							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_STAZIONE_INT_PA_SCONOSCIUTA\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -236,7 +236,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
+							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -285,7 +285,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200 with browsers detail\", function(){",
+							"pm.test(\"Payment Support - Status code is 200 with browsers detail\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -325,13 +325,13 @@
 			"response": []
 		},
 		{
-			"name": "Payment transaction- xpay",
+			"name": "Payment transaction - xpay",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 302 with params\", function(){",
+							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function(){",
 							"    ",
 							"    pm.response.to.have.status(200);",
 							"});"
@@ -393,7 +393,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200 with params\", function(){",
+							"pm.test(\"Payment transaction xpay verify Status code is 200 with params\", function(){",
 							"    ",
 							"    pm.expect(pm.response.text()).to.include(\"Checkout - pagoPA<\");",
 							"    pm.response.to.have.status(200);",
@@ -451,13 +451,13 @@
 			"response": []
 		},
 		{
-			"name": "Payment transaction- vpos challenge",
+			"name": "Payment transaction - vpos challenge",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200 with params\", function(){",
+							"pm.test(\"Payment transaction vpos challenge - Status code is 200 with params\", function(){",
 							"    pm.expect(pm.response.text()).to.include(\"Checkout - pagoPA<\");",
 							"    pm.response.to.have.status(200);",
 							"});"
@@ -513,13 +513,13 @@
 			"response": []
 		},
 		{
-			"name": "Payment transaction- vpos method",
+			"name": "Payment transaction - vpos method",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200 with 3DS.Notification.Received\", function(){",
+							"pm.test(\"Payment transaction vpos method - Status code is 200 with 3DS.Notification.Received\", function(){",
 							"    pm.expect(pm.response.text()).to.include(\"3DS.Notification.Received\");",
 							"    pm.response.to.have.status(200);",
 							"});"
