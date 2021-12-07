@@ -45,6 +45,11 @@ export const payAndGetSuccessMessage = async (
   await page.click(usetMailTextInput);
   await page.keyboard.type(validUserMail);
 
+  const userMailCheckTextInput = '#useremailCheck';
+  await page.waitForSelector(userMailCheckTextInput);
+  await page.click(userMailCheckTextInput);
+  await page.keyboard.type(validUserMail);
+
   const emailButton = '#emailform > div.windowcont__bottom > div > div > button';
   await page.waitForSelector(emailButton);
   await page.click(emailButton);
