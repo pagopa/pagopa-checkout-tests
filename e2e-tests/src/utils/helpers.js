@@ -33,6 +33,8 @@ export const payAndGetSuccessMessage = async (
   creditCardNumber,
   creditCardExpirationDate,
   creditCardSecureCode,
+  isXpay,
+  challengePin
 ) => {
   /**
    * 1. index page
@@ -104,18 +106,46 @@ export const payAndGetSuccessMessage = async (
 
   expect(pay3ds2Response.status()).toEqual(200);
 
-  // Polling to wait final transaction result
-  let waitForXpayHtmlUrl = true;
-  while (waitForXpayHtmlUrl) {
-    const [transactionCheck] = await Promise.all([
-      page.waitForResponse(
-        response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
-      ),
-    ]);
-    const jsonResponse = (await transactionCheck.json());
+  if ( isXpay ){
 
-    // eslint-disable-next-line no-undef
-    waitForXpayHtmlUrl = jsonResponse.data.finalStatus === false && !jsonResponse.data.xpayHtml;
+    // xpay 3ds2 auth    
+    let waitForXpayHtmlUrl = true;
+    while (waitForXpayHtmlUrl) {
+      const [transactionCheck] = await Promise.all([
+        page.waitForResponse(
+          response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
+        ),
+      ]);
+      const jsonResponse = (await transactionCheck.json());
+
+      // eslint-disable-next-line no-undef
+      waitForXpayHtmlUrl = jsonResponse.data.finalStatus === false && !jsonResponse.data.xpayHtml;
+    }
+
+  } else {
+
+    // vpos 3ds2 auth
+    const challengeDataEntryTextInput = '#challengeDataEntry';
+    const confirmButton = '#confirm';
+
+    await page.waitForNavigation();
+    await page.waitForTimeout(3000);
+
+    await page.waitForSelector(challengeDataEntryTextInput);
+    await page.click(challengeDataEntryTextInput);
+    await page.keyboard.type(challengePin);
+   
+    await page.waitForSelector(confirmButton);
+    await page.click(confirmButton);
+
+    await page.waitForTimeout(3000);
+
+    await page.waitForSelector(challengeDataEntryTextInput);
+    await page.click(challengeDataEntryTextInput);
+    await page.keyboard.type(challengePin);
+   
+    await page.waitForSelector(confirmButton);
+    await page.click(confirmButton);
   }
 
   // Polling to wait final transaction result
