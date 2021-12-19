@@ -14,10 +14,10 @@ describe('checkout tests', () => {
   const CREDIT_CARD_SECURE_CODE = '123';
   const CHALLENGE_PIN = '123456';
   /**
-   * Increase default test timeout (60000ms)
+   * Increase default test timeout (120000ms)
    * to support entire payment flow
    */
-  jest.setTimeout(60000);
+  jest.setTimeout(120000);
 
   beforeEach(async () => {
     await page.goto(CHECKOUT_URL);
@@ -52,6 +52,7 @@ describe('checkout tests', () => {
     );
 
     expect(successMessage).toContain('Grazie, l\'operazione è stata eseguita con successo!');
+    return true;
   });
 });
 

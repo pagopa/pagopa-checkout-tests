@@ -41,6 +41,7 @@ export const payAndGetSuccessMessage = async (
    */
   await page.waitForResponse(
     response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
+    {timeout : 16000}  
   );
   const usetMailTextInput = '#useremail';
   await page.waitForSelector(usetMailTextInput);
@@ -176,7 +177,6 @@ export const payAndGetSuccessMessage = async (
   await page.waitForSelector(finalResult);
   const element = await page.$(finalResult);
   const successDescription = await page.evaluate(el => el.textContent, element);
- 
   return successDescription;
 };
 
