@@ -4,11 +4,11 @@ import { sleep } from 'k6';
 
 export let options = {
     stages: [
-      { duration: '1m', target: 5 }, // ramp up to 70 users
-      { duration: '28m', target: 5 }, // stay at 70 for ~30 min
-      { duration: '1m', target: 0 }, // scale down. (optional)
+        { duration: '1m', target: 70 }, // ramp up to 70 users
+        { duration: '28m', target: 70 }, // stay at 70 for ~30 min
+        { duration: '1m', target: 0 }, // scale down. (optional)
     ],
-  };
+};
 
 
 export function setup() {
@@ -21,14 +21,14 @@ export default function () {
     const min = 302001000000000000;
     const max = 302001999999999999;
     const urlBasePath = "https://api.uat.platform.pagopa.it";
-    const rptId = `77777777777${ Math.floor(Math.random() * (max - min + 1) + min)}`;
+    const rptId = `77777777777${Math.floor(Math.random() * (max - min + 1) + min)}`;
 
     const headersParams = {
         headers: {
             'Content-Type': 'application/json',
         },
     };
-    
+
     // 1. Verification Step
     const tagVerify = {
         pagoPaMethod: "GetPaymentInfo",
@@ -39,7 +39,7 @@ export default function () {
 
     check(verifyResponse, { 'verifyResponse status is 200': (r) => r.status === 200 }, tagVerify);
 
-    if ( verifyResponse.status != 200 ) {
+    if (verifyResponse.status != 200) {
 
         console.log("verifyResponse: " + verifyResponse.status);
         console.log(JSON.stringify(verifyResponse.json()));
@@ -63,13 +63,13 @@ export default function () {
             body,
             headersParams,
             {
-            tags: tagActivation
+                tags: tagActivation
             }
         );
 
         check(activationResponse, { 'activationResponse status is 200': (r) => r.status === 200 }, tagActivation);
 
-        if ( activationResponse.status != 200 ) {
+        if (activationResponse.status != 200) {
 
             console.log("activationResponse: " + activationResponse.status);
             console.log(JSON.stringify(activationResponse.json()));
@@ -86,7 +86,7 @@ export default function () {
             let checks = 0;
             let activationStatusResponse;
 
-            while ( !activationCompleted && checks < maxCheck ){
+            while (!activationCompleted && checks < maxCheck) {
                 activationStatusResponse = http.get(`${urlBasePath}/api/checkout/activations/v1/payment-activations/${codiceContestoPagamento}`, {
                     tags: tagActivationStatus,
                 });
@@ -95,7 +95,7 @@ export default function () {
                 sleep(2);
             }
 
-            if ( activationStatusResponse.status != 200 ) {
+            if (activationStatusResponse.status != 200) {
                 console.log(activationStatusResponse.status);
             }
 
