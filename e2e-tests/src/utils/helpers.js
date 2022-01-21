@@ -33,16 +33,24 @@ export const payAndGetSuccessMessage = async (
   creditCardNumber,
   creditCardExpirationDate,
   creditCardSecureCode,
+  isXpay,
+  challengePin
 ) => {
   /**
    * 1. index page
    */
   await page.waitForResponse(
     response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
+    {timeout : 16000}  
   );
   const usetMailTextInput = '#useremail';
   await page.waitForSelector(usetMailTextInput);
   await page.click(usetMailTextInput);
+  await page.keyboard.type(validUserMail);
+
+  const userMailCheckTextInput = '#useremailCheck';
+  await page.waitForSelector(userMailCheckTextInput);
+  await page.click(userMailCheckTextInput);
   await page.keyboard.type(validUserMail);
 
   const emailButton = '#emailform > div.windowcont__bottom > div > div > button';
@@ -99,18 +107,46 @@ export const payAndGetSuccessMessage = async (
 
   expect(pay3ds2Response.status()).toEqual(200);
 
-  // Polling to wait final transaction result
-  let waitForXpayHtmlUrl = true;
-  while (waitForXpayHtmlUrl) {
-    const [transactionCheck] = await Promise.all([
-      page.waitForResponse(
-        response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
-      ),
-    ]);
-    const jsonResponse = (await transactionCheck.json());
+  if ( isXpay ){
 
-    // eslint-disable-next-line no-undef
-    waitForXpayHtmlUrl = jsonResponse.data.finalStatus === false && !jsonResponse.data.xpayHtml;
+    // xpay 3ds2 auth    
+    let waitForXpayHtmlUrl = true;
+    while (waitForXpayHtmlUrl) {
+      const [transactionCheck] = await Promise.all([
+        page.waitForResponse(
+          response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
+        ),
+      ]);
+      const jsonResponse = (await transactionCheck.json());
+
+      // eslint-disable-next-line no-undef
+      waitForXpayHtmlUrl = jsonResponse.data.finalStatus === false && !jsonResponse.data.xpayHtml;
+    }
+
+  } else {
+
+    // vpos 3ds2 auth
+    const challengeDataEntryTextInput = '#challengeDataEntry';
+    const confirmButton = '#confirm';
+
+    await page.waitForNavigation();
+    await page.waitForTimeout(3000);
+
+    await page.waitForSelector(challengeDataEntryTextInput);
+    await page.click(challengeDataEntryTextInput);
+    await page.keyboard.type(challengePin);
+   
+    await page.waitForSelector(confirmButton);
+    await page.click(confirmButton);
+
+    await page.waitForTimeout(3000);
+
+    await page.waitForSelector(challengeDataEntryTextInput);
+    await page.click(challengeDataEntryTextInput);
+    await page.keyboard.type(challengePin);
+   
+    await page.waitForSelector(confirmButton);
+    await page.click(confirmButton);
   }
 
   // Polling to wait final transaction result
@@ -141,7 +177,6 @@ export const payAndGetSuccessMessage = async (
   await page.waitForSelector(finalResult);
   const element = await page.$(finalResult);
   const successDescription = await page.evaluate(el => el.textContent, element);
- 
   return successDescription;
 };
 
