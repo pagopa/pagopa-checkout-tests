@@ -1,4 +1,4 @@
-import { verifyPayment, payNotice, acceptCookiePolicy } from './utils/helpers.js';
+import { payNotice, acceptCookiePolicy } from './utils/helpers.js';
 
 describe('Checkout payment activation tests', () => {
   /**
@@ -6,16 +6,7 @@ describe('Checkout payment activation tests', () => {
    */
   const CHECKOUT_URL = 'https://dev.checkout.pagopa.it/';
   const VALID_FISCAL_CODE = '77777777777';
-  // const INVALID_FISCAL_CODE = '07777777779';
   const EMAIL = 'mario.rossi@email.com';
-  /*
-  const INVALID_CARD_DATA = {
-    number: '4801769871971639',
-    expirationDate: '1230',
-    ccv: '123',
-    holderName: 'Mario Rossi',
-  };
-  */
   const VALID_CARD_DATA = {
     number: '4333334000098346',
     expirationDate: '1230',
@@ -30,7 +21,7 @@ describe('Checkout payment activation tests', () => {
    * Increase default test timeout (5000ms)
    * to support entire payment flow
    */
-  jest.setTimeout(6*10*1000);
+  jest.setTimeout(60000);
 
   beforeEach(async () => {
     await page.goto(CHECKOUT_URL);

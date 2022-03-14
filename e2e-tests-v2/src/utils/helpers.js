@@ -54,13 +54,10 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
-  const payNoticeBtn = await page.waitForXPath(payNoticeBtnXPath, {visible: true});
+  const payNoticeBtn = await page.waitForXPath(payNoticeBtnXPath);
   await payNoticeBtn.click();
+  await page.waitForNavigation();
   
-  await Promise.all([
-    page.waitForNavigation()
-  ])
-
   await fillEmailForm(email);
   await choosePaymentMethod('card');
   await fillCardDataForm(cardData);
@@ -84,6 +81,7 @@ export const fillEmailForm = async email => {
 
   const continueBtn = await page.waitForXPath(continueBtnXPath);
   await continueBtn.click();
+
 };
 
 export const choosePaymentMethod = async method => {
