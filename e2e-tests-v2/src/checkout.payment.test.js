@@ -13,6 +13,12 @@ describe('Checkout payment activation tests', () => {
     ccv: '123',
     holderName: 'Mario Rossi',
   }
+  const INVALID_CARD_DATA = {
+    number: '4801769871971639',
+    expirationDate: '1230',
+    ccv: '123',
+    holderName: 'Mario Rossi'
+  }
   const VALID_NOTICE_CODE = Math.floor(
     Math.random() * (302001999999999999 - 302001000000000000 + 1) + 302001000000000000,
   ).toString();
@@ -21,7 +27,10 @@ describe('Checkout payment activation tests', () => {
    * Increase default test timeout (5000ms)
    * to support entire payment flow
    */
-  jest.setTimeout(60000);
+   jest.setTimeout(60000);
+   jest.retryTimes(3);
+   page.setDefaultNavigationTimeout(60000);
+   page.setDefaultTimeout(60000)
 
   beforeEach(async () => {
     await page.goto(CHECKOUT_URL);
@@ -37,6 +46,14 @@ describe('Checkout payment activation tests', () => {
    const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, VALID_CARD_DATA);
 
     expect(resultMessage).toContain('Grazie, hai pagato');
+  });
+
+  it('Should fail to execute a payment. Unauthorized credit card', async () => {
+    /*
+     * 1. Payment with valid notice code
+    */
+   const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, INVALID_CARD_DATA);
+    expect(resultMessage).toContain('Autorizzazione negata');
   });
 
 });
