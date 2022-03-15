@@ -1,4 +1,4 @@
-import { payNotice, acceptCookiePolicy } from './utils/helpers.js';
+import { payNotice, acceptCookiePolicy, verifyPayment } from './utils/helpers.js';
 
 describe('Checkout payment activation tests', () => {
   /**
@@ -34,15 +34,25 @@ describe('Checkout payment activation tests', () => {
 
   beforeEach(async () => {
     await page.goto(CHECKOUT_URL);
-    await page.setViewport({ width: 1200, height: 907 });
   });
 
+  beforeAll( async () => {
+    await page.goto(CHECKOUT_URL);
+    await page.setViewport({ width: 1200, height: 907 });
+    await acceptCookiePolicy();
+  })
+
+  it('Should correctly verify a payment', async () => {
+    /*
+     * 1. Verify with valid notice code
+    */
+   await verifyPayment(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, VALID_CARD_DATA);
+  });
 
   it('Should correctly execute a payment', async () => {
     /*
-     * 1. Payment with valid notice code
+     * 2. Valid payment with valid notice code
     */
-   await acceptCookiePolicy();
    const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, VALID_CARD_DATA);
 
     expect(resultMessage).toContain('Grazie, hai pagato');
@@ -50,7 +60,7 @@ describe('Checkout payment activation tests', () => {
 
   it('Should fail to execute a payment. Unauthorized credit card', async () => {
     /*
-     * 1. Payment with valid notice code
+     * 3. Payment with valid notice code and not authorized card
     */
    const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, INVALID_CARD_DATA);
     expect(resultMessage).toContain('Autorizzazione negata');

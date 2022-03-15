@@ -34,7 +34,6 @@ export const verifyPaymentAndGetError = async (noticeCode, fiscalCode) => {
 };
 
 export const verifyPayment = async (noticeCode, fiscalCode) => {
-  await acceptCookiePolicy();
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 };
 
