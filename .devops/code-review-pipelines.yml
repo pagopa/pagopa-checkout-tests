@@ -63,3 +63,30 @@ stages:
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/*-TEST.xml' 
               searchFolder: '$(System.DefaultWorkingDirectory)'
+
+  - stage: E2E_DEV_Tests_Checkout_v2
+    pool:
+      vmImage: 'ubuntu-latest'
+    dependsOn: Setup_Project
+    jobs:
+      - job: e2e_tests
+        steps:
+          - script: |
+             docker build -t ui_test-v2 e2e-tests-v2
+            displayName: 'Build test image'
+
+          - script: |
+              docker run --name=ui_test-v2 ui_test-v2
+            displayName: 'Run UI test container'
+            continueOnError: true 
+
+          - script: |
+              docker cp ui_test-v2:/puppeteer/test_reports  test_reports
+            displayName: 'Copy test result'
+            continueOnError: true 
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*-TEST.xml' 
+              searchFolder: '$(System.DefaultWorkingDirectory)'
