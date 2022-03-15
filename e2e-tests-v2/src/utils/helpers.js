@@ -65,6 +65,23 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
   return await message.evaluate(el => el.textContent);
 };
 
+export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => {
+  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[2]/button';
+  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/h6';
+  await fillPaymentNotificationForm(noticeCode, fiscalCode);
+
+  const payNoticeBtn = await page.waitForXPath(payNoticeBtnXPath);
+  await payNoticeBtn.click();
+  await page.waitForNavigation();
+  
+  await fillEmailForm(email);
+  await choosePaymentMethod('card');
+  await fillCardDataForm(cardData, true);
+
+  const message = await page.waitForXPath(resultMessageXPath);
+  return await message.evaluate(el => el.textContent);
+};
+
 export const fillEmailForm = async email => {
   const emailInput = '#email';
   const confirmEmailInput = '#confirmEmail';
@@ -95,13 +112,14 @@ export const choosePaymentMethod = async method => {
   }
 };
 
-export const fillCardDataForm = async cardData => {
+export const fillCardDataForm = async (cardData, useXPAY = false) => {
   const cardNumberInput = '#number';
   const expirationDateInput = '#expirationDate';
   const ccvInput = '#cvv';
   const holderNameInput = '#name';
   const continueBtnXPath = '/html/body/div[1]/div/div[2]/div/div[2]/form/div[2]/div[2]';
   const payBtnXPath = '/html/body/div[1]/div/div[2]/div/div[7]/div[2]/button';
+  const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
 
   await page.waitForSelector(cardNumberInput);
   await page.click(cardNumberInput);
@@ -121,6 +139,15 @@ export const fillCardDataForm = async cardData => {
 
   const continueBtn = await page.waitForXPath(continueBtnXPath);
   await continueBtn.click();
+
+  if(useXPAY){
+    const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
+    await selectPSPBtn.click();
+
+    const XPAYBtn = await page.$x("//div[contains(., 'XPAY')]");
+    console.log(await page.evaluate(XPAYBtn))
+    // await XPAYBtn.click();
+  }
 
   const payBtn = await page.waitForXPath(payBtnXPath);
   await payBtn.click();

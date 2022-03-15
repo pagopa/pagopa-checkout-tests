@@ -1,6 +1,6 @@
 import { payNotice, acceptCookiePolicy, verifyPayment } from './utils/helpers.js';
 
-describe('Checkout payment activation tests', () => {
+describe('Checkout payments tests -', () => {
   /**
    * Test input and configuration
    */
@@ -42,6 +42,7 @@ describe('Checkout payment activation tests', () => {
     await acceptCookiePolicy();
   })
 
+  
   it('Should correctly verify a payment', async () => {
     /*
      * 1. Verify with valid notice code
@@ -49,7 +50,7 @@ describe('Checkout payment activation tests', () => {
    await verifyPayment(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, VALID_CARD_DATA);
   });
 
-  it('Should correctly execute a payment', async () => {
+  it('Should correctly execute a payment (VPOS authorization - 3DS2 step: methodURL)', async () => {
     /*
      * 2. Valid payment with valid notice code
     */
@@ -65,5 +66,4 @@ describe('Checkout payment activation tests', () => {
    const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, INVALID_CARD_DATA);
     expect(resultMessage).toContain('Autorizzazione negata');
   });
-
 });
