@@ -1,26 +1,43 @@
 import http from 'k6/http';
-import { check } from 'k6';
-import { sleep } from 'k6';
+import {check, sleep} from 'k6';
 
-export let options = {
+export const options = {
     stages: [
-        { duration: '1m', target: 70 }, // ramp up to 70 users
-        { duration: '28m', target: 70 }, // stay at 70 for ~30 min
+        { duration: '1m', target: 20 }, // ramp up to 20 users
+        { duration: '3m', target: 20 }, // stay at 20 for ~3 min
         { duration: '1m', target: 0 }, // scale down. (optional)
     ],
 };
 
+function setupV1() {
+    return "https://api.uat.platform.pagopa.it/api/checkout/payments/v1";
+}
+
+function setupV2() {
+    return "https://api.uat.platform.pagopa.it/checkout/payments/v1";
+}
 
 export function setup() {
+    let urlBasePath;
+    if (__ENV.API_VERSION === "v1") {
+        console.info("Running soak tests on Checkout API v1");
+        urlBasePath = setupV1();
+    } else {
+        console.info("Running soak tests on Checkout API v2");
+        urlBasePath = setupV2();
+    }
+
     return {
+        activationUrl: `${urlBasePath}/payment-activations`,
+        verifyUrl: `${urlBasePath}/payment-requests`,
+        activationStatusUrl: `${urlBasePath}/payment-activations`
     };
 }
 
-export default function () {
+export default function ({ verifyUrl, activationUrl, activationStatusUrl }) {
 
     const min = 302001000000000000;
     const max = 302001999999999999;
-    const urlBasePath = "https://api.uat.platform.pagopa.it";
     const rptId = `77777777777${Math.floor(Math.random() * (max - min + 1) + min)}`;
 
     const headersParams = {
@@ -33,7 +50,7 @@ export default function () {
     const tagVerify = {
         pagoPaMethod: "GetPaymentInfo",
     };
-    const verifyResponse = http.get(`${urlBasePath}/api/checkout/activations/v1/payment-requests/${rptId}?recaptchaResponse=token`, headersParams, {
+    const verifyResponse = http.get(`${verifyUrl}/${rptId}?recaptchaResponse=token`, headersParams, {
         tags: tagVerify
     });
 
@@ -59,7 +76,7 @@ export default function () {
         });
 
         const activationResponse = http.post(
-            `${urlBasePath}/api/checkout/activations/v1/payment-activations`,
+            `${activationUrl}?recaptchaResponse=token`,
             body,
             headersParams,
             {
@@ -87,7 +104,7 @@ export default function () {
             let activationStatusResponse;
 
             while (!activationCompleted && checks < maxCheck) {
-                activationStatusResponse = http.get(`${urlBasePath}/api/checkout/activations/v1/payment-activations/${codiceContestoPagamento}`, {
+                activationStatusResponse = http.get(`${activationStatusUrl}/${codiceContestoPagamento}`, {
                     tags: tagActivationStatus,
                 });
                 checks++;
