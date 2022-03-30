@@ -9,14 +9,6 @@ export const options = {
     ],
 };
 
-function setupV1() {
-    return "https://api.uat.platform.pagopa.it/api/checkout/payments/v1";
-}
-
-function setupV2() {
-    return "https://api.uat.platform.pagopa.it/checkout/payments/v1";
-}
-
 function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
     const tagCheckStatus = {pagoPaMethod: 'checkStatus'};
     const checkTransactionStatusResponse = http.get(`${paymentManagerApiUrl}/payments/${idPayment}/actions/check`, headerParams, {tags: tagCheckStatus});
@@ -131,14 +123,7 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
 }
 
 export function setup() {
-    let urlBasePath;
-    if (__ENV.API_VERSION === "v1") {
-        console.info("Running soak tests on Checkout API v1");
-        urlBasePath = setupV1();
-    } else {
-        console.info("Running soak tests on Checkout API v2");
-        urlBasePath = setupV2();
-    }
+    const urlBasePath = "https://api.uat.platform.pagopa.it/checkout/payments/v1";
 
     return {
         activationUrl: `${urlBasePath}/payment-activations`,
