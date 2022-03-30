@@ -122,24 +122,36 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
     }
 }
 
-export function setup() {
-    const urlBasePath = "https://api.uat.platform.pagopa.it/checkout/payments/v1";
-
-    return {
-        activationUrl: `${urlBasePath}/payment-activations`,
-        verifyUrl: `${urlBasePath}/payment-requests`,
-        activationStatusUrl: `${urlBasePath}/payment-activations`
-    };
+function generateMockEcRptId() {
+    const min = 302001000000000000;
+    const max = 302001999999999999;
+    const urlBasePath = "https://api.uat.platform.pagopa.it";
+    return `77777777777${Math.floor(Math.random() * (max - min + 1) + min)}`;
 }
 
-export default function ({ verifyUrl, activationUrl, activationStatusUrl }) {
+function generateDonationsRptId() {
     const auxDigit = 3;
     const segregationCode = "00";
     const idDonation = "00";
     const iuv = new Date().getTime();
     const ecCf = 13669721006;
 
-    const rptId = `${ecCf}${auxDigit}${segregationCode}${idDonation}${iuv}`;
+    return `${ecCf}${auxDigit}${segregationCode}${idDonation}${iuv}`;
+}
+
+export function setup() {
+    const urlBasePath = "https://api.uat.platform.pagopa.it/checkout/payments/v1";
+
+    return {
+        useDonationsRptId: __ENV.DONATIONS_RPT ?? true,
+        activationUrl: `${urlBasePath}/payment-activations`,
+        verifyUrl: `${urlBasePath}/payment-requests`,
+        activationStatusUrl: `${urlBasePath}/payment-activations`
+    };
+}
+
+export default function ({ useDonationsRptId, verifyUrl, activationUrl, activationStatusUrl }) {
+    const rptId = useDonationsRptId ? generateDonationsRptId() : generateMockEcRptId();
 
     const headersParams = {
         headers: {
