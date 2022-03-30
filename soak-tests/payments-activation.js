@@ -35,10 +35,13 @@ export function setup() {
 }
 
 export default function ({ verifyUrl, activationUrl, activationStatusUrl }) {
+    const auxDigit = 3;
+    const segregationCode = "00";
+    const idDonation = "00";
+    const iuv = new Date().getTime();
+    const ecCf = 13669721006;
 
-    const min = 302001000000000000;
-    const max = 302001999999999999;
-    const rptId = `77777777777${Math.floor(Math.random() * (max - min + 1) + min)}`;
+    const rptId = `${ecCf}${auxDigit}${segregationCode}${idDonation}${iuv}`;
 
     const headersParams = {
         headers: {
