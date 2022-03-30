@@ -143,7 +143,7 @@ export function setup() {
     const urlBasePath = "https://api.uat.platform.pagopa.it/checkout/payments/v1";
 
     return {
-        useDonationsRptId: __ENV.DONATIONS_RPT ?? true,
+        useDonationsRptId: __ENV.DONATIONS_RPT !== undefined ? __ENV.DONATIONS_RPT : true,
         activationUrl: `${urlBasePath}/payment-activations`,
         verifyUrl: `${urlBasePath}/payment-requests`,
         activationStatusUrl: `${urlBasePath}/payment-activations`
