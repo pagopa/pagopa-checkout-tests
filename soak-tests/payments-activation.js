@@ -17,6 +17,119 @@ function setupV2() {
     return "https://api.uat.platform.pagopa.it/checkout/payments/v1";
 }
 
+function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
+    const tagCheckStatus = {pagoPaMethod: 'checkStatus'};
+    const checkTransactionStatusResponse = http.get(`${paymentManagerApiUrl}/payments/${idPayment}/actions/check`, headerParams, {tags: tagCheckStatus});
+
+    check(checkTransactionStatusResponse, {'checkStatus response is 200': r => r.status === 200}, {tags: tagCheckStatus});
+
+    if (checkTransactionStatusResponse.status !== 200) {
+        console.log("checkStatus: " + checkTransactionStatusResponse.status);
+        console.log(JSON.stringify(checkTransactionStatusResponse.json()));
+
+        return;
+    }
+
+    const tagStartSession = {pagoPaMethod: 'startSession'};
+    const startSessionBody = {
+        "data": {
+            "email": "foo@example.com",
+            "fiscalCode": "MRARSS90A01H501V",
+            idPayment
+        }
+    };
+    const startSessionResponse = http.post(`${paymentManagerApiUrl}/users/actions/start-session`, startSessionBody, headerParams, {tags: tagStartSession});
+    check(startSessionResponse, {'startSession response is 200': r => r.status === 200}, {tags: tagStartSession});
+
+    if (startSessionResponse.status !== 200) {
+        console.log("startSession: " + startSessionResponse.status);
+        console.log(JSON.stringify(startSessionResponse.json()));
+
+        return;
+    }
+
+    const {sessionToken} = startSessionResponse.json();
+    const paymentManagerAuthHeaders = {
+        headers: {
+            'Authorization': sessionToken
+        }
+    };
+    const paymentManagerheadersParams = Object.assign(headerParams, paymentManagerAuthHeaders);
+
+    const tagApproveTerms = {pagoPaMethod: "approveTerms"};
+    const approveTermsBody = {
+        "data": {
+            "privacy": true,
+            "terms": true
+        }
+    };
+    const approveTermsResponse = http.post(`${paymentManagerApiUrl}/users/actions/approve-terms`, approveTermsBody, paymentManagerheadersParams, {tags: tagStartSession});
+    check(approveTermsResponse, {'approveTerms response is 200': r => r.status === 200}, {tags: tagApproveTerms});
+
+    if (approveTermsResponse.status !== 200) {
+        console.log("approveTerms: " + approveTermsResponse.status);
+        console.log(JSON.stringify(approveTermsResponse.json()));
+
+        return;
+    }
+
+    const tagAddWallet = {pagoPaMethod: "addWallet"};
+    const addWalletBody = {
+        "data": {
+            "creditCard": {
+                "expireMonth": "12",
+                "expireYear": "30",
+                "holder": "Mario Rossi",
+                "pan": "5111114000023477",
+                "securityCode": "123"
+            },
+            "idPagamentoFromEC": "e1283f0e673b4789a2af87fd9b4043f4",
+            "type": "CREDIT_CARD"
+        }
+    };
+    const addWalletResponse = http.post(`${paymentManagerApiUrl}/wallet`, addWalletBody, paymentManagerheadersParams, {tags: tagAddWallet});
+    check(addWalletResponse, {'addWallet response is 200': r => r.status === 200}, {tags: tagAddWallet});
+
+    if (addWalletResponse.status !== 200) {
+        console.log("addWallet: " + addWalletResponse.status);
+        console.log(JSON.stringify(addWalletResponse.json()));
+
+        return;
+    }
+
+    const { idWallet } = addWalletResponse.json();
+    const tagPay3ds2 = {pagoPaMethod: "pay3ds2"};
+    const threedsData = {
+        "browserJavaEnabled": "false",
+        "browserLanguage": "it-IT",
+        "browserColorDepth": "24",
+        "browserScreenHeight": "1080",
+        "browserScreenWidth": "1920",
+        "browserTZ": "-120",
+        "browserAcceptHeader": "",
+        "browserIP": "",
+        "browserUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0",
+        "acctID": "ACCT_94187",
+        "deliveryEmailAddress": "foo@example.com",
+        "mobilePhone": null
+    };
+    const pay3ds2Body = {
+        "data": {
+            "cvv": "123",
+            "idWallet": 94187,
+            "threeDSData": JSON.stringify(threedsData),
+            "tipo": "web"
+        }
+    };
+    const payResponse = http.post(`${paymentManagerApiUrl}/payments/${idPayment}/actions/pay3ds2`, pay3ds2Body, paymentManagerheadersParams, { tags: tagPay3ds2 });
+    check(payResponse, {'pay3ds2 response is 200': r => r.status === 200}, {tags: tagPay3ds2});
+
+    if (payResponse.status !== 200) {
+        console.log("pay3ds2: " + payResponse.status);
+        console.log(JSON.stringify(payResponse.json()));
+    }
+}
+
 export function setup() {
     let urlBasePath;
     if (__ENV.API_VERSION === "v1") {
@@ -120,6 +233,10 @@ export default function ({ verifyUrl, activationUrl, activationStatusUrl }) {
             }
 
             check(activationStatusResponse, { 'activationStatusResponse status is 200': (r) => r.status === 200 }, tagActivation);
+
+            const { idPagamento: idPayment } = activationStatusResponse.json();
+
+            doTransaction("http://acardste.vaservices.eu/pp-restapi/v4", idPayment, headersParams);
         }
     }
 }
