@@ -23,13 +23,13 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
     }
 
     const tagStartSession = {pagoPaMethod: 'startSession'};
-    const startSessionBody = {
+    const startSessionBody = JSON.stringify({
         "data": {
             "email": "foo@example.com",
             "fiscalCode": "MRARSS90A01H501V",
             idPayment
         }
-    };
+    });
     const startSessionResponse = http.post(`${paymentManagerApiUrl}/users/actions/start-session`, startSessionBody, headerParams, {tags: tagStartSession});
     check(startSessionResponse, {'startSession response is 200': r => r.status === 200}, {tags: tagStartSession});
 
@@ -41,21 +41,21 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
     }
 
     const {sessionToken} = startSessionResponse.json();
-    const paymentManagerAuthHeaders = {
-        headers: {
-            'Authorization': sessionToken
-        }
+    const paymentManagerHeaderParams = {
+        headers: Object.assign(headerParams.headers, {
+            'Authorization': `Bearer ${sessionToken}`,
+        })
     };
     const paymentManagerheadersParams = Object.assign(headerParams, paymentManagerAuthHeaders);
 
     const tagApproveTerms = {pagoPaMethod: "approveTerms"};
-    const approveTermsBody = {
+    const approveTermsBody = JSON.stringify({
         "data": {
             "privacy": true,
             "terms": true
         }
-    };
-    const approveTermsResponse = http.post(`${paymentManagerApiUrl}/users/actions/approve-terms`, approveTermsBody, paymentManagerheadersParams, {tags: tagStartSession});
+    });
+    const approveTermsResponse = http.post(`${paymentManagerApiUrl}/users/actions/approve-terms`, approveTermsBody, paymentManagerHeaderParams, {tags: tagStartSession});
     check(approveTermsResponse, {'approveTerms response is 200': r => r.status === 200}, {tags: tagApproveTerms});
 
     if (approveTermsResponse.status !== 200) {
@@ -66,7 +66,7 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
     }
 
     const tagAddWallet = {pagoPaMethod: "addWallet"};
-    const addWalletBody = {
+    const addWalletBody = JSON.stringify({
         "data": {
             "creditCard": {
                 "expireMonth": "12",
@@ -78,8 +78,8 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
             "idPagamentoFromEC": "e1283f0e673b4789a2af87fd9b4043f4",
             "type": "CREDIT_CARD"
         }
-    };
-    const addWalletResponse = http.post(`${paymentManagerApiUrl}/wallet`, addWalletBody, paymentManagerheadersParams, {tags: tagAddWallet});
+    });
+    const addWalletResponse = http.post(`${paymentManagerApiUrl}/wallet`, addWalletBody, paymentManagerHeaderParams, {tags: tagAddWallet});
     check(addWalletResponse, {'addWallet response is 200': r => r.status === 200}, {tags: tagAddWallet});
 
     if (addWalletResponse.status !== 200) {
@@ -89,7 +89,7 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
         return;
     }
 
-    const { idWallet } = addWalletResponse.json();
+    const { idWallet } = addWalletResponse.json().data;
     const tagPay3ds2 = {pagoPaMethod: "pay3ds2"};
     const threedsData = {
         "browserJavaEnabled": "false",
@@ -105,27 +105,40 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
         "deliveryEmailAddress": "foo@example.com",
         "mobilePhone": null
     };
-    const pay3ds2Body = {
+    const pay3ds2Body = JSON.stringify({
         "data": {
             "cvv": "123",
-            "idWallet": 94187,
+            idWallet,
             "threeDSData": JSON.stringify(threedsData),
             "tipo": "web"
         }
-    };
-    const payResponse = http.post(`${paymentManagerApiUrl}/payments/${idPayment}/actions/pay3ds2`, pay3ds2Body, paymentManagerheadersParams, { tags: tagPay3ds2 });
+    });
+    const payResponse = http.post(`${paymentManagerApiUrl}/payments/${idPayment}/actions/pay3ds2`, pay3ds2Body, paymentManagerHeaderParams, { tags: tagPay3ds2 });
     check(payResponse, {'pay3ds2 response is 200': r => r.status === 200}, {tags: tagPay3ds2});
 
     if (payResponse.status !== 200) {
         console.log("pay3ds2: " + payResponse.status);
         console.log(JSON.stringify(payResponse.json()));
+
+        return;
+    }
+
+    const { id } = payResponse.json().data;
+    const idTransaction = Base64.encode(String(id));
+    const tagTransactionStatus = { pagoPaMethod: "getTransactionStatus" };
+    const transactionStatusResponse = http.get(`${paymentManagerApiUrl}/transactions/${idTransaction}/actions/check`, paymentManagerHeaderParams, { tags: tagTransactionStatus });
+    check(transactionStatusResponse, {'getTransactionStatus response is 200': r => r.status === 200}, {tags: tagTransactionStatus});
+
+    if (transactionStatusResponse.status !== 200) {
+        console.log("getTransactionStatus: " + transactionStatusResponse.status);
+        console.log(JSON.stringify(transactionStatusResponse.json()));
     }
 }
 
 function generateMockEcRptId() {
     const min = 302001000000000000;
     const max = 302001999999999999;
-    const urlBasePath = "https://api.uat.platform.pagopa.it";
+
     return `77777777777${Math.floor(Math.random() * (max - min + 1) + min)}`;
 }
 
@@ -143,7 +156,7 @@ export function setup() {
     const urlBasePath = "https://api.uat.platform.pagopa.it/checkout/payments/v1";
 
     return {
-        useDonationsRptId: __ENV.DONATIONS_RPT !== undefined ? __ENV.DONATIONS_RPT : true,
+        useDonationsRptId: __ENV.DONATIONS_RPT !== undefined ? (__ENV.DONATIONS_RPT === "true") : true,
         activationUrl: `${urlBasePath}/payment-activations`,
         verifyUrl: `${urlBasePath}/payment-requests`,
         activationStatusUrl: `${urlBasePath}/payment-activations`
@@ -233,7 +246,7 @@ export default function ({ useDonationsRptId, verifyUrl, activationUrl, activati
 
             const { idPagamento: idPayment } = activationStatusResponse.json();
 
-            doTransaction("http://acardste.vaservices.eu/pp-restapi/v4", idPayment, headersParams);
+            doTransaction("https://acardste.vaservices.eu/pp-restapi/v4", idPayment, headersParams);
         }
     }
 }
