@@ -46,7 +46,6 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
             'Authorization': `Bearer ${sessionToken}`,
         })
     };
-    const paymentManagerheadersParams = Object.assign(headerParams, paymentManagerAuthHeaders);
 
     const tagApproveTerms = {pagoPaMethod: "approveTerms"};
     const approveTermsBody = JSON.stringify({
@@ -180,9 +179,9 @@ export default function ({ useDonationsRptId, verifyUrl, activationUrl, activati
         tags: tagVerify
     });
 
-    check(verifyResponse, { 'verifyResponse status is 200': (r) => r.status === 200 }, tagVerify);
+    check(verifyResponse, { 'verifyResponse status is OK': (r) => r.status === 200 || (r.status === 400 && r.json().detail !== undefined) }, tagVerify);
 
-    if (verifyResponse.status != 200) {
+    if (verifyResponse.status != 200 && verifyResponse.status !== 400) {
 
         console.log("verifyResponse: " + verifyResponse.status);
         console.log(JSON.stringify(verifyResponse.json()));
@@ -210,9 +209,9 @@ export default function ({ useDonationsRptId, verifyUrl, activationUrl, activati
             }
         );
 
-        check(activationResponse, { 'activationResponse status is 200': (r) => r.status === 200 }, tagActivation);
+        check(activationResponse, { 'activationResponse status is OK': (r) => r.status === 200 || (r.status === 400 && r.json().detail !== undefined)}, tagActivation);
 
-        if (activationResponse.status != 200) {
+        if (activationResponse.status != 200 && activationResponse.status !== 400) {
 
             console.log("activationResponse: " + activationResponse.status);
             console.log(JSON.stringify(activationResponse.json()));
@@ -238,11 +237,14 @@ export default function ({ useDonationsRptId, verifyUrl, activationUrl, activati
                 sleep(2);
             }
 
-            if (activationStatusResponse.status != 200) {
-                console.log(activationStatusResponse.status);
-            }
+            check(activationStatusResponse, { 'activationStatusResponse status is OK': (r) => r.status === 200 || (r.status === 400 && r.json().detail !== undefined) }, tagActivation);
 
-            check(activationStatusResponse, { 'activationStatusResponse status is 200': (r) => r.status === 200 }, tagActivation);
+            if (activationStatusResponse.status != 200 && activationStatusResponse.status !== 400) {
+                console.log("activationStatusResponse: " + activationStatusResponse.status);
+
+                console.log(JSON.stringify(activationResponse.json()));
+                return;
+            }
 
             const { idPagamento: idPayment } = activationStatusResponse.json();
 
