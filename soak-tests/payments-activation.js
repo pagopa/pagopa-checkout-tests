@@ -131,20 +131,20 @@ const Base64 = {
 export const options = {
     stages: [
         { duration: '1m', target: 20 }, // ramp up to 20 users
-        { duration: '3m', target: 20 }, // stay at 20 for ~3 min
+        { duration: '1m', target: 20 }, // stay at 20 for ~3 min
         { duration: '1m', target: 0 }, // scale down. (optional)
     ],
 };
 
 function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
-    const tagCheckStatus = {pagoPaMethod: 'checkStatus'};
-    const checkTransactionStatusResponse = http.get(`${paymentManagerApiUrl}/payments/${idPayment}/actions/check`, headerParams, {tags: tagCheckStatus});
+    const tagCheckPayment = {pagoPaMethod: 'checkPayment'};
+    const checkPaymentResponse = http.get(`${paymentManagerApiUrl}/payments/${idPayment}/actions/check`, headerParams, {tags: tagCheckPayment});
 
-    check(checkTransactionStatusResponse, {'checkStatus response is 200': r => r.status === 200}, {tags: tagCheckStatus});
+    check(checkPaymentResponse, {'checkPayment response is 200': r => r.status === 200}, {tags: tagCheckPayment});
 
-    if (checkTransactionStatusResponse.status !== 200) {
-        console.log("checkStatus: " + checkTransactionStatusResponse.status);
-        console.log(JSON.stringify(checkTransactionStatusResponse.json()));
+    if (checkPaymentResponse.status !== 200) {
+        console.log("checkStatus: " + checkPaymentResponse.status);
+        console.log(JSON.stringify(checkPaymentResponse.json()));
 
         return;
     }
