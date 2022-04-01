@@ -201,7 +201,7 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
                 "pan": "5111114000023477",
                 "securityCode": "123"
             },
-            "idPagamentoFromEC": "e1283f0e673b4789a2af87fd9b4043f4",
+            "idPagamentoFromEC": idPayment,
             "type": "CREDIT_CARD"
         }
     });
@@ -224,8 +224,8 @@ function doTransaction(paymentManagerApiUrl, idPayment, headerParams) {
         "browserScreenHeight": "1080",
         "browserScreenWidth": "1920",
         "browserTZ": "-120",
-        "browserAcceptHeader": "",
-        "browserIP": "",
+        "browserAcceptHeader": "*/*",
+        "browserIP": "8.8.8.8",
         "browserUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0",
         "acctID": "ACCT_94187",
         "deliveryEmailAddress": "foo@example.com",
