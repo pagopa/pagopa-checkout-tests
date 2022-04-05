@@ -132,6 +132,9 @@ const execute_mock_authorization = async() => {
 }
 
 export const fillCardDataForm = async (cardData, useXPAY = false) => {
+
+  const unauthorizedCard = "4801769871971639";
+
   const cardNumberInput = '#number';
   const expirationDateInput = '#expirationDate';
   const ccvInput = '#cvv';
@@ -171,7 +174,7 @@ export const fillCardDataForm = async (cardData, useXPAY = false) => {
   const payBtn = await page.waitForXPath(payBtnXPath);
   await payBtn.click();
 
-  if(!useXPAY){
+  if(!useXPAY && unauthorizedCard !== cardData.number ){
     await page.waitForNavigation();
     await execute_mock_authorization();
   }

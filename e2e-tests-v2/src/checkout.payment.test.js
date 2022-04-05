@@ -1,5 +1,12 @@
 import { payNotice, acceptCookiePolicy, verifyPayment } from './utils/helpers.js';
 
+export const INVALID_CARD_DATA = {
+  number: '4801769871971639',
+  expirationDate: '1230',
+  ccv: '123',
+  holderName: 'Mario Rossi'
+}
+
 describe('Checkout payments tests -', () => {
   /**
    * Test input and configuration
@@ -13,12 +20,7 @@ describe('Checkout payments tests -', () => {
     ccv: '123',
     holderName: 'Mario Rossi',
   }
-  const INVALID_CARD_DATA = {
-    number: '4801769871971639',
-    expirationDate: '1230',
-    ccv: '123',
-    holderName: 'Mario Rossi'
-  }
+
   const VALID_NOTICE_CODE = Math.floor(
     Math.random() * (302001999999999999 - 302001000000000000 + 1) + 302001000000000000,
   ).toString();
