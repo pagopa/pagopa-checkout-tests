@@ -16,18 +16,23 @@ export function setup() {
 
 export default function (data) {
     // Values from env var.
-    var urlBasePath = "https://api.uat.platform.pagopa.it";
+    const urlBasePath = "https://api.uat.platform.pagopa.it";
  
     // Send new message
-    var tag = {
+    const tag = {
         pagoPaMethod: "GetActivationStatus",
     }; 
-    var url = `${urlBasePath}/checkout/payments/v1/payment-activations/51665c20b01411ec8b020996dc93061d`;
-    var r = http.get(url, {
+
+    var notFoundCcp = "";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+   
+    for (var i = 0; i < 32; i++)
+        notFoundCcp += possible.charAt(Math.floor(Math.random() * possible.length));
+     
+    const url = `${urlBasePath}/checkout/payments/v1/payment-activations/${notFoundCcp}`;
+    const r = http.get(url, {
         tags: tag,
     });
     
-    console.log("Get activation status " + r.status);
-    check(r, { 'status is 200': (r) => r.status === 200 }, tag);
- 
+    check(r, { 'status is 404': (r) => r.status === 404 }, tag);
 }
