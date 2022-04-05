@@ -49,7 +49,7 @@ export const acceptCookiePolicy = async () => {
 };
 
 export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
-  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[2]/button';
+  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[1]/button';
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
@@ -60,13 +60,14 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
   await fillEmailForm(email);
   await choosePaymentMethod('card');
   await fillCardDataForm(cardData);
+  await new Promise((r) => setTimeout(r, 2000));
 
   const message = await page.waitForXPath(resultMessageXPath);
   return await message.evaluate(el => el.textContent);
 };
 
 export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => {
-  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[2]/button';
+  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[1]/button';
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
@@ -85,7 +86,7 @@ export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => 
 export const fillEmailForm = async email => {
   const emailInput = '#email';
   const confirmEmailInput = '#confirmEmail';
-  const continueBtnXPath = '/html/body/div[1]/div/div[2]/div/div[2]/form/div[2]/div[2]';
+  const continueBtnXPath = '/html/body/div[1]/div/div[2]/div/div[2]/form/div[2]/div[1]/button';
 
   await page.waitForSelector(emailInput);
   await page.click(emailInput);
@@ -112,13 +113,31 @@ export const choosePaymentMethod = async method => {
   }
 };
 
+const execute_mock_authorization = async() => {
+  const dataInput = '#challengeDataEntry';
+  const confirmButton = '#confirm'
+  const mockOTPCode = '123456';
+  const verificationStep = 2;
+
+  for(let _ =0; _ < verificationStep;  _++){
+    await page.waitForSelector(dataInput, {visible: true});
+    await page.click(dataInput);
+    await page.keyboard.type(mockOTPCode);
+
+    await page.waitForSelector(confirmButton);
+    await page.click(confirmButton);
+
+    await page.waitForNavigation();
+  }
+}
+
 export const fillCardDataForm = async (cardData, useXPAY = false) => {
   const cardNumberInput = '#number';
   const expirationDateInput = '#expirationDate';
   const ccvInput = '#cvv';
   const holderNameInput = '#name';
-  const continueBtnXPath = '/html/body/div[1]/div/div[2]/div/div[2]/form/div[2]/div[2]';
-  const payBtnXPath = '/html/body/div[1]/div/div[2]/div/div[7]/div[2]/button';
+  const continueBtnXPath = '/html/body/div[1]/div/div[2]/div/div[2]/form/div[2]/div[1]';
+  const payBtnXPath = '/html/body/div[1]/div/div[2]/div/div[7]/div[1]/button';
   const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
 
   await page.waitForSelector(cardNumberInput);
@@ -151,4 +170,9 @@ export const fillCardDataForm = async (cardData, useXPAY = false) => {
 
   const payBtn = await page.waitForXPath(payBtnXPath);
   await payBtn.click();
+
+  if(!useXPAY){
+    await page.waitForNavigation();
+    await execute_mock_authorization();
+  }
 };
