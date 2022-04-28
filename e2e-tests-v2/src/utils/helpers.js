@@ -102,7 +102,7 @@ export const fillEmailForm = async email => {
 };
 
 export const choosePaymentMethod = async method => {
-  const cardOptionXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div[1]/div[1]/div/div';
+  const cardOptionXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div[1]/div[1]/div';
 
   switch (method) {
     case 'card': {
