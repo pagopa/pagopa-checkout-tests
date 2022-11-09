@@ -27,14 +27,36 @@ stages:
             displayName: 'newman installation'
 
           - script: |
-              newman run api-tests/checkout-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
+              newman run api-tests/checkout-tests/checkout-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
             displayName: 'Run api test'
             continueOnError: true 
 
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
-              testResultsFiles: '**/*-TEST.xml' 
+              testResultsFiles: '**/checkout-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+
+  - stage: API_Tests_Carts
+    pool:
+      vmImage: 'ubuntu-latest'
+    dependsOn: Setup_Project
+    jobs:
+      - job: api_tests
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
+
+          - script: |
+              newman run api-tests/cart-tests/cart-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
+            displayName: 'Run api test'
+            continueOnError: true
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/cart-api-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
 
   - stage: E2E_Tests_Checkout
