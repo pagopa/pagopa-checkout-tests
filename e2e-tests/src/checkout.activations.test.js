@@ -14,10 +14,10 @@ describe('Checkout payment activation tests', () => {
   const VALID_NOTICE_CODE = Math.floor(Math.random() * (302001999999999999 - 302001000000000000 + 1) + 302001000000000000).toString();
 
   /**
-   * Increase default test timeout (5000ms)
+   * Increase default test timeout (60000ms)
    * to support entire payment flow
    */
-  jest.setTimeout(30000);
+  jest.setTimeout(60000);
 
   beforeEach(async () => {
     await page.goto(IO_PAY_PORTAL_URL);
