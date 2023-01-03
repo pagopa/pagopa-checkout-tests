@@ -24,12 +24,9 @@ export const fillPaymentNotificationForm = async (noticeCode, fiscalCode) => {
 };
 
 export const verifyPaymentAndGetError = async (noticeCode, fiscalCode) => {
-  const errorMessageXPath = '/html/body/div[2]/div[3]/div/div/div/div[1]';
-
-  await acceptCookiePolicy();
+  const errorMessageXPath = '/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
   const errorMessageElem = await page.waitForXPath(errorMessageXPath);
-
   return await errorMessageElem.evaluate(el => el.textContent);
 };
 
@@ -52,7 +49,6 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
   const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div[6]/div[1]/button';
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
-
   const payNoticeBtn = await page.waitForXPath(payNoticeBtnXPath);
   await payNoticeBtn.click();
   await fillEmailForm(email);
@@ -172,7 +168,7 @@ export const fillCardDataForm = async (cardData, useXPAY = false) => {
   const payBtn = await page.waitForXPath(payBtnXPath);
   await payBtn.click();
 
-  if(!useXPAY && unauthorizedCard !== cardData.number ){
+  if(!useXPAY && unauthorizedCard !== cardData.number){
     await page.waitForNavigation();
     await execute_mock_authorization();
   }
