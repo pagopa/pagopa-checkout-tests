@@ -1,11 +1,11 @@
 
-import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./helpers.js";
+import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./utils/helpers";
 
 describe("Checkout payment activation tests", () => {
   /**
    * Test input and configuration
    */
-  const CHECKOUT_URL = "https://dev.checkout.pagopa.it/";
+  const CHECKOUT_URL = "http://dev.checkout.pagopa.it/";
   const VALID_FISCAL_CODE = "77777777777";
   const EMAIL = "mario.rossi@email.com";
   const VALID_CARD_DATA = {
@@ -15,8 +15,8 @@ describe("Checkout payment activation tests", () => {
     holderName: "Mario Rossi",
   };
   const VALID_NOTICE_CODE = Math.floor(
-    Math.random() * (302001999999999999 - 302001000000000000 + 1) +
-      302001000000000000
+    Math.random() * (311111999999999999 - 311111000000000000 + 1) +
+      311111000000000000
   ).toString();
   
   const PA_IRRAGGIUNGIBILE_NOTICE_CODE = "302016723749670009";
@@ -48,7 +48,7 @@ describe("Checkout payment activation tests", () => {
      * 1. Payment with valid notice code
     */
     const resultMessage = await payNotice(
-      VALID_NOTICE_CODE,
+      "311111160078373950",
       VALID_FISCAL_CODE,
       EMAIL,
       VALID_CARD_DATA
