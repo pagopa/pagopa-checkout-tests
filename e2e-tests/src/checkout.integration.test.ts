@@ -48,7 +48,7 @@ describe("Checkout payment activation tests", () => {
      * 1. Payment with valid notice code
     */
     const resultMessage = await payNotice(
-      "311111160078373950",
+      VALID_NOTICE_CODE,
       VALID_FISCAL_CODE,
       EMAIL,
       VALID_CARD_DATA
