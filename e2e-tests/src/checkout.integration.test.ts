@@ -5,7 +5,7 @@ describe("Checkout payment activation tests", () => {
   /**
    * Test input and configuration
    */
-  const CHECKOUT_URL = "http://dev.checkout.pagopa.it/";
+  const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
   const VALID_FISCAL_CODE = "77777777777";
   const INVALID_FISCAL_CODE = "77777777776"
   const EMAIL = "mario.rossi@email.com";
