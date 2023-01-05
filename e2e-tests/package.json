@@ -1,8 +1,8 @@
 {
   "name": "user-interface-tests",
   "version": "1.0.0",
-  "description": "Test automation for io-pay",
-  "author": "Simone Infante",
+  "description": "Test automation for Checkout FE",
+  "author": "Fernando Granato",
   "license": "MIT",
   "scripts": {
     "test": "dotenv -e .env jest --detectOpenHandles --reporters=jest-junit",

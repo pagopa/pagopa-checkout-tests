@@ -1,230 +1,175 @@
-export const activatePayment = async (validNoticeCode, validFiscalCodePa) => {
-  const noticeCodeTextInput = '#paymentNoticeCode';
-  await page.waitForSelector(noticeCodeTextInput);
-  await page.click(noticeCodeTextInput);
-  await page.keyboard.type(validNoticeCode);
+export const selectKeyboardForm = async () => {
+  const selectFormXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/div/div/div[1]';
 
-  const fiscalCodePaTextInput = '#organizationId';
-  await page.waitForSelector(fiscalCodePaTextInput);
-  await page.click(fiscalCodePaTextInput);
-  await page.keyboard.type(validFiscalCodePa);
-
-  const verifyButton = '#verify';
-  await page.waitForSelector(verifyButton);
-  await page.click(verifyButton);
-
-
-  await page.waitForResponse(
-    response => response.request().method() === 'GET' && /payment-requests/.test(response.request().url()),
-  );
-
-  const infoImporto = '#importo';
-  await page.waitForSelector(infoImporto);
-  await page.click(infoImporto);
-
-  const activeButton = '#active';
-  await page.waitForSelector(activeButton);
-  await page.click(activeButton);
+  const selectFormBtn = await page.waitForXPath(selectFormXPath);
+  await selectFormBtn.click();
 };
 
-export const payAndGetSuccessMessage = async (
-  validUserMail,
-  creditCardHolder,
-  creditCardNumber,
-  creditCardExpirationDate,
-  creditCardSecureCode,
-) => {
-  /**
-   * 1. index page
-   */
-  await page.waitForResponse(
-    response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
-  );
-  const usetMailTextInput = '#useremail';
-  await page.waitForSelector(usetMailTextInput);
-  await page.click(usetMailTextInput);
-  await page.keyboard.type(validUserMail);
+export const fillPaymentNotificationForm = async (noticeCode, fiscalCode) => {
+  const noticeCodeTextInput = '#billCode';
+  const fiscalCodeTextInput = '#cf';
+  const verifyBtn = '#paymentNoticeButtonContinue';
 
-  const emailButton = '#emailform > div.windowcont__bottom > div > div > button';
-  await page.waitForSelector(emailButton);
-  await page.click(emailButton);
+  await selectKeyboardForm();
+  await page.waitForSelector(noticeCodeTextInput);
+  await page.click(noticeCodeTextInput);
+  await page.keyboard.type(noticeCode);
 
-  /**
-   * 2. inputcard page
-   */
-  const creditCardHolderFieldS = '#creditcardname';
-  await page.waitForSelector(creditCardHolderFieldS);
-  await page.focus(creditCardHolderFieldS);
-  await page.keyboard.type(creditCardHolder);
+  await page.waitForSelector(fiscalCodeTextInput);
+  await page.click(fiscalCodeTextInput);
+  await page.keyboard.type(fiscalCode);
 
-  const creditCardPANFieldS = '#creditcardnumber';
-  await page.waitForSelector(creditCardPANFieldS);
-  await page.focus(creditCardPANFieldS);
-  await page.keyboard.type(creditCardNumber);
+  await page.waitForSelector(verifyBtn);
+  await page.click(verifyBtn);
+};
 
-  const creditCardExpDateFieldS = '#creditcardexpirationdate';
-  await page.waitForSelector(creditCardExpDateFieldS);
-  await page.focus(creditCardExpDateFieldS);
-  await page.keyboard.type(creditCardExpirationDate);
+export const verifyPaymentAndGetError = async (noticeCode, fiscalCode) => {
+  const errorMessageXPath = '/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div';
+  await fillPaymentNotificationForm(noticeCode, fiscalCode);
+  const errorMessageElem = await page.waitForXPath(errorMessageXPath);
+  return await errorMessageElem.evaluate(el => el.textContent);
+};
 
-  const creditCardSecurCodeFieldS = '#creditcardsecurcode';
-  await page.waitForSelector(creditCardSecurCodeFieldS);
-  await page.focus(creditCardSecurCodeFieldS);
-  await page.keyboard.type(creditCardSecureCode);
+export const verifyPayment = async (noticeCode, fiscalCode) => {
+  await fillPaymentNotificationForm(noticeCode, fiscalCode);
+};
 
-  const privacyToggleS = '#creditcardform #privacyToggler';
-  await page.waitForSelector(privacyToggleS);
-  await page.click(privacyToggleS);
+export const acceptCookiePolicy = async () => {
+  const acceptPolicyBtn = '#onetrust-accept-btn-handler';
+  const darkFilterXPath = '/html/body/div[2]/div[1]';
 
-  /**
-   * 3. check page
-   */
-  const submitWalletbuttonS =
-    '#creditcardform > .windowcont__bottom > .container > .windowcont__bottom__wrap > .btn-primary';
-  await page.waitForSelector(submitWalletbuttonS);
-  await page.click(submitWalletbuttonS);
+  await page.waitForSelector(acceptPolicyBtn);
+  await page.click(acceptPolicyBtn);
+
+  // Avoid click on form button when dark filter is still enabled
+  await page.waitForXPath(darkFilterXPath, { hidden: true });
+};
+
+export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
+  const payNoticeBtnSelector = "#paymentSummaryButtonPay";
+  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
+  await fillPaymentNotificationForm(noticeCode, fiscalCode);
+  const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
+  await payNoticeBtn.click();
+  await fillEmailForm(email);
+  await choosePaymentMethod('card');
+  await fillCardDataForm(cardData);
+  await new Promise((r) => setTimeout(r, 2000));
+
+  const message = await page.waitForXPath(resultMessageXPath);
+  return await message.evaluate(el => el.textContent);
+};
+
+export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => {
+  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[1]/button';
+  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
+  await fillPaymentNotificationForm(noticeCode, fiscalCode);
+
+  const payNoticeBtn = await page.waitForXPath(payNoticeBtnXPath);
+  await payNoticeBtn.click();
   await page.waitForNavigation();
+  
+  await fillEmailForm(email);
+  await choosePaymentMethod('card');
+  await fillCardDataForm(cardData, true);
 
-  const payButtonS = '#checkout > .windowcont__bottom > .container > .windowcont__bottom__wrap > .btn-primary';
+  const message = await page.waitForXPath(resultMessageXPath);
+  return await message.evaluate(el => el.textContent);
+};
 
-  await page.waitForSelector(payButtonS);
+export const fillEmailForm = async email => {
+  const emailInput = '#email';
+  const confirmEmailInput = '#confirmEmail';
+  const continueBtnSelector = "#paymentEmailPageButtonContinue";
 
-  const [pay3ds2Response] = await Promise.all([
-    page.waitForResponse(
-      response => response.request().method() === 'POST' && /pay3ds2/.test(response.request().url()),
-    ),
-    page.click(payButtonS),
-    page.waitForNavigation(),
-  ]);
+  await page.waitForSelector(emailInput);
+  await page.click(emailInput);
+  await page.keyboard.type(email);
 
-  expect(pay3ds2Response.status()).toEqual(200);
+  await page.waitForSelector(confirmEmailInput);
+  await page.click(confirmEmailInput);
+  await page.keyboard.type(email);
 
-  // Polling to wait final transaction result
-  let waitForXpayHtmlUrl = true;
-  while (waitForXpayHtmlUrl) {
-    const [transactionCheck] = await Promise.all([
-      page.waitForResponse(
-        response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
-      ),
-    ]);
-    const jsonResponse = (await transactionCheck.json());
+  const continueBtn = await page.waitForSelector(continueBtnSelector);
+  await continueBtn.click();
 
-    // eslint-disable-next-line no-undef
-    waitForXpayHtmlUrl = jsonResponse.data.finalStatus === false && !jsonResponse.data.xpayHtml;
+};
+
+export const choosePaymentMethod = async method => {
+  const cardOptionXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div/div[1]/div[1]/div';
+
+  switch (method) {
+    case 'card': {
+      const cardOptionBtn = await page.waitForXPath(cardOptionXPath);
+      await cardOptionBtn.click();
+      break;
+    }
+  }
+};
+
+const execute_mock_authorization = async() => {
+  const dataInput = '#challengeDataEntry';
+  const confirmButton = '#confirm'
+  const mockOTPCode = '123456';
+  const verificationStep = 2;
+
+  for(let _ =0; _ < verificationStep;  _++){
+    await page.waitForSelector(dataInput, {visible: true});
+    await page.click(dataInput);
+    await page.keyboard.type(mockOTPCode);
+
+    await page.waitForSelector(confirmButton);
+    await page.click(confirmButton);
+
+    await page.waitForNavigation();
+  }
+}
+
+export const fillCardDataForm = async (cardData, useXPAY = false) => {
+
+  const unauthorizedCard = "4801769871971639";
+
+  const cardNumberInput = '#number';
+  const expirationDateInput = '#expirationDate';
+  const ccvInput = '#cvv';
+  const holderNameInput = '#name';
+  const continueBtnXPath = "button[type=submit]";
+  const payBtnSelector = "#paymentCheckPageButtonPay";
+  const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
+
+  await page.waitForSelector(cardNumberInput);
+  await page.click(cardNumberInput);
+  await page.keyboard.type(cardData.number);
+
+  await page.waitForSelector(expirationDateInput);
+  await page.click(expirationDateInput);
+  await page.keyboard.type(cardData.expirationDate);
+
+  await page.waitForSelector(ccvInput);
+  await page.click(ccvInput);
+  await page.keyboard.type(cardData.ccv);
+
+  await page.waitForSelector(holderNameInput);
+  await page.click(holderNameInput);
+  await page.keyboard.type(cardData.holderName);
+
+  const continueBtn = await page.waitForSelector(continueBtnXPath);
+  await continueBtn.click();
+
+  if(useXPAY){
+    const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
+    await selectPSPBtn.click();
+
+    const XPAYBtn = await page.$x("//div[contains(., 'XPAY')]");
+    console.log(await page.evaluate(XPAYBtn))
+    // await XPAYBtn.click();
   }
 
-  // Polling to wait final transaction result
-  let waitForFinalStatus = true;
+  const payBtn = await page.waitForSelector(payBtnSelector);
+  await payBtn.click();
 
-  /**
-   * 4. response page - polling
-   */
-  let jsonResponse = undefined;
-  while (waitForFinalStatus) {
-    const [transactionCheck] = await Promise.all([
-      page.waitForResponse(
-        response => response.request().method() === 'GET' && /actions\/check/.test(response.request().url()),
-      ),
-    ]);
-    jsonResponse = await transactionCheck.json();
-
-    waitForFinalStatus = jsonResponse.data.finalStatus === false;
+  if(!useXPAY && unauthorizedCard !== cardData.number){
+    await page.waitForNavigation();
+    await execute_mock_authorization();
   }
-
-  /**
-   * 5. response page - return final succes result of transaction
-   */
-  expect(jsonResponse.data.finalStatus).toEqual(true);
-  expect(jsonResponse.data.idStatus).toEqual(3);
-  const finalResult =
-    'body > div > div.container.flex-fill.main > div > div > div.windowcont__response > div > div.h3.text-center';
-  await page.waitForSelector(finalResult);
-  const element = await page.$(finalResult);
-  const successDescription = await page.evaluate(el => el.textContent, element);
- 
-  return successDescription;
-};
-
-
-export const verifyPaymentAndGetError = async (noticeCode, fiscalCodePa) => {
-
-  const noticeCodeTextInput = '#paymentNoticeCode';
-  await page.waitForSelector(noticeCodeTextInput);
-  await page.click(noticeCodeTextInput);
-  await page.keyboard.type(noticeCode);
-
-  const fiscalCodePaTextInput = '#organizationId';
-  await page.waitForSelector(fiscalCodePaTextInput);
-  await page.click(fiscalCodePaTextInput);
-  await page.keyboard.type(fiscalCodePa);
-
-  const verifyButton = '#verify';
-  await page.waitForSelector(verifyButton);
-  await page.click(verifyButton);
-                     
-  const errorText = 'body > div.tingle-modal.tingle-modal--visible > div > div.tingle-modal-box__content > div.d-flex > h4';
-  await page.waitForSelector(errorText);
-  const element = await page.$(errorText);
-  const errorDescription = await page.evaluate(el => el.textContent, element);
-
-  return errorDescription;
-};
-
-export const verifyPaymentAndGetErrorCode = async (noticeCode, fiscalCodePa) => {
-
-  const noticeCodeTextInput = '#paymentNoticeCode';
-  await page.waitForSelector(noticeCodeTextInput);
-  await page.click(noticeCodeTextInput);
-  await page.keyboard.type(noticeCode);
-
-  const fiscalCodePaTextInput = '#organizationId';
-  await page.waitForSelector(fiscalCodePaTextInput);
-  await page.click(fiscalCodePaTextInput);
-  await page.keyboard.type(fiscalCodePa);
-
-  const verifyButton = '#verify';
-  await page.waitForSelector(verifyButton);
-  await page.click(verifyButton);
-                     
-  const errorText = 'body > div.tingle-modal.tingle-modal--visible > div > div.tingle-modal-box__content > div.mb-3.modalwindow__content > div > div > b';
-  await page.waitForSelector(errorText);
-  const element = await page.$(errorText);
-  const errorDescription = await page.evaluate(el => el.textContent, element);
-
-  return errorDescription;
-};
-
-export const acceptCookiesBanner = async() => {
-  const cookiesBanner = '#onetrust-banner-sdk';
-  const cookiesBannerAcceptBtn = '#onetrust-accept-btn-handler';
-  const overlayFilter = '#onetrust-consent-sdk > div.onetrust-pc-dark-filter.ot-fade-in'
-  checkCookieBanner();
-
-  await page.click(cookiesBannerAcceptBtn);
-  
-  await page.waitForResponse(
-    response => response.request().method() === 'POST' && /consentreceipts/.test(response.request().url()),
-  );
-
-  /*
-  * Wait until the banner is no more visible
-  */
-  await page.waitForSelector(cookiesBanner, {visible: false})
-  await page.waitForSelector(overlayFilter, {hidden: true})
-};
-
-export const checkCookieBanner = async() => {
-  const cookiesBanner = '#onetrust-banner-sdk';
-  
-  await page.waitForSelector(cookiesBanner, {visible: true});
-};
-
-export const showCookiesPreferences = async() => {
-  const showPreferencesBtn = '#onetrust-pc-btn-handler';
-  const preferencesDialog = '#onetrust-pc-sdk'
-
-  await page.waitForSelector(showPreferencesBtn, {visible: true});
-  await page.click(showPreferencesBtn);
-
-  await page.waitForSelector(preferencesDialog, {visible: true})
 };
