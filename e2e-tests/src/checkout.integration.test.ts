@@ -6,24 +6,25 @@ describe("Checkout payment activation tests", () => {
    * Test input and configuration
    */
   const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
-  const VALID_FISCAL_CODE = "77777777777";
-  const INVALID_FISCAL_CODE = "77777777776"
-  const EMAIL = "mario.rossi@email.com";
+  const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
+  const INVALID_FISCAL_CODE = String(process.env.INVALID_FISCAL_CODE)
+  const EMAIL = String(process.env.EMAIL);
   const VALID_CARD_DATA = {
-    number: "4333334000098346",
-    expirationDate: "1230",
-    ccv: "123",
-    holderName: "Mario Rossi",
+    number: String(process.env.CARD_NUMBER),
+    expirationDate: String(process.env.CARD_EXPIRATION_DATE),
+    ccv: String(process.env.CARD_CCV),
+    holderName: String(process.env.CARD_HOLDER_NAME)
   };
+
+  const VALID_RANGE_END_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat("9999999999999"));
+  const VALID_RANGE_START_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat("0000000000000"));
+
   const VALID_NOTICE_CODE = Math.floor(
-    Math.random() * (311111999999999999 - 311111000000000000 + 1) +
-      311111000000000000
+    Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) +
+    VALID_RANGE_START_NOTICE_CODE
   ).toString();
   
-  const PA_IRRAGGIUNGIBILE_NOTICE_CODE = "302016723749670009";
-  const PAA_PAGAMENTO_IN_CORSO_NOTICE_CODE = "302016723749670010";
-  const PPT_SINTASSI_XSD_NOTICE_CODE = "302016723749670011";
-  const PPT_SYSTEM_ERROR_NOTICE_CODE = "302016723749670012";
+  const PA_IRRAGGIUNGIBILE_NOTICE_CODE = String(process.env.PA_IRRAGGIUNGIBILE_NOTICE_CODE)
 
   /**
    * Increase default test timeout (60000ms)
