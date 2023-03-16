@@ -85,24 +85,20 @@
 			"response": []
 		},
 		{
-			"name": "Create transaction",
+			"name": "Payment Verify - PPT_DOMINIO_SCONOSCIUTO",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Activation - Status code is 200 with valid json response\", function(){",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
+							"    ",
+							"    const responseJson = pm.response.json();",
+							"",
+							"    pm.expect(responseJson.detail).to.include(\"PPT_DOMINIO_SCONOSCIUTO\");",
+							"",
+							"    pm.response.to.have.status(400);",
 							"});"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"postman.setNextRequest(\"Payment Activation Polling - Succes\")"
 						],
 						"type": "text/javascript"
 					}
@@ -112,19 +108,10 @@
 				"disabledSystemHeaders": {}
 			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\"rptId\" : \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n\"importoSingoloVersamento\" : 120000,\n\"codiceContestoPagamento\" : \"{{CODICE_CONTESTO_PAGAMENTO}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -132,7 +119,14 @@
 						"ecommerce",
 						"checkout",
 						"v1",
-						"transactions"
+						"payment-requests",
+						"{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "token"
+						}
 					]
 				}
 			},
@@ -187,20 +181,46 @@
 			"response": []
 		},
 		{
-			"name": "Payment Verify - PPT_DOMINIO_SCONOSCIUTO",
+			"name": "Create transaction",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
-							"    ",
-							"    const responseJson = pm.response.json();",
+							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function() {",
+							"    pm.response.to.have.status(200);",
 							"",
-							"    pm.expect(responseJson.detail).to.include(\"PPT_DOMINIO_SCONOSCIUTO\");",
+							"    const response = pm.response.json();",
+							"    const expectedWithoutAuthTokenAndTransactionId = {",
+							"        \"status\": \"ACTIVATED\",",
+							"        \"payments\": [",
+							"            {",
+							"                \"paymentToken\": \"6ea67cb831c14e15a7e2705a206a1a5c\",",
+							"                \"rptId\": \"77777777777311116723749670000\",",
+							"                \"reason\": \"test\",",
+							"                \"amount\": 100",
+							"            }",
+							"        ],",
+							"        \"clientId\": \"CHECKOUT\",",
+							"    };",
 							"",
-							"    pm.response.to.have.status(400);",
+							"    console.log(uuid());",
+							"",
+							"    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
+							"    pm.expect(response.payments).eql(expectedWithoutAuthTokenAndTransactionId.payments);",
+							"    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
+							"    pm.expect(response.authToken).to.be.a(\"string\");",
+							"    pm.expect(response.transactionId).to.be.a(\"string\");",
 							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -210,10 +230,19 @@
 				"disabledSystemHeaders": {}
 			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"email\": \"mario.rossi@example.com\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -221,14 +250,7 @@
 						"ecommerce",
 						"checkout",
 						"v1",
-						"payment-requests",
-						"{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}"
-					],
-					"query": [
-						{
-							"key": "recaptchaResponse",
-							"value": "token"
-						}
+						"transactions"
 					]
 				}
 			},
