@@ -204,8 +204,6 @@
 							"        \"clientId\": \"CHECKOUT\",",
 							"    };",
 							"",
-							"    console.log(uuid());",
-							"",
 							"    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
 							"    pm.expect(response.payments).eql(expectedWithoutAuthTokenAndTransactionId.payments);",
 							"    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
@@ -252,6 +250,23 @@
 						"v1",
 						"transactions"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request payment authorization",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 100,\n  \"fee\": 99999999,\n  \"paymentInstrumentId\": \"string\",\n  \"pspId\": \"string\",\n  \"language\": \"IT\",\n  \"details\": {\n    \"detailType\": \"postepay\",\n    \"accountEmail\": \"user@example.com\"\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				}
 			},
 			"response": []
@@ -525,6 +540,68 @@
 						"transactions",
 						"NzA5MDEwMjg3NQ==",
 						"method"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Compute fee for credit card payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Fee compute - Status code is 200 with valid json response\", function() {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    const expectedWithoutBundles = {",
+							"        \"paymentMethodName\": \"Carte\",",
+							"        \"paymentMethodStatus\": \"ENABLED\",",
+							"        \"belowThreshold\": false",
+							"    };",
+							"",
+							"    pm.expect(response.paymentMethodName).eql(expectedWithoutBundles.paymentMethodName);",
+							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
+							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
+							"    pm.expect(response.bundles).to.be.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/fee/calculate",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"platform",
+						"pagopa",
+						"it"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"e7058cac-5e1a-4002-8994-5bab31e9f385",
+						"fee",
+						"calculate"
 					]
 				}
 			},
