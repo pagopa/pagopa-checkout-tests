@@ -16,11 +16,25 @@
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
-							"    pm.environment.set(\"CODICE_CONTESTO_PAGAMENTO\", responseJson.codiceContestoPagamento);",
-							"",
-							"    pm.expect(responseJson.importoSingoloVersamento).greaterThan(0);",
-							"",
 							"    pm.response.to.have.status(200);",
+							"",
+							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
+							"    const dueDate = new Date().toISOString().split('T')[0];",
+							"",
+							"    const expected = {",
+							"        \"amount\": 100,",
+							"        \"rptId\": requestRptId,",
+							"        \"paFiscalCode\": \"77777777777\",",
+							"        \"paName\": \"company PA\",",
+							"        \"description\": \"/RFB/00202200000217527/5.00/TXT/\",",
+							"        \"dueDate\": dueDate",
+							"    };",
+							"",
+							"    pm.expect(responseJson.amount).eql(expected.amount);",
+							"    pm.expect(responseJson.rptId).eql(expected.rptId);",
+							"    pm.expect(responseJson.paFiscalCode).eql(expected.paFiscalCode);",
+							"    pm.expect(responseJson.description).eql(expected.description);",
+							"    pm.expect(responseJson.dueDate).eql(expected.dueDate);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -30,7 +44,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"VALID_NOTICE_CODE\", _.random(302001000000000000, 302001999999999999));",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", _.random(311116723749670000, 311116723749670300));",
 							"postman.setNextRequest(\"Payment Activation - Succes\");"
 						],
 						"type": "text/javascript"
@@ -49,14 +63,13 @@
 					"urlencoded": []
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
+						"ecommerce",
 						"checkout",
-						"payments",
 						"v1",
 						"payment-requests",
 						"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}"
@@ -152,14 +165,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-requests/{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
+						"ecommerce",
 						"checkout",
-						"payments",
 						"v1",
 						"payment-requests",
 						"{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}"
@@ -201,14 +213,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
+						"ecommerce",
 						"checkout",
-						"payments",
 						"v1",
 						"payment-requests",
 						"{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}"
