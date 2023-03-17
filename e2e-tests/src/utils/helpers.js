@@ -8,9 +8,8 @@ export const selectKeyboardForm = async () => {
 export const fillPaymentNotificationForm = async (noticeCode, fiscalCode) => {
   const noticeCodeTextInput = '#billCode';
   const fiscalCodeTextInput = '#cf';
-  const verifyBtn = '#paymentNoticeButtonContinue';
-
-  await selectKeyboardForm();
+  
+  // await selectKeyboardForm();
   await page.waitForSelector(noticeCodeTextInput);
   await page.click(noticeCodeTextInput);
   await page.keyboard.type(noticeCode);
@@ -18,20 +17,42 @@ export const fillPaymentNotificationForm = async (noticeCode, fiscalCode) => {
   await page.waitForSelector(fiscalCodeTextInput);
   await page.click(fiscalCodeTextInput);
   await page.keyboard.type(fiscalCode);
+};
 
+export const clearPaymentNotificationForm = async () => {
+  const noticeCodeTextInput = '#billCode';
+  const fiscalCodeTextInput = '#cf';
+  
+  const actualNoticeCodeTextInputValue = await page.$eval(noticeCodeTextInput, ({ value }) => value);
+  await page.click(noticeCodeTextInput);
+  [...actualNoticeCodeTextInputValue].forEach( async () => {
+    await page.keyboard.press('Backspace');
+  });
+
+  const actualfiscalCodeTextInputValue = await page.$eval(fiscalCodeTextInput, ({ value }) => value);
+  await page.click(fiscalCodeTextInput);
+  [...actualfiscalCodeTextInputValue].forEach( async () => {
+    await page.keyboard.press('Backspace');
+  });
+};
+
+export const confirmPaymentNotificationForm = async () => {
+  const verifyBtn = '#paymentNoticeButtonContinue';
   await page.waitForSelector(verifyBtn);
   await page.click(verifyBtn);
-};
+} 
 
 export const verifyPaymentAndGetError = async (noticeCode, fiscalCode) => {
   const errorMessageXPath = '/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
+  await confirmPaymentNotificationForm();
   const errorMessageElem = await page.waitForXPath(errorMessageXPath);
   return await errorMessageElem.evaluate(el => el.textContent);
 };
 
 export const verifyPayment = async (noticeCode, fiscalCode) => {
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
+  await confirmPaymentNotificationForm();
 };
 
 export const acceptCookiePolicy = async () => {
@@ -49,6 +70,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
   const payNoticeBtnSelector = "#paymentSummaryButtonPay";
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
+  await confirmPaymentNotificationForm();
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
   await payNoticeBtn.click();
   await fillEmailForm(email);
