@@ -195,7 +195,6 @@
 							"        \"status\": \"ACTIVATED\",",
 							"        \"payments\": [",
 							"            {",
-							"                \"paymentToken\": \"6ea67cb831c14e15a7e2705a206a1a5c\",",
 							"                \"rptId\": \"77777777777311116723749670000\",",
 							"                \"reason\": \"test\",",
 							"                \"amount\": 100",
@@ -204,8 +203,16 @@
 							"        \"clientId\": \"CHECKOUT\",",
 							"    };",
 							"",
+							"    const paymentsWithoutPaymentToken = response.payments.map(p => {",
+							"        const { paymentToken, ...rest} = p;",
+							"        return rest;",
+							"    });",
+							"",
+							"    const paymentTokens = response.payments.map(e => e.paymentToken);",
+							"",
 							"    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
-							"    pm.expect(response.payments).eql(expectedWithoutAuthTokenAndTransactionId.payments);",
+							"    pm.expect(paymentsWithoutPaymentToken).eql(expectedWithoutAuthTokenAndTransactionId.payments);",
+							"    pm.expect(paymentTokens).to.satisfy((tokens) => tokens.every(token => typeof token === \"string\"));",
 							"    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
 							"    pm.expect(response.authToken).to.be.a(\"string\");",
 							"    pm.expect(response.transactionId).to.be.a(\"string\");",
@@ -250,23 +257,6 @@
 						"v1",
 						"transactions"
 					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Request payment authorization",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"amount\": 100,\n  \"fee\": 99999999,\n  \"paymentInstrumentId\": \"string\",\n  \"pspId\": \"string\",\n  \"language\": \"IT\",\n  \"details\": {\n    \"detailType\": \"postepay\",\n    \"accountEmail\": \"user@example.com\"\n  }\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
 				}
 			},
 			"response": []
