@@ -1,31 +1,25 @@
-const VALID_RANGE_END_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat('9999999999999'));
-const VALID_RANGE_START_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat('0000000000000'));
-
-export const selectKeyboardForm = async () => {
-  const selectFormXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/div/div/div[1]';
-
-  const selectFormBtn = await page.waitForXPath(selectFormXPath);
-  await selectFormBtn.click();
-};
+import {
+  VALID_RANGE_END_NOTICE_CODE,
+  VALID_RANGE_START_NOTICE_CODE,
+  BILL_CODE_ID,
+  CF_ID,
+  EMAIL_ID,
+  CHECK_EMAIL_ID,
+  VERIFY_BUTTON_ID,
+  ACCEPT_POLICY_BUTTON_ID,
+  PAYMENT_SUMMARY_BUTTON_ID,
+  CONTINUE_BUTTON_ID,
+  CARD_NUMBER_INPUT,
+  EXPIRATION_DATE_INPUT,
+  CCV_INPUT,
+  HOLDER_NAME_INPUT,
+  CONTINUE_PAYMENT_BUTTON,
+} from '../utils/const';
 
 export const generateAValidNoticeCode = () =>
   Math.floor(
     Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) + VALID_RANGE_START_NOTICE_CODE,
   ).toString();
-
-export const fillPaymentNotificationForm = async (noticeCode, fiscalCode) => {
-  const noticeCodeTextInput = '#billCode';
-  const fiscalCodeTextInput = '#cf';
-
-  // await selectKeyboardForm();
-  await page.waitForSelector(noticeCodeTextInput);
-  await page.click(noticeCodeTextInput);
-  await page.keyboard.type(noticeCode);
-
-  await page.waitForSelector(fiscalCodeTextInput);
-  await page.click(fiscalCodeTextInput);
-  await page.keyboard.type(fiscalCode);
-};
 
 export const fillInputById = async (id, value) => {
   await page.waitForSelector(id);
@@ -40,10 +34,14 @@ export const clearInputById = async id => {
   await Promise.all(promises);
 };
 
+export const fillPaymentNotificationForm = async (noticeCode, fiscalCode) => {
+  await fillInputById(BILL_CODE_ID, noticeCode);
+  await fillInputById(CF_ID, fiscalCode);
+};
+
 export const confirmPaymentNotificationForm = async () => {
-  const verifyBtn = '#paymentNoticeButtonContinue';
-  await page.waitForSelector(verifyBtn);
-  await page.click(verifyBtn);
+  await page.waitForSelector(VERIFY_BUTTON_ID);
+  await page.click(VERIFY_BUTTON_ID);
 };
 
 export const verifyPaymentAndGetError = async (noticeCode, fiscalCode) => {
@@ -60,19 +58,17 @@ export const verifyPayment = async (noticeCode, fiscalCode) => {
 };
 
 export const acceptCookiePolicy = async () => {
-  const acceptPolicyBtn = '#onetrust-accept-btn-handler';
   const darkFilterXPath = '/html/body/div[2]/div[1]';
 
-  await page.waitForSelector(acceptPolicyBtn);
-  await page.click(acceptPolicyBtn);
+  await page.waitForSelector(ACCEPT_POLICY_BUTTON_ID);
+  await page.click(ACCEPT_POLICY_BUTTON_ID);
 
   // Avoid click on form button when dark filter is still enabled
   await page.waitForXPath(darkFilterXPath, { hidden: true });
 };
 
 export const confirmSummary = async () => {
-  const payNoticeBtnSelector = '#paymentSummaryButtonPay';
-  const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
+  const payNoticeBtn = await page.waitForSelector(PAYMENT_SUMMARY_BUTTON_ID);
   await payNoticeBtn.click();
 };
 
@@ -110,21 +106,12 @@ export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => 
 };
 
 export const fillEmailForm = async (email, email2) => {
-  const emailInput = '#email';
-  const confirmEmailInput = '#confirmEmail';
-
-  await page.waitForSelector(emailInput);
-  await page.click(emailInput);
-  await page.keyboard.type(email);
-
-  await page.waitForSelector(confirmEmailInput);
-  await page.click(confirmEmailInput);
-  await page.keyboard.type(email2 || email);
+  await fillInputById(EMAIL_ID, email);
+  await fillInputById(CHECK_EMAIL_ID, email2 || email);
 };
 
 export const confirmEmailForm = async () => {
-  const continueBtnSelector = '#paymentEmailPageButtonContinue';
-  const continueBtn = await page.waitForSelector(continueBtnSelector);
+  const continueBtn = await page.waitForSelector(CONTINUE_BUTTON_ID);
   await continueBtn.click();
 };
 
@@ -159,33 +146,19 @@ const execute_mock_authorization = async () => {
 };
 
 export const fillCardDataForm = async (cardData, useXPAY = false) => {
+  const { number, expirationDate, cvv, holderName } = cardData;
+
   const unauthorizedCard = '4801769871971639';
 
-  const cardNumberInput = '#number';
-  const expirationDateInput = '#expirationDate';
-  const ccvInput = '#cvv';
-  const holderNameInput = '#name';
-  const continueBtnXPath = 'button[type=submit]';
   const payBtnSelector = '#paymentCheckPageButtonPay';
   const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
 
-  await page.waitForSelector(cardNumberInput);
-  await page.click(cardNumberInput);
-  await page.keyboard.type(cardData.number);
+  await fillInputById(CARD_NUMBER_INPUT, number);
+  await fillInputById(EXPIRATION_DATE_INPUT, expirationDate);
+  await fillInputById(CCV_INPUT, cvv);
+  await fillInputById(HOLDER_NAME_INPUT, holderName);
 
-  await page.waitForSelector(expirationDateInput);
-  await page.click(expirationDateInput);
-  await page.keyboard.type(cardData.expirationDate);
-
-  await page.waitForSelector(ccvInput);
-  await page.click(ccvInput);
-  await page.keyboard.type(cardData.ccv);
-
-  await page.waitForSelector(holderNameInput);
-  await page.click(holderNameInput);
-  await page.keyboard.type(cardData.holderName);
-
-  const continueBtn = await page.waitForSelector(continueBtnXPath);
+  const continueBtn = await page.waitForSelector(CONTINUE_PAYMENT_BUTTON);
   await continueBtn.click();
 
   if (useXPAY) {
@@ -205,3 +178,5 @@ export const fillCardDataForm = async (cardData, useXPAY = false) => {
     await execute_mock_authorization();
   }
 };
+
+export const isButtonDisabled = async id => await page.$eval(id, ({ disabled }) => disabled);
