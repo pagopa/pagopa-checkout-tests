@@ -16,12 +16,17 @@ const CONTINUE_PAYMENT_BUTTON = 'button[type=submit]';
 const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
 const VALID_RANGE_END_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat('9999999999999'));
 const VALID_RANGE_START_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat('0000000000000'));
+const CARD_NUMBER_VPOS = String(process.env.CARD_NUMBER_VPOS);
+const CARD_NUMBER_XPAY = String(process.env.CARD_NUMBER_XPAY);
+const CARD_EXPIRATION_DATE = String(process.env.CARD_EXPIRATION_DATE);
+const CVV = String(process.env.CARD_CCV);
+const HOLDER_NAME = String(process.env.CARD_HOLDER_NAME);
 
 const VALID_CARD_DATA = {
-  number: String(process.env.CARD_NUMBER),
-  expirationDate: String(process.env.CARD_EXPIRATION_DATE),
-  ccv: String(process.env.CARD_CCV),
-  holderName: String(process.env.CARD_HOLDER_NAME),
+  number: CARD_NUMBER_VPOS,
+  expirationDate: CARD_EXPIRATION_DATE,
+  ccv: CVV,
+  holderName: HOLDER_NAME,
 };
 
 export {
@@ -42,6 +47,11 @@ export {
   EXPIRATION_DATE_INPUT,
   CCV_INPUT,
   HOLDER_NAME_INPUT,
+  HOLDER_NAME,
+  CVV,
   CONTINUE_PAYMENT_BUTTON,
   VALID_CARD_DATA,
+  CARD_EXPIRATION_DATE,
+  CARD_NUMBER_XPAY,
+  CARD_NUMBER_VPOS,
 };

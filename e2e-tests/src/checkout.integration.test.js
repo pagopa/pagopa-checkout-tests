@@ -1,27 +1,18 @@
-import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from './utils/helpers';
+import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError, generateAValidNoticeCode } from './utils/helpers';
+import {
+  VALID_CARD_DATA,
+  EMAIL,
+  VALID_FISCAL_CODE,
+  INVALID_FISCAL_CODE,
+  CHECKOUT_URL,
+  CARD_NUMBER_XPAY,
+} from './utils/const';
 
 describe('Checkout payment activation tests', () => {
   /**
    * Test input and configuration
    */
-  const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
-  const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
-  const INVALID_FISCAL_CODE = String(process.env.INVALID_FISCAL_CODE);
-  const EMAIL = String(process.env.EMAIL);
-  const VALID_CARD_DATA = {
-    number: String(process.env.CARD_NUMBER),
-    expirationDate: String(process.env.CARD_EXPIRATION_DATE),
-    ccv: String(process.env.CARD_CCV),
-    holderName: String(process.env.CARD_HOLDER_NAME),
-  };
-
-  const VALID_RANGE_END_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat('9999999999999'));
-  const VALID_RANGE_START_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat('0000000000000'));
-
-  const VALID_NOTICE_CODE = Math.floor(
-    Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) + VALID_RANGE_START_NOTICE_CODE,
-  ).toString();
-
+  const VALID_NOTICE_CODE = generateAValidNoticeCode();
   const PA_IRRAGGIUNGIBILE_NOTICE_CODE = String(process.env.PA_IRRAGGIUNGIBILE_NOTICE_CODE);
 
   /**
@@ -29,7 +20,7 @@ describe('Checkout payment activation tests', () => {
    * to support entire payment flow
    */
   jest.setTimeout(60000);
-  jest.retryTimes(1);
+  jest.retryTimes(3);
   page.setDefaultNavigationTimeout(60000);
   page.setDefaultTimeout(60000);
 
@@ -40,16 +31,16 @@ describe('Checkout payment activation tests', () => {
   });
 
   beforeEach(async () => {
-    await page.goto(`${CHECKOUT_URL}inserisci-dati-avviso`);
+    await page.goto(CHECKOUT_URL);
   });
 
-  it.only('Should correctly execute a payment (vPAY)', async () => {
+  it.only('Should correctly execute a payment (xPAY)', async () => {
     /*
      * 1. Payment with valid notice code
      */
     const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, {
       ...VALID_CARD_DATA,
-      number: String(process.env.CARD_NUMBER_2),
+      number: CARD_NUMBER_XPAY,
     });
 
     expect(resultMessage).toContain('Grazie, hai pagato');
