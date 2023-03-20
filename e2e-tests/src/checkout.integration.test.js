@@ -1,4 +1,10 @@
-import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError, generateAValidNoticeCode } from './utils/helpers';
+import {
+  payNotice,
+  selectKeyboardInput,
+  acceptCookiePolicy,
+  verifyPaymentAndGetError,
+  generateAValidNoticeCode,
+} from './utils/helpers';
 import {
   VALID_CARD_DATA,
   EMAIL,
@@ -31,10 +37,10 @@ describe('Checkout payment activation tests', () => {
   });
 
   beforeEach(async () => {
-    await page.goto(CHECKOUT_URL);
+    await selectKeyboardInput();
   });
 
-  it.only('Should correctly execute a payment (xPAY)', async () => {
+  it('Should correctly execute a payment (xPAY)', async () => {
     /*
      * 1. Payment with valid notice code
      */
@@ -46,7 +52,7 @@ describe('Checkout payment activation tests', () => {
     expect(resultMessage).toContain('Grazie, hai pagato');
   });
 
-  it('Should correctly execute a payment (vPOS)', async () => {
+  it.only('Should correctly execute a payment (vPOS)', async () => {
     /*
      * 1. Payment with valid notice code
      */

@@ -9,7 +9,7 @@ const EMAIL_ID = '#email';
 const CHECK_EMAIL_ID = '#confirmEmail';
 const CARD_NUMBER_INPUT = '#number';
 const EXPIRATION_DATE_INPUT = '#expirationDate';
-const CCV_INPUT = '#cvv';
+const CVV_INPUT = '#cvv';
 const HOLDER_NAME_INPUT = '#name';
 const PAYMENT_SUMMARY_BUTTON_ID = '#paymentSummaryButtonPay';
 const CONTINUE_PAYMENT_BUTTON = 'button[type=submit]';
@@ -25,7 +25,7 @@ const HOLDER_NAME = String(process.env.CARD_HOLDER_NAME);
 const VALID_CARD_DATA = {
   number: CARD_NUMBER_VPOS,
   expirationDate: CARD_EXPIRATION_DATE,
-  ccv: CVV,
+  cvv: CVV,
   holderName: HOLDER_NAME,
 };
 
@@ -45,7 +45,7 @@ export {
   PAYMENT_SUMMARY_BUTTON_ID,
   CARD_NUMBER_INPUT,
   EXPIRATION_DATE_INPUT,
-  CCV_INPUT,
+  CVV_INPUT,
   HOLDER_NAME_INPUT,
   HOLDER_NAME,
   CVV,

@@ -8,6 +8,7 @@ import {
   confirmEmailForm,
   choosePaymentMethod,
   isButtonDisabled,
+  selectKeyboardInput,
 } from './utils/helpers';
 import {
   CHECKOUT_URL,
@@ -23,7 +24,7 @@ import {
   CARD_NUMBER_INPUT,
   VALID_CARD_DATA,
   EXPIRATION_DATE_INPUT,
-  CCV_INPUT,
+  CVV_INPUT,
   HOLDER_NAME_INPUT,
 } from './utils/const';
 
@@ -44,7 +45,8 @@ beforeAll(async () => {
 
 describe('Checkout notification form:', () => {
   beforeEach(async () => {
-    await page.goto(`${CHECKOUT_URL}inserisci-dati-avviso`);
+    await page.goto(CHECKOUT_URL);
+    await selectKeyboardInput();
   });
 
   test('submit should be inhibited when wrong data or no data are inserted', async () => {
@@ -74,7 +76,8 @@ describe('Checkout notification form:', () => {
 describe('Checkout email form:', () => {
   beforeEach(async () => {
     const VALID_NOTICE_CODE = generateAValidNoticeCode();
-    await page.goto(`${CHECKOUT_URL}inserisci-dati-avviso`);
+    await page.goto(CHECKOUT_URL);
+    await selectKeyboardInput();
     await clearInputById(BILL_CODE_ID);
     await clearInputById(CF_ID);
     await fillInputById(BILL_CODE_ID, VALID_NOTICE_CODE);
@@ -110,7 +113,9 @@ describe('Checkout email form:', () => {
 describe('Checkout cart form:', () => {
   beforeAll(async () => {
     const VALID_NOTICE_CODE = generateAValidNoticeCode();
-    await page.goto(`${CHECKOUT_URL}inserisci-dati-avviso`);
+    await page.goto(CHECKOUT_URL);
+    await selectKeyboardInput();
+
     await clearInputById(BILL_CODE_ID);
     await clearInputById(CF_ID);
 
@@ -130,7 +135,7 @@ describe('Checkout cart form:', () => {
   beforeEach(async () => {
     await clearInputById(CARD_NUMBER_INPUT);
     await clearInputById(EXPIRATION_DATE_INPUT);
-    await clearInputById(CCV_INPUT);
+    await clearInputById(CVV_INPUT);
     await clearInputById(HOLDER_NAME_INPUT);
   });
 
@@ -143,7 +148,7 @@ describe('Checkout cart form:', () => {
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeTruthy();
     await fillInputById(EXPIRATION_DATE_INPUT, VALID_CARD_DATA.expirationDate);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeTruthy();
-    await fillInputById(CCV_INPUT, VALID_CARD_DATA.ccv);
+    await fillInputById(CVV_INPUT, VALID_CARD_DATA.cvv);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeTruthy();
     await fillInputById(HOLDER_NAME_INPUT, VALID_CARD_DATA.holderName);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeFalsy();
@@ -163,14 +168,14 @@ describe('Checkout cart form:', () => {
   test('continue button status resets properly', async () => {
     await fillInputById(CARD_NUMBER_INPUT, VALID_CARD_DATA.number);
     await fillInputById(EXPIRATION_DATE_INPUT, VALID_CARD_DATA.expirationDate);
-    await fillInputById(CCV_INPUT, VALID_CARD_DATA.ccv);
+    await fillInputById(CVV_INPUT, VALID_CARD_DATA.cvv);
     await fillInputById(HOLDER_NAME_INPUT, VALID_CARD_DATA.holderName);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeFalsy();
     await clearInputById(CARD_NUMBER_INPUT);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeTruthy();
     await clearInputById(EXPIRATION_DATE_INPUT);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeTruthy();
-    await clearInputById(CCV_INPUT);
+    await clearInputById(CVV_INPUT);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeTruthy();
     await clearInputById(HOLDER_NAME_INPUT);
     expect(await isButtonDisabled(CONTINUE_PAYMENT_BUTTON)).toBeTruthy();

@@ -11,7 +11,7 @@ import {
   CONTINUE_BUTTON_ID,
   CARD_NUMBER_INPUT,
   EXPIRATION_DATE_INPUT,
-  CCV_INPUT,
+  CVV_INPUT,
   HOLDER_NAME_INPUT,
   CONTINUE_PAYMENT_BUTTON,
 } from '../utils/const';
@@ -20,6 +20,13 @@ export const generateAValidNoticeCode = () =>
   Math.floor(
     Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) + VALID_RANGE_START_NOTICE_CODE,
   ).toString();
+
+export const selectKeyboardInput = async () => {
+  const selectFormXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/div/div/div[1]';
+
+  const selectFormBtn = await page.waitForXPath(selectFormXPath);
+  await selectFormBtn.click();
+};
 
 export const fillInputById = async (id, value) => {
   await page.waitForSelector(id);
@@ -99,7 +106,7 @@ export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => 
   await fillEmailForm(email);
   await confirmEmailForm();
   await choosePaymentMethod('card');
-  await fillCardDataForm(cardData, true);
+  await fillCardDataForm(cardData);
 
   const message = await page.waitForXPath(resultMessageXPath);
   return await message.evaluate(el => el.textContent);
@@ -154,7 +161,7 @@ export const fillCardDataForm = async cardData => {
 
   await fillInputById(CARD_NUMBER_INPUT, number);
   await fillInputById(EXPIRATION_DATE_INPUT, expirationDate);
-  await fillInputById(CCV_INPUT, cvv);
+  await fillInputById(CVV_INPUT, cvv);
   await fillInputById(HOLDER_NAME_INPUT, holderName);
 
   const continueBtn = await page.waitForSelector(CONTINUE_PAYMENT_BUTTON);
