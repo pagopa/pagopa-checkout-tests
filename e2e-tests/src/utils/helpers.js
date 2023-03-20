@@ -145,13 +145,12 @@ const execute_mock_authorization = async () => {
   }
 };
 
-export const fillCardDataForm = async (cardData, useXPAY = false) => {
+export const fillCardDataForm = async cardData => {
   const { number, expirationDate, cvv, holderName } = cardData;
 
   const unauthorizedCard = '4801769871971639';
 
   const payBtnSelector = '#paymentCheckPageButtonPay';
-  const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
 
   await fillInputById(CARD_NUMBER_INPUT, number);
   await fillInputById(EXPIRATION_DATE_INPUT, expirationDate);
@@ -161,19 +160,10 @@ export const fillCardDataForm = async (cardData, useXPAY = false) => {
   const continueBtn = await page.waitForSelector(CONTINUE_PAYMENT_BUTTON);
   await continueBtn.click();
 
-  if (useXPAY) {
-    const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
-    await selectPSPBtn.click();
-
-    const XPAYBtn = await page.$x("//div[contains(., 'XPAY')]");
-    console.log(await page.evaluate(XPAYBtn));
-    // await XPAYBtn.click();
-  }
-
   const payBtn = await page.waitForSelector(payBtnSelector);
   await payBtn.click();
 
-  if (!useXPAY && unauthorizedCard !== cardData.number) {
+  if (unauthorizedCard !== cardData.number) {
     await page.waitForNavigation();
     await execute_mock_authorization();
   }
