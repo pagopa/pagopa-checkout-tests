@@ -187,12 +187,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"TRANSACTION_ID\", jsonData.transactionId);",
-							"postman.setEnvironmentVariable(\"AUTH_TOKEN\", jsonData.authToken);",
 							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function() {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
+							"    postman.setEnvironmentVariable(\"TRANSACTION_ID\", response.transactionId);",
+							"    postman.setEnvironmentVariable(\"AUTH_TOKEN\", response.authToken);",
 							"    const expectedWithoutAuthTokenAndTransactionId = {",
 							"        \"status\": \"ACTIVATED\",",
 							"        \"payments\": [",
