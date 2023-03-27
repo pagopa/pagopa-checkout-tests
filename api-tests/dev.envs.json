@@ -1,0 +1,82 @@
+{
+	"id": "ee214e09-702c-423b-aa2c-eed3436b8cbc",
+	"name": "Checkout Tests DEV",
+	"values": [
+		{
+			"key": "CHECKOUT_HOST",
+			"value": "https://api.dev.platform.pagopa.it",
+			"enabled": true
+		},
+		{
+			"key": "PAID_FISCAL_CODE_PA",
+			"value": "00000000000",
+			"enabled": true
+		},
+		{
+			"key": "VALID_NOTICE_CODE",
+			"value": "311116723749670000",
+			"enabled": true
+		},
+		{
+			"key": "VALID_FISCAL_CODE_PA",
+			"value": "77777777777",
+			"enabled": true
+		},
+		{
+			"key": "PAID_NOTICE_CODE",
+			"value": "000000000000000009",
+			"enabled": true
+		},
+		{
+			"key": "IN_PROGRESS_FISCAL_CODE_PA",
+			"value": "00000000000",
+			"enabled": true
+		},
+		{
+			"key": "IN_PROGRESS_NOTICE_CODE",
+			"value": "002720356084529460",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_NOTICE_CODE",
+			"value": "002720356084529460",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_FISCAL_CODE_PA",
+			"value": "00000000000",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_STAZIONE_NOTICE_CODE",
+			"value": "002720356512737953",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_STAZIONE_FISCAL_CODE_PA",
+			"value": "77777777777",
+			"enabled": true
+		},
+		{
+			"key": "CART_ID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "TRANSACTION_ID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "AUTH_TOKEN",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-03-22T16:04:28.173Z",
+	"_postman_exported_using": "Postman/10.12.4"
+}
