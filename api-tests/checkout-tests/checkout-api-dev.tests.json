@@ -216,6 +216,8 @@
 							"    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
 							"    pm.expect(response.authToken).to.be.a(\"string\");",
 							"    pm.expect(response.transactionId).to.be.a(\"string\");",
+							"",
+							"    pm.environment.set(\"TRANSACTION_ID\", response.transactionId);",
 							"});"
 						],
 						"type": "text/javascript"
