@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9653fcbd-6895-4780-9154-d0296173321c",
+		"_postman_id": "504530f5-d2d2-4211-9473-482d1d82567e",
 		"name": "Checkout API (DEV)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -25,16 +25,15 @@
 							"        \"amount\": 100,",
 							"        \"rptId\": requestRptId,",
 							"        \"paFiscalCode\": \"77777777777\",",
-							"        \"paName\": \"company PA\",",
-							"        \"description\": \"/RFB/00202200000217527/5.00/TXT/\",",
 							"        \"dueDate\": dueDate",
 							"    };",
 							"",
 							"    pm.expect(responseJson.amount).eql(expected.amount);",
 							"    pm.expect(responseJson.rptId).eql(expected.rptId);",
 							"    pm.expect(responseJson.paFiscalCode).eql(expected.paFiscalCode);",
-							"    pm.expect(responseJson.description).eql(expected.description);",
 							"    pm.expect(responseJson.dueDate).eql(expected.dueDate);",
+							"    pm.expect(responseJson.description).to.be.a.string;",
+							"    pm.expect(responseJson.paName).to.be.a.string;",
 							"});"
 						],
 						"type": "text/javascript"
@@ -44,8 +43,10 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"VALID_NOTICE_CODE\", _.random(311116723749670000, 311116723749670300));",
-							"postman.setNextRequest(\"Payment Activation - Succes\");"
+							"const rptIdNumber = _.random(300);",
+							"const rptIdSuffix = rptIdNumber.toString().padStart(3, '0');",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", \"311116723749670\" + rptIdSuffix);",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -189,16 +190,23 @@
 						"exec": [
 							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function() {",
 							"    pm.response.to.have.status(200);",
+							"",
 							"    const response = pm.response.json();",
-							"    postman.setEnvironmentVariable(\"TRANSACTION_ID\", response.transactionId);",
-							"    postman.setEnvironmentVariable(\"AUTH_TOKEN\", response.authToken);",
+							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
 							"    const expectedWithoutAuthTokenAndTransactionId = {",
 							"        \"status\": \"ACTIVATED\",",
 							"        \"payments\": [",
 							"            {",
-							"                \"rptId\": \"77777777777311116723749670000\",",
+							"                \"rptId\": requestRptId,",
 							"                \"reason\": \"test\",",
-							"                \"amount\": 100",
+							"                \"amount\": 100,",
+							"                \"transferList\": [",
+							"                    {",
+							"                        \"paFiscalCode\": \"77777777777\",",
+							"                        \"digitalStamp\": false,",
+							"                        \"transferAmount\": 100",
+							"                    }",
+							"                ]",
 							"            }",
 							"        ],",
 							"        \"clientId\": \"CHECKOUT\",",
@@ -219,6 +227,8 @@
 							"    pm.expect(response.transactionId).to.be.a(\"string\");",
 							"",
 							"    pm.environment.set(\"TRANSACTION_ID\", response.transactionId);",
+							"    pm.environment.set(\"AMOUNT\", response.payments.reduce((total, payment) => total + payment.amount, 0))",
+							"    pm.environment.set(\"AUTH_TOKEN\", response.authToken);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -259,50 +269,6 @@
 						"checkout",
 						"v1",
 						"transactions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete transaction",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Transaction cancellation - Status code is 202.\", function() {",
-							"    pm.response.to.have.status(202);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"ecommerce",
-						"checkout",
-						"v1",
-						"transactions",
-						"{{TRANSACTION_ID}}"
 					]
 				}
 			},
@@ -363,7 +329,7 @@
 						"exec": [
 							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function(){",
 							"    ",
-							"    pm.response.to.have.status(200);",
+							"    pm.response.to.have.status(302);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -487,7 +453,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction vpos challenge - Status code is 200 with params\", function(){",
+							"pm.test(\"Payment transaction vpos challenge - Status code is 200 with params\", function() {",
 							"    pm.expect(pm.response.text()).to.include(\"Checkout - pagoPA<\");",
 							"    pm.response.to.have.status(200);",
 							"});"
@@ -583,7 +549,75 @@
 			"response": []
 		},
 		{
-			"name": "Compute fee for credit card payment",
+			"name": "Get payment method details for credit cards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Payment method details - Status code is 200 with valid json response\", function() {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    const expectedWithoutRangesAssetAndStatus = {",
+							"        \"id\": \"e7058cac-5e1a-4002-8994-5bab31e9f385\",",
+							"        \"name\": \"Carte\",",
+							"        \"description\": \"Carte di Credito e Debito\",",
+							"        \"paymentTypeCode\": \"CP\"",
+							"    };",
+							"",
+							"    pm.expect(response.id).eql(expectedWithoutRangesAssetAndStatus.id);",
+							"    pm.expect(response.name).eql(expectedWithoutRangesAssetAndStatus.name);",
+							"    pm.expect(response.description).eql(expectedWithoutRangesAssetAndStatus.description);",
+							"    pm.expect(response.description).eql(expectedWithoutRangesAssetAndStatus.description);",
+							"    pm.expect(response.paymentTypeCode).eql(expectedWithoutRangesAssetAndStatus.paymentTypeCode);",
+							"    pm.expect(response.asset).to.be.not.empty;",
+							"    pm.expect(response.ranges).to.be.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"platform",
+						"pagopa",
+						"it"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"e7058cac-5e1a-4002-8994-5bab31e9f385",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Compute fee for credit card payment 2",
 			"event": [
 				{
 					"listen": "test",
@@ -622,7 +656,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/fee/calculate",
+					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/fees",
 					"protocol": "https",
 					"host": [
 						"api",
@@ -637,8 +671,204 @@
 						"v1",
 						"payment-methods",
 						"e7058cac-5e1a-4002-8994-5bab31e9f385",
-						"fee",
-						"calculate"
+						"fees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all payment methods",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get all payment methods - Status code is 200 with valid json response\", function() {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"",
+							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"",
+							"    pm.expect(response.paymentMethods).to.be.not.empty;",
+							"    pm.expect(response.paymentMethods).to.satisfy((methods) => methods.every(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property))));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.dev.platform.pagopa.it/ecommerce/payment-methods-service/v1/payment-methods",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"platform",
+						"pagopa",
+						"it"
+					],
+					"path": [
+						"ecommerce",
+						"payment-methods-service",
+						"v1",
+						"payment-methods"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request authorization",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function() {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"",
+							"    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
+							"    pm.expect(response.authorizationRequestId).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 100,\n    \"paymentInstrumentId\": \"e7058cac-5e1a-4002-8994-5bab31e9f385\",\n    \"pspId\": \"BNLIITRR\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"mail@example.com\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"Mario Rossi\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"platform",
+						"pagopa",
+						"it"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete transaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Transaction cancellation - Status code is 202.\", function() {",
+							"    pm.response.to.have.status(202);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const rptIdNumber = _.random(300);",
+							"const rptIdSuffix = rptIdNumber.toString().padStart(3, '0');",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", \"311116723749670\" + rptIdSuffix);",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      console.log(responseBody);",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}"
 					]
 				}
 			},
