@@ -64,8 +64,15 @@ stages:
             displayName: 'newman installation'
 
           - script: |
-              newman run --ignore-redirects api-tests/cart-tests/cart-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
-            displayName: 'Run api test'
+              newman run --ignore-redirects api-tests/cart-tests/cart-api-dev.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
+            displayName: 'Run API tests (DEV)'
+            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'DEV'))
+            continueOnError: true
+
+          - script: |
+              newman run --ignore-redirects api-tests/cart-tests/cart-api-uat.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
+            displayName: 'Run API tests (UAT)'
+            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
             continueOnError: true
 
           - task: PublishTestResults@2
