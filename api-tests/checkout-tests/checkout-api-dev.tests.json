@@ -303,14 +303,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/browsers/current/info",
+					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/browsers/current/info",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"api",
 						"checkout",
-						"payments",
+						"payment-transactions",
 						"v1",
 						"browsers",
 						"current",
@@ -327,9 +327,35 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function(){",
-							"    ",
+							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function() {",
+							"    // vvv These are the same ones in the request URL! vvv",
+							"    const requestParams = {",
+							"        \"id\": \"NzA5MDEwMjg3NQ==\",",
+							"        \"esito\": \"OK\",",
+							"        \"idOperazione\": \"00054014\",",
+							"        \"timestamp\": \"1638023340310\",",
+							"        \"mac\": \"000000b500ba947c2614b547250c49e59477e6ef\",",
+							"        \"xpayNonce\": \"58a83f26-1421-3350-8dd6-aa152de80000\"",
+							"    };",
+							"    /// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+							"",
+							"    const expectedResponseParams = {",
+							"        ...requestParams,",
+							"        \"timeStamp\": requestParams.timestamp,",
+							"        \"resumeType\": \"xpay\"",
+							"    };",
+							"    delete expectedResponseParams[\"timestamp\"];",
+							"",
 							"    pm.response.to.have.status(302);",
+							"",
+							"    const URL = require('url');",
+							"    const redirectUrl = URL.parse(pm.response.headers.get(\"Location\"));",
+							"    const responseQueryParams = Object.fromEntries(redirectUrl.query.split(\"&\").map(entry => {",
+							"        const [name, value] = entry.split(/=(.*)/s);",
+							"        return [name, value]",
+							"    }));",
+							"",
+							"    pm.expect(expectedResponseParams).to.deep.equal(responseQueryParams);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -389,10 +415,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction xpay verify Status code is 200 with params\", function(){",
-							"    ",
-							"    pm.expect(pm.response.text()).to.include(\"Checkout - pagoPA<\");",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"Payment transaction xpay verify Status code is 302\", function(){",
+							"        pm.response.to.have.status(302);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -453,9 +477,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction vpos challenge - Status code is 200 with params\", function() {",
-							"    pm.expect(pm.response.text()).to.include(\"Checkout - pagoPA<\");",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"Payment transaction vpos challenge - Status code is 302\", function() {",
+							"    pm.response.to.have.status(302);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -835,7 +858,6 @@
 							"    console.log(error);",
 							"  } else {",
 							"      const responseBody = response.json();",
-							"      console.log(responseBody);",
 							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
 							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
 							"  }",
