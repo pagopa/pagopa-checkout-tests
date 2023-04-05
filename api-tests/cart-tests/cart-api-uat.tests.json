@@ -133,7 +133,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"AA\",\n            \"description\": \"BB\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"CC\",\n            \"description\": \"DD\"\n        }\n    ],\n    \"returnurls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"AA\",\n            \"description\": \"BB\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"CC\",\n            \"description\": \"DD\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
