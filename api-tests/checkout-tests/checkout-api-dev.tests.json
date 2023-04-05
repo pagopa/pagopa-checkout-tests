@@ -96,9 +96,9 @@
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
-							"    pm.expect(responseJson.detail).to.include(\"PPT_DOMINIO_SCONOSCIUTO\");",
+							"    pm.expect(responseJson.faultCodeDetail).to.include(\"PPT_DOMINIO_SCONOSCIUTO\");",
 							"",
-							"    pm.response.to.have.status(400);",
+							"    pm.response.to.have.status(404);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -144,9 +144,9 @@
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
-							"    pm.expect(responseJson.detail).equals(\"PPT_STAZIONE_INT_PA_SCONOSCIUTA\");",
+							"    pm.expect(responseJson.faultCodeDetail).equals(\"PPT_STAZIONE_INT_PA_SCONOSCIUTA\");",
 							"",
-							"    pm.response.to.have.status(400);",
+							"    pm.response.to.have.status(404);",
 							"});"
 						],
 						"type": "text/javascript"
