@@ -38,19 +38,18 @@ stages:
               newman run --ignore-redirects api-tests/checkout-tests/checkout-api-dev.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
             displayName: 'Run API tests (DEV)'
             condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'DEV'))
-            continueOnError: true
 
           - script: |
               newman run --ignore-redirects api-tests/checkout-tests/checkout-api-uat.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
             displayName: 'Run API tests (UAT)'
             condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
-            continueOnError: true
 
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/checkout-api-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
 
   - stage: API_Tests_Carts
     pool:
@@ -64,15 +63,21 @@ stages:
             displayName: 'newman installation'
 
           - script: |
-              newman run --ignore-redirects api-tests/cart-tests/cart-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
-            displayName: 'Run api test'
-            continueOnError: true
+              newman run --ignore-redirects api-tests/cart-tests/cart-api-dev.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
+            displayName: 'Run API tests (DEV)'
+            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'DEV'))
+
+          - script: |
+              newman run --ignore-redirects api-tests/cart-tests/cart-api-uat.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
+            displayName: 'Run API tests (UAT)'
+            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
 
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/cart-api-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
 
   - stage: E2E_Tests_Checkout
     pool:
@@ -88,16 +93,16 @@ stages:
           - script: |
               docker run --name=ui_test ui_test
             displayName: 'Run UI test container'
-            continueOnError: true 
 
           - script: |
               docker cp ui_test:/puppeteer/test_reports  test_reports
             displayName: 'Copy test result'
-            continueOnError: true 
+            condition: succeededOrFailed()
 
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/*-TEST.xml' 
               searchFolder: '$(System.DefaultWorkingDirectory)'
-              
+            condition: succeededOrFailed()
+

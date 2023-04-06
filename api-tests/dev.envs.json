@@ -1,5 +1,5 @@
 {
-	"id": "ee214e09-702c-423b-aa2c-eed3436b8cbc",
+	"id": "86cc9402-fab3-4297-9467-b9022df1f8a0",
 	"name": "Checkout Tests DEV",
 	"values": [
 		{
@@ -14,7 +14,7 @@
 		},
 		{
 			"key": "VALID_NOTICE_CODE",
-			"value": "311116723749670000",
+			"value": "311116723749670106",
 			"enabled": true
 		},
 		{
@@ -39,17 +39,17 @@
 		},
 		{
 			"key": "UNKNOWN_NOTICE_CODE",
-			"value": "002720356084529460",
+			"value": "302170000000000000",
 			"enabled": true
 		},
 		{
 			"key": "UNKNOWN_FISCAL_CODE_PA",
-			"value": "00000000000",
+			"value": "00000000001",
 			"enabled": true
 		},
 		{
 			"key": "UNKNOWN_STAZIONE_NOTICE_CODE",
-			"value": "002720356512737953",
+			"value": "302970000000000000",
 			"enabled": true
 		},
 		{
@@ -74,9 +74,15 @@
 			"value": "",
 			"type": "any",
 			"enabled": true
+		},
+		{
+			"key": "AMOUNT",
+			"value": 100,
+			"type": "any",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-03-22T16:04:28.173Z",
-	"_postman_exported_using": "Postman/10.12.4"
+	"_postman_exported_at": "2023-04-05T09:49:52.281Z",
+	"_postman_exported_using": "Postman/10.12.0"
 }

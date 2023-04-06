@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "1c7679ff-59c0-48ac-b3d7-bbc6dbc8172d",
-		"name": "Carts API",
+		"_postman_id": "ce27323b-6fdb-47bc-92ec-bc7c3e3b3ac7",
+		"name": "Carts API (DEV)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -30,7 +30,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 12000,\n            \"companyName\": \"Nome EC\",\n            \"description\": \"Oggetto del pagamento\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}\n\n",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"311100100440009424\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 12000,\n            \"companyName\": \"Nome EC\",\n            \"description\": \"Oggetto del pagamento\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\",\n    \"idCart\": \"3de77d19-1655-4eaa-8bbb-14be203584d4\",\n    \"allCCP\": false\n}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -38,11 +38,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.uat.platform.pagopa.it/checkout/ec/v1/carts",
+					"raw": "https://api.dev.platform.pagopa.it/checkout/ec/v1/carts",
 					"protocol": "https",
 					"host": [
 						"api",
-						"uat",
+						"dev",
 						"platform",
 						"pagopa",
 						"it"
@@ -90,11 +90,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.uat.platform.pagopa.it/checkout/ec/v1/carts",
+					"raw": "https://api.dev.platform.pagopa.it/checkout/ec/v1/carts",
 					"protocol": "https",
 					"host": [
 						"api",
-						"uat",
+						"dev",
 						"platform",
 						"pagopa",
 						"it"
@@ -118,7 +118,6 @@
 						"exec": [
 							"pm.test(\"Status code is 422 with multiple payment notices\", () => {",
 							"  pm.expect(pm.response.code).to.eql(422);",
-							"",
 							"});"
 						],
 						"type": "text/javascript"
@@ -133,7 +132,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": null,\n            \"description\": null\n        },\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": null,\n            \"description\": null\n        }\n    ],\n    \"returnurls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"AA\",\n            \"description\": \"BB\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009425\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"CC\",\n            \"description\": \"DD\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -141,11 +140,11 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.uat.platform.pagopa.it/checkout/ec/v1/carts",
+					"raw": "https://api.dev.platform.pagopa.it/checkout/ec/v1/carts",
 					"protocol": "https",
 					"host": [
 						"api",
-						"uat",
+						"dev",
 						"platform",
 						"pagopa",
 						"it"

@@ -1,75 +1,75 @@
 {
-    "id": "3c507643-91d7-4f1c-afcf-779d6787f5c5",
-    "name": "UAT",
-    "values": [
-        {
-            "key": "CHECKOUT_HOST",
-            "value": "https://api.uat.platform.pagopa.it",
-            "enabled": true
-        },
-        {
-            "key": "PAID_FISCAL_CODE_PA",
-            "value": "00000000000",
-            "enabled": true
-        },
-        {
-            "key": "VALID_NOTICE_CODE",
-            "value": "302000100000009424",
-            "enabled": true
-        },
-        {
-            "key": "VALID_FISCAL_CODE_PA",
-            "value": "77777777777",
-            "enabled": true
-        },
-        {
-            "key": "PAID_NOTICE_CODE",
-            "value": "000000000000000009",
-            "enabled": true
-        },
-        {
-            "key": "CODICE_CONTESTO_PAGAMENTO",
-            "value": "",
-            "enabled": true
-        },
-        {
-            "key": "IN_PROGRESS_FISCAL_CODE_PA",
-            "value": "00000000000",
-            "enabled": true
-        },
-        {
-            "key": "IN_PROGRESS_NOTICE_CODE",
-            "value": "002720356084529460",
-            "enabled": true
-        },
-        {
-            "key": "UNKNOWN_NOTICE_CODE",
-            "value": "002720356084529460",
-            "enabled": true
-        },
-        {
-            "key": "UNKNOWN_FISCAL_CODE_PA",
-            "value": "00000000000",
-            "enabled": true
-        },
-        {
-            "key": "UNKNOWN_STAZIONE_NOTICE_CODE",
-            "value": "002720356512737953",
-            "enabled": true
-        },
-        {
-            "key": "UNKNOWN_STAZIONE_FISCAL_CODE_PA",
-            "value": "77777777777",
-            "enabled": true
-        },
-        {
-            "key": "CART_ID",
-            "value": "",
-            "type": "any",
-            "enabled": true
-        }
-    ],
-    "_postman_variable_scope": "environment",
-    "_postman_exported_at": "2022-11-09T15:41:28.385Z",
-    "_postman_exported_using": "Postman/10.1.2"
+	"id": "e340349e-bff3-4edc-80fe-62d49a8cef1f",
+	"name": "Checkout Tests UAT",
+	"values": [
+		{
+			"key": "CHECKOUT_HOST",
+			"value": "https://api.uat.platform.pagopa.it",
+			"enabled": true
+		},
+		{
+			"key": "PAID_FISCAL_CODE_PA",
+			"value": "00000000000",
+			"enabled": true
+		},
+		{
+			"key": "VALID_NOTICE_CODE",
+			"value": "302000100000009424",
+			"enabled": true
+		},
+		{
+			"key": "VALID_FISCAL_CODE_PA",
+			"value": "77777777777",
+			"enabled": true
+		},
+		{
+			"key": "PAID_NOTICE_CODE",
+			"value": "000000000000000009",
+			"enabled": true
+		},
+		{
+			"key": "CODICE_CONTESTO_PAGAMENTO",
+			"value": "f578bd72132b4da282bf6c35cf41011d",
+			"enabled": true
+		},
+		{
+			"key": "IN_PROGRESS_FISCAL_CODE_PA",
+			"value": "00000000000",
+			"enabled": true
+		},
+		{
+			"key": "IN_PROGRESS_NOTICE_CODE",
+			"value": "002720356084529460",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_NOTICE_CODE",
+			"value": "002720356084529460",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_FISCAL_CODE_PA",
+			"value": "00000000000",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_STAZIONE_NOTICE_CODE",
+			"value": "002720356512737953",
+			"enabled": true
+		},
+		{
+			"key": "UNKNOWN_STAZIONE_FISCAL_CODE_PA",
+			"value": "77777777777",
+			"enabled": true
+		},
+		{
+			"key": "CART_ID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-04-05T10:58:37.337Z",
+	"_postman_exported_using": "Postman/10.12.0"
 }

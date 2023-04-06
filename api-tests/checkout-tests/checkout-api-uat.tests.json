@@ -1,13 +1,12 @@
 {
 	"info": {
-		"_postman_id": "3c57ab59-bac5-4627-b66f-b9948e5cd129",
-		"name": "Checkout API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_postman_id": "fe24eeaa-0e01-405f-9faf-eb7489e7c4b4",
+		"name": "Checkout API (UAT)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Payment Verify - Succes",
+			"name": "Payment Verify - Success",
 			"event": [
 				{
 					"listen": "test",
@@ -17,11 +16,24 @@
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
-							"    pm.environment.set(\"CODICE_CONTESTO_PAGAMENTO\", responseJson.codiceContestoPagamento);",
-							"",
-							"    pm.expect(responseJson.importoSingoloVersamento).greaterThan(0);",
-							"",
 							"    pm.response.to.have.status(200);",
+							"",
+							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
+							"    const dueDate = new Date().toISOString().split('T')[0];",
+							"",
+							"    const expected = {",
+							"        \"amount\": 12000,",
+							"        \"rptId\": requestRptId,",
+							"        \"paFiscalCode\": \"77777777777\",",
+							"        \"dueDate\": dueDate",
+							"    };",
+							"",
+							"    pm.expect(responseJson.amount).eql(expected.amount);",
+							"    pm.expect(responseJson.rptId).eql(expected.rptId);",
+							"    pm.expect(responseJson.paFiscalCode).eql(expected.paFiscalCode);",
+							"    // pm.expect(responseJson.dueDate).eql(expected.dueDate);",
+							"    pm.expect(responseJson.description).to.be.a.string;",
+							"    pm.expect(responseJson.paName).to.be.a.string;",
 							"});"
 						],
 						"type": "text/javascript"
@@ -31,8 +43,10 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"VALID_NOTICE_CODE\", _.random(302001000000000000, 302001999999999999));",
-							"postman.setNextRequest(\"Payment Activation - Succes\");"
+							"const rptIdNumber = _.random(300);",
+							"const rptIdSuffix = rptIdNumber.toString().padStart(3, '0');",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", \"302006723749670\" + rptIdSuffix);",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -50,14 +64,13 @@
 					"urlencoded": []
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/checkout/ecommerce/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
 						"checkout",
-						"payments",
+						"ecommerce",
 						"v1",
 						"payment-requests",
 						"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}"
@@ -73,15 +86,18 @@
 			"response": []
 		},
 		{
-			"name": "Payment Activation - Succes",
+			"name": "Payment Activation - Success",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
 							"pm.test(\"Payment Activation - Status code is 200 with valid json response\", function(){",
-							"",
 							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"",
+							"    pm.expect(response).to.have.keys(\"importoSingoloVersamento\", \"causaleVersamento\", \"enteBeneficiario\");",
 							"});"
 						],
 						"type": "text/javascript"
@@ -105,7 +121,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\"rptId\" : \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n\"importoSingoloVersamento\" : 120000,\n\"codiceContestoPagamento\" : \"{{CODICE_CONTESTO_PAGAMENTO}}\"\n}",
+					"raw": "{\n    \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n    \"importoSingoloVersamento\": 120000,\n    \"codiceContestoPagamento\": \"{{CODICE_CONTESTO_PAGAMENTO}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -113,16 +129,21 @@
 					}
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-activations",
+					"raw": "{{CHECKOUT_HOST}}/checkout/payments/v1/payment-activations?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
 						"checkout",
 						"payments",
 						"v1",
 						"payment-activations"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "token"
+						}
 					]
 				}
 			},
@@ -165,12 +186,11 @@
 					"urlencoded": []
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-activations/{{CODICE_CONTESTO_PAGAMENTO}}",
+					"raw": "{{CHECKOUT_HOST}}/checkout/payments/v1/payment-activations/{{CODICE_CONTESTO_PAGAMENTO}}",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
 						"checkout",
 						"payments",
 						"v1",
@@ -208,12 +228,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-requests/{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/checkout/payments/v1/payment-requests/{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
 						"checkout",
 						"payments",
 						"v1",
@@ -257,12 +276,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/checkout/payments/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"api",
 						"checkout",
 						"payments",
 						"v1",
@@ -308,14 +326,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payments/v1/browsers/current/info",
+					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/browsers/current/info",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"api",
 						"checkout",
-						"payments",
+						"payment-transactions",
 						"v1",
 						"browsers",
 						"current",
@@ -334,7 +352,7 @@
 						"exec": [
 							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function(){",
 							"    ",
-							"    pm.response.to.have.status(200);",
+							"    pm.response.to.have.status(302);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -394,10 +412,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction xpay verify Status code is 200 with params\", function(){",
-							"    ",
-							"    pm.expect(pm.response.text()).to.include(\"Checkout - pagoPA<\");",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"Payment transaction xpay verify Status code is 302\", function() {",
+							"    pm.response.to.have.status(302);",
+							"",
+							"    const location = pm.response.headers.get(\"Location\");",
+							"    pm.expect(location.startsWith(\"https://uat.checkout.pagopa.it/esito\"));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -458,9 +477,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction vpos challenge - Status code is 200 with params\", function(){",
-							"    pm.expect(pm.response.text()).to.include(\"Checkout - pagoPA<\");",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"Payment transaction vpos challenge - Status code is 302\", function(){",
+							"    pm.response.to.have.status(302);",
+							"",
+							"    const location = pm.response.headers.get(\"Location\");",
+							"    pm.expect(location.startsWith(\"https://uat.checkout.pagopa.it/esito\"));",
 							"});"
 						],
 						"type": "text/javascript"
