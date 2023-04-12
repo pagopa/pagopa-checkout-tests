@@ -776,7 +776,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"Transaction authorization - Status code is 200 with valid json response\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
