@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "504530f5-d2d2-4211-9473-482d1d82567e",
-		"name": "Checkout API (DEV)",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"_postman_id": "b778c0ad-1b60-4e94-b968-530ae76e9139",
+		"name": "Ecommerce for Checkout API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -19,10 +20,11 @@
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
-							"    const dueDate = new Date().toISOString().split('T')[0];",
-							"",
+							"    const fixedDueDate = pm.environment.get(\"DUE_DATE\")",
+							"    const dueDate = fixedDueDate ==null ? new Date().toISOString().split('T')[0] : fixedDueDate;",
+							"    const amount = parseInt(pm.environment.get(\"AMOUNT\"));",
 							"    const expected = {",
-							"        \"amount\": 100,",
+							"        \"amount\": amount,",
 							"        \"rptId\": requestRptId,",
 							"        \"paFiscalCode\": \"77777777777\",",
 							"        \"dueDate\": dueDate",
@@ -43,9 +45,11 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const rptIdNumber = _.random(300);",
-							"const rptIdSuffix = rptIdNumber.toString().padStart(3, '0');",
-							"pm.environment.set(\"VALID_NOTICE_CODE\", \"311116723749670\" + rptIdSuffix);",
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
 							""
 						],
 						"type": "text/javascript"
@@ -58,7 +62,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": []
@@ -110,7 +120,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
@@ -158,7 +174,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
@@ -188,44 +210,49 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function () {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
 							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
+							"    const expectedReason = pm.environment.get(\"EXPECTED_PAYMENT_REASON\");",
+							"    const expectedTransferListTokens = new Set([\"paFiscalCode\", \"digitalStamp\", \"transferAmount\"]);",
 							"    const expectedWithoutAuthTokenAndTransactionId = {",
 							"        \"status\": \"ACTIVATED\",",
 							"        \"payments\": [",
 							"            {",
 							"                \"rptId\": requestRptId,",
-							"                \"reason\": \"test\",",
+							"                \"reason\": expectedReason,",
 							"                \"amount\": 100,",
-							"                \"transferList\": [",
-							"                    {",
-							"                        \"paFiscalCode\": \"77777777777\",",
-							"                        \"digitalStamp\": false,",
-							"                        \"transferAmount\": 100",
-							"                    }",
-							"                ]",
+							"",
 							"            }",
 							"        ],",
 							"        \"clientId\": \"CHECKOUT\",",
 							"    };",
 							"",
+							"",
 							"    const paymentsWithoutPaymentToken = response.payments.map(p => {",
-							"        const { paymentToken, ...rest} = p;",
+							"        const { paymentToken, ...rest } = p;",
 							"        return rest;",
 							"    });",
-							"",
+							"    const paymentsWithoutPaymentTokenAndTransferList = paymentsWithoutPaymentToken.map(p => {",
+							"        const { transferList, ...rest } = p;",
+							"        return rest;",
+							"    });",
 							"    const paymentTokens = response.payments.map(e => e.paymentToken);",
 							"",
 							"    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
-							"    pm.expect(paymentsWithoutPaymentToken).eql(expectedWithoutAuthTokenAndTransactionId.payments);",
+							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList).eql(expectedWithoutAuthTokenAndTransactionId.payments);",
 							"    pm.expect(paymentTokens).to.satisfy((tokens) => tokens.every(token => typeof token === \"string\"));",
 							"    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
 							"    pm.expect(response.authToken).to.be.a(\"string\");",
 							"    pm.expect(response.transactionId).to.be.a(\"string\");",
-							"",
+							"    pm.expect(paymentsWithoutPaymentToken[0].transferList).to.satisfy((transferList) => transferList.every(transferListItem =>",
+							"        Object.keys(transferListItem).every(property => expectedTransferListTokens.has(property))",
+							"        && pm.expect(transferListItem.paFiscalCode).to.be.a(\"string\")",
+							"        && pm.expect(transferListItem.digitalStamp).to.be.a(\"boolean\")",
+							"        && pm.expect(transferListItem.transferAmount).to.be.a(\"number\")",
+							"    ));",
 							"    pm.environment.set(\"TRANSACTION_ID\", response.transactionId);",
 							"    pm.environment.set(\"AMOUNT\", response.payments.reduce((total, payment) => total + payment.amount, 0))",
 							"    pm.environment.set(\"AUTH_TOKEN\", response.authToken);",
@@ -249,7 +276,13 @@
 			},
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"email\": \"mario.rossi@example.com\"\n}\n",
@@ -582,8 +615,9 @@
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
+							"    const paymentMethodId = pm.environment.get(\"PAYMENT_METHOD_ID\");",
 							"    const expectedWithoutRangesAssetAndStatus = {",
-							"        \"id\": \"e7058cac-5e1a-4002-8994-5bab31e9f385\",",
+							"        \"id\": paymentMethodId,",
 							"        \"name\": \"Carte\",",
 							"        \"description\": \"Carte di Credito e Debito\",",
 							"        \"paymentTypeCode\": \"CP\"",
@@ -591,8 +625,7 @@
 							"",
 							"    pm.expect(response.id).eql(expectedWithoutRangesAssetAndStatus.id);",
 							"    pm.expect(response.name).eql(expectedWithoutRangesAssetAndStatus.name);",
-							"    pm.expect(response.description).eql(expectedWithoutRangesAssetAndStatus.description);",
-							"    pm.expect(response.description).eql(expectedWithoutRangesAssetAndStatus.description);",
+							"    pm.expect(response.description.toLowerCase).eql(expectedWithoutRangesAssetAndStatus.description.toLowerCase);",
 							"    pm.expect(response.paymentTypeCode).eql(expectedWithoutRangesAssetAndStatus.paymentTypeCode);",
 							"    pm.expect(response.asset).to.be.not.empty;",
 							"    pm.expect(response.ranges).to.be.not.empty;",
@@ -602,45 +635,33 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
 					}
-				},
+				],
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
 						"checkout",
 						"v1",
 						"payment-methods",
-						"e7058cac-5e1a-4002-8994-5bab31e9f385",
-						""
+						"{{PAYMENT_METHOD_ID}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Compute fee for credit card payment 2",
+			"name": "Compute fee for credit card payment",
 			"event": [
 				{
 					"listen": "test",
@@ -668,7 +689,13 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
@@ -679,21 +706,16 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/fees",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/fees",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
 						"checkout",
 						"v1",
 						"payment-methods",
-						"e7058cac-5e1a-4002-8994-5bab31e9f385",
+						"{{PAYMENT_METHOD_ID}}",
 						"fees"
 					]
 				}
@@ -713,9 +735,10 @@
 							"    const response = pm.response.json();",
 							"",
 							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
-							"",
-							"    pm.expect(response.paymentMethods).to.be.not.empty;",
-							"    pm.expect(response.paymentMethods).to.satisfy((methods) => methods.every(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property))));",
+							"    //this line handle transient time for which response will differs from DEV and UAT until Checkout develop branch deploy in UAT env",
+							"    const paymentMethods = response.paymentMethods == null ? response : response.paymentMethods;",
+							"    pm.expect(paymentMethods).to.be.not.empty;",
+							"    pm.expect(paymentMethods).to.satisfy((methods) => methods.every(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property))));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -724,16 +747,17 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/payment-methods-service/v1/payment-methods",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/payment-methods-service/v1/payment-methods",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
@@ -752,7 +776,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"Transaction authorization - Status code is 200 with valid json response\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -777,10 +801,16 @@
 					]
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 100,\n    \"paymentInstrumentId\": \"e7058cac-5e1a-4002-8994-5bab31e9f385\",\n    \"pspId\": \"BNLIITRR\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"mail@example.com\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"Mario Rossi\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    }\n}",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"mail@example.com\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"Mario Rossi\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -788,14 +818,9 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
@@ -827,9 +852,12 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const rptIdNumber = _.random(300);",
-							"const rptIdSuffix = rptIdNumber.toString().padStart(3, '0');",
-							"pm.environment.set(\"VALID_NOTICE_CODE\", \"311116723749670\" + rptIdSuffix);",
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
 							"",
 							"const requestBody = {",
 							"  \"paymentNotices\": [",
@@ -841,11 +869,14 @@
 							"  \"email\": \"mario.rossi@example.com\"",
 							"};",
 							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT\")",
+							"",
 							"const requestObject = {",
 							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions\",",
 							"  method: 'POST',",
 							"  header: {",
 							"    'Content-Type': 'application/json',",
+							"    'deployment' : deploymentHeader,",
 							"  },",
 							"  body: {",
 							"    mode: 'raw',",
@@ -879,7 +910,13 @@
 					]
 				},
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
 					"host": [
