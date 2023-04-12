@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import {
   VALID_RANGE_END_NOTICE_CODE,
   VALID_RANGE_START_NOTICE_CODE,
@@ -79,35 +80,17 @@ export const confirmSummary = async () => {
   await payNoticeBtn.click();
 };
 
-export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
+export const payNotice = async (noticeCode, fiscalCode, email, cardData, psp) => {
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
   await confirmPaymentNotificationForm();
   await confirmSummary();
   await fillEmailForm(email);
   await confirmEmailForm();
   await choosePaymentMethod('card');
-  await fillCardDataForm(cardData);
+  await fillCardDataForm(cardData, psp);
   await new Promise(r => setTimeout(r, 2000));
 
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
-  const message = await page.waitForXPath(resultMessageXPath);
-  return await message.evaluate(el => el.textContent);
-};
-
-export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => {
-  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[1]/button';
-  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
-  await fillPaymentNotificationForm(noticeCode, fiscalCode);
-
-  const payNoticeBtn = await page.waitForXPath(payNoticeBtnXPath);
-  await payNoticeBtn.click();
-  await page.waitForNavigation();
-
-  await fillEmailForm(email);
-  await confirmEmailForm();
-  await choosePaymentMethod('card');
-  await fillCardDataForm(cardData);
-
   const message = await page.waitForXPath(resultMessageXPath);
   return await message.evaluate(el => el.textContent);
 };
@@ -135,24 +118,45 @@ export const choosePaymentMethod = async method => {
 };
 
 const execute_mock_authorization = async () => {
-  const dataInput = '#challengeDataEntry';
-  const confirmButton = '#confirm';
-  const mockOTPCode = '123456';
-  const verificationStep = 2;
+  try {
+    const dataInput = '#otipee';
+    const confirmButton =
+      '#returnForm > div.row.rowDataProps.row-eq-height.white > div.col-xs-6.spaziaturaData.padData.noVerticalPad.noPadXS > button';
+    const mockOTPCode = '123456';
 
-  for (let _ = 0; _ < verificationStep; _++) {
-    await page.waitForSelector(dataInput, { visible: true });
-    await page.click(dataInput);
-    await page.keyboard.type(mockOTPCode);
-
+    await fillInputById(dataInput, mockOTPCode);
     await page.waitForSelector(confirmButton);
     await page.click(confirmButton);
-
     await page.waitForNavigation();
+
+    const localStorage = await page.evaluate(() => sessionStorage.getItem('transaction'));
+    const token = JSON.parse(localStorage).payments[0].paymentToken;
+    await fetch('https://api.dev.platform.pagopa.it/nodo/node-for-psp/v1', {
+      method: 'POST',
+      headers: {
+        Host: 'api.dev.platform.pagopa.it:443',
+        'Content-Type': 'application/xml',
+        SOAPAction: 'sendPaymentOutcome',
+      },
+      body: `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nod="http://pagopa-api.pagopa.gov.it/node/nodeForPsp.xsd">\n    <soapenv:Header/>\n    <soapenv:Body>\n        <nod:sendPaymentOutcomeReq>\n            <idPSP>60000000001</idPSP>\n            <idBrokerPSP>60000000001</idBrokerPSP>\n            <idChannel>60000000001_01</idChannel>\n            <password>pwdpwdpwd</password>\n            <paymentToken>${token}</paymentToken>\n            <outcome>OK</outcome>\n            <!--Optional:-->\n            <details>\n                <paymentMethod>creditCard</paymentMethod>\n                <!--Optional:-->\n                <paymentChannel>app</paymentChannel>\n                <fee>5.00</fee>\n                <!--Optional:-->\n                <payer>\n                    <uniqueIdentifier>\n                        <entityUniqueIdentifierType>G</entityUniqueIdentifierType>\n                        <entityUniqueIdentifierValue>77777777777_01</entityUniqueIdentifierValue>\n                    </uniqueIdentifier>\n                    <fullName>name</fullName>\n                    <!--Optional:-->\n                    <streetName>street</streetName>\n                    <!--Optional:-->\n                    <civicNumber>civic</civicNumber>\n                    <!--Optional:-->\n                    <postalCode>postal</postalCode>\n                    <!--Optional:-->\n                    <city>city</city>\n                    <!--Optional:-->\n                    <stateProvinceRegion>state</stateProvinceRegion>\n                    <!--Optional:-->\n                    <country>IT</country>\n                    <!--Optional:-->\n                    <e-mail>prova@test.it</e-mail>\n                </payer>\n                <applicationDate>2021-12-12</applicationDate>\n                <transferDate>2021-12-11</transferDate>\n            </details>\n        </nod:sendPaymentOutcomeReq>\n    </soapenv:Body>\n</soapenv:Envelope>`,
+    });
+  } catch (e) {
+    console.error(e);
   }
 };
 
-export const fillCardDataForm = async cardData => {
+const selectPsp = async psp => {
+  try {
+    const ModificaPSP = await page.waitForSelector("button[aria-label='Modifica PSP']");
+    await ModificaPSP.click();
+    const PSPs = await page.$x(`//div[contains(text(), '${psp}')]`);
+    if (PSPs.length === 1) await PSPs[0].click();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const fillCardDataForm = async (cardData, psp) => {
   const { number, expirationDate, cvv, holderName } = cardData;
 
   const unauthorizedCard = '4801769871971639';
@@ -166,6 +170,8 @@ export const fillCardDataForm = async cardData => {
 
   const continueBtn = await page.waitForSelector(CONTINUE_PAYMENT_BUTTON);
   await continueBtn.click();
+
+  if (psp) await selectPsp(psp);
 
   const payBtn = await page.waitForSelector(payBtnSelector);
   await payBtn.click();

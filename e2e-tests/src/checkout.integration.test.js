@@ -6,19 +6,21 @@ import {
   generateAValidNoticeCode,
 } from './utils/helpers';
 import {
-  VALID_CARD_DATA,
   EMAIL,
   VALID_FISCAL_CODE,
   INVALID_FISCAL_CODE,
+  CVV,
+  HOLDER_NAME,
   CHECKOUT_URL,
   CARD_NUMBER_XPAY,
+  CARD_NUMBER_VPOS,
+  CARD_EXPIRATION_DATE,
 } from './utils/const';
 
 describe('Checkout payment activation tests', () => {
   /**
    * Test input and configuration
    */
-  const VALID_NOTICE_CODE = generateAValidNoticeCode();
   const PA_IRRAGGIUNGIBILE_NOTICE_CODE = String(process.env.PA_IRRAGGIUNGIBILE_NOTICE_CODE);
 
   /**
@@ -40,23 +42,46 @@ describe('Checkout payment activation tests', () => {
     await selectKeyboardInput();
   });
 
+  afterEach(async () => {
+    await page.goto(CHECKOUT_URL);
+  });
+
   it('Should correctly execute a payment (xPAY)', async () => {
     /*
      * 1. Payment with valid notice code
      */
-    const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, {
-      ...VALID_CARD_DATA,
-      number: CARD_NUMBER_XPAY,
-    });
+
+    const VALID_NOTICE_CODE = generateAValidNoticeCode();
+
+    const resultMessage = await payNotice(
+      VALID_NOTICE_CODE,
+      VALID_FISCAL_CODE,
+      EMAIL,
+      {
+        number: CARD_NUMBER_XPAY,
+        expirationDate: CARD_EXPIRATION_DATE,
+        cvv: CVV,
+        holderName: HOLDER_NAME,
+      },
+      'test12',
+    );
 
     expect(resultMessage).toContain('Grazie, hai pagato');
   });
 
-  it.only('Should correctly execute a payment (vPOS)', async () => {
+  it('Should correctly execute a payment (vPOS)', async () => {
     /*
      * 1. Payment with valid notice code
      */
-    const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, VALID_CARD_DATA);
+
+    const VALID_NOTICE_CODE = generateAValidNoticeCode();
+
+    const resultMessage = await payNotice(VALID_NOTICE_CODE, VALID_FISCAL_CODE, EMAIL, {
+      number: CARD_NUMBER_VPOS,
+      expirationDate: CARD_EXPIRATION_DATE,
+      cvv: CVV,
+      holderName: HOLDER_NAME,
+    });
 
     expect(resultMessage).toContain('Grazie, hai pagato');
   });
@@ -65,7 +90,7 @@ describe('Checkout payment activation tests', () => {
     /*
      * 2. Payment with notice code that fails on verify and get PA_IRRAGGIUNGIBILE
      */
-    const resultMessage = await verifyPaymentAndGetError(PA_IRRAGGIUNGIBILE_NOTICE_CODE, VALID_FISCAL_CODE);
+    const resultMessage = await verifyPaymentAndGetError(PA_IRRAGGIUNGIBILE_NOTICE_CODE, '77777777777');
 
     expect(resultMessage).toContain('PPT_STAZIONE_INT_PA_SCONOSCIUTA');
   });
