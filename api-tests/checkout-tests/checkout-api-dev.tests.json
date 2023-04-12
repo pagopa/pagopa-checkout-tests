@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "b778c0ad-1b60-4e94-b968-530ae76e9139",
 		"name": "Checkout API (DEV)",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -45,7 +46,8 @@
 						"exec": [
 							"const rptIdNumber = _.random(300);",
 							"const rptIdSuffix = rptIdNumber.toString().padStart(3, '0');",
-							"pm.environment.set(\"VALID_NOTICE_CODE\", \"311116723749670\" + rptIdSuffix);",
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\")",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", `${noticeCodePrefix}16723749670` + rptIdSuffix);",
 							""
 						],
 						"type": "text/javascript"
@@ -636,7 +638,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -645,8 +647,7 @@
 						"checkout",
 						"v1",
 						"payment-methods",
-						"e7058cac-5e1a-4002-8994-5bab31e9f385",
-						""
+						"{{PAYMENT_METHOD_ID}}"
 					]
 				}
 			},
@@ -698,7 +699,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/fees",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/fees",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -707,7 +708,7 @@
 						"checkout",
 						"v1",
 						"payment-methods",
-						"e7058cac-5e1a-4002-8994-5bab31e9f385",
+						"{{PAYMENT_METHOD_ID}}",
 						"fees"
 					]
 				}
@@ -727,9 +728,10 @@
 							"    const response = pm.response.json();",
 							"",
 							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
-							"",
-							"    pm.expect(response.paymentMethods).to.be.not.empty;",
-							"    pm.expect(response.paymentMethods).to.satisfy((methods) => methods.every(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property))));",
+							"    //this line handle transient time for which response will differs from DEV and UAT until Checkout develop branch deploy in UAT env",
+							"    const paymentMethods = response.paymentMethods == null ? response : response.paymentMethods;",
+							"    pm.expect(paymentMethods).to.be.not.empty;",
+							"    pm.expect(paymentMethods).to.satisfy((methods) => methods.every(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property))));",
 							"});"
 						],
 						"type": "text/javascript"

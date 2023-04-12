@@ -73,9 +73,33 @@
 			"value": "green",
 			"type": "default",
 			"enabled": true
+		},
+		{
+			"key": "PAYMENT_METHOD_ID",
+			"value": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "TRANSACTION_ID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "AUTH_TOKEN",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "NOTICE_CODE_PREFIX",
+			"value": "3020",
+			"type": "default",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-04-12T08:10:22.482Z",
+	"_postman_exported_at": "2023-04-12T12:19:45.244Z",
 	"_postman_exported_using": "Postman/10.12.11"
 }
