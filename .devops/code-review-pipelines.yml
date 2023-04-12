@@ -41,7 +41,7 @@ stages:
 
           - script: |
               newman run --ignore-redirects api-tests/checkout-tests/checkout-api-uat.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
-              newman run --ignore-redirects api-tests/checkout-tests/checkout-for-ecommerce-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
+              newman run --ignore-redirects api-tests/checkout-tests/checkout-for-ecommerce-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-for-ecommerce-api-TEST.xml
             displayName: 'Run API tests (UAT)'
             condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
 
