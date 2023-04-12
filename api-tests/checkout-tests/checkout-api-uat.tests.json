@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fe24eeaa-0e01-405f-9faf-eb7489e7c4b4",
+		"_postman_id": "d4426dab-46ed-4651-8ffb-51fd5393e75c",
 		"name": "Checkout API (UAT)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -58,19 +58,25 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": []
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/checkout/ecommerce/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
-						"checkout",
 						"ecommerce",
+						"checkout",
 						"v1",
 						"payment-requests",
 						"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}"

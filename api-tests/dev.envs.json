@@ -1,5 +1,5 @@
 {
-	"id": "86cc9402-fab3-4297-9467-b9022df1f8a0",
+	"id": "540c0c1e-5e34-4448-ac0f-caddb6f8a94c",
 	"name": "Checkout Tests DEV",
 	"values": [
 		{
@@ -80,9 +80,15 @@
 			"value": 100,
 			"type": "any",
 			"enabled": true
+		},
+		{
+			"key": "DEPLOYMENT",
+			"value": "green",
+			"type": "default",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-04-05T09:49:52.281Z",
-	"_postman_exported_using": "Postman/10.12.0"
+	"_postman_exported_at": "2023-04-12T08:09:31.340Z",
+	"_postman_exported_using": "Postman/10.12.11"
 }

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "504530f5-d2d2-4211-9473-482d1d82567e",
+		"_postman_id": "b778c0ad-1b60-4e94-b968-530ae76e9139",
 		"name": "Checkout API (DEV)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -58,7 +58,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "urlencoded",
 					"urlencoded": []
@@ -110,7 +116,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_FISCAL_CODE_PA}}{{UNKNOWN_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
@@ -158,7 +170,13 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}?recaptchaResponse=token",
 					"host": [
@@ -249,7 +267,13 @@
 			},
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"email\": \"mario.rossi@example.com\"\n}\n",
@@ -602,30 +626,19 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
 					}
-				},
+				],
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
@@ -668,7 +681,13 @@
 			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
@@ -679,14 +698,9 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/fees",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/e7058cac-5e1a-4002-8994-5bab31e9f385/fees",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
@@ -724,16 +738,17 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/payment-methods-service/v1/payment-methods",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/payment-methods-service/v1/payment-methods",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
@@ -777,7 +792,13 @@
 					]
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": 100,\n    \"paymentInstrumentId\": \"e7058cac-5e1a-4002-8994-5bab31e9f385\",\n    \"pspId\": \"BNLIITRR\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"mail@example.com\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"Mario Rossi\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    }\n}",
@@ -788,14 +809,9 @@
 					}
 				},
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
-					"protocol": "https",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
@@ -841,11 +857,14 @@
 							"  \"email\": \"mario.rossi@example.com\"",
 							"};",
 							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT\")",
+							"",
 							"const requestObject = {",
 							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions\",",
 							"  method: 'POST',",
 							"  header: {",
 							"    'Content-Type': 'application/json',",
+							"    'deployment' : deploymentHeader,",
 							"  },",
 							"  body: {",
 							"    mode: 'raw',",
@@ -879,7 +898,13 @@
 					]
 				},
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
 					"host": [
