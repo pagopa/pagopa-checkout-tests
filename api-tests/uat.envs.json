@@ -97,9 +97,39 @@
 			"value": "3020",
 			"type": "default",
 			"enabled": true
+		},
+		{
+			"key": "AMOUNT",
+			"value": "12000",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "DUE_DATE",
+			"value": "2021-07-31",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "EXPECTED_PAYMENT_REASON",
+			"value": "TARI/TEFA 2021",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "PSP_ID",
+			"value": "BNLIITRR",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "FEE",
+			"value": "0",
+			"type": "default",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-04-12T12:19:45.244Z",
+	"_postman_exported_at": "2023-04-12T14:09:58.481Z",
 	"_postman_exported_using": "Postman/10.12.11"
 }
