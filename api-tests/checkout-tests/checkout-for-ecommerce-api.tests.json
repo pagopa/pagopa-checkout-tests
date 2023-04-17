@@ -7,6 +7,105 @@
 	},
 	"item": [
 		{
+			"name": "Delete transaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Transaction cancellation - Status code is 202.\", function() {",
+							"    pm.response.to.have.status(202);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"    'deployment' : deploymentHeader,",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Payment Verify - Success",
 			"event": [
 				{
@@ -829,105 +928,6 @@
 						"transactions",
 						"{{TRANSACTION_ID}}",
 						"auth-requests"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete transaction",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Transaction cancellation - Status code is 202.\", function() {",
-							"    pm.response.to.have.status(202);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
-							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
-							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
-							"const randomNoticeCode = _.random(min, max);",
-							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
-							"",
-							"",
-							"const requestBody = {",
-							"  \"paymentNotices\": [",
-							"    {",
-							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
-							"      \"amount\": 100",
-							"    }",
-							"  ],",
-							"  \"email\": \"mario.rossi@example.com\"",
-							"};",
-							"",
-							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
-							"",
-							"const requestObject = {",
-							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions\",",
-							"  method: 'POST',",
-							"  header: {",
-							"    'Content-Type': 'application/json',",
-							"    'deployment' : deploymentHeader,",
-							"  },",
-							"  body: {",
-							"    mode: 'raw',",
-							"    raw: JSON.stringify(requestBody)",
-							"  }",
-							"};",
-							"",
-							"pm.sendRequest(requestObject, (error, response) => {",
-							"  if (error) {",
-							"    console.log(error);",
-							"  } else {",
-							"      const responseBody = response.json();",
-							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
-							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
-							"  }",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"ecommerce",
-						"checkout",
-						"v1",
-						"transactions",
-						"{{TRANSACTION_ID}}"
 					]
 				}
 			},
