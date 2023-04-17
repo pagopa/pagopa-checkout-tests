@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b778c0ad-1b60-4e94-b968-530ae76e9139",
+		"_postman_id": "31c17369-db66-4fdb-aa95-6ba3a386ea7e",
 		"name": "Ecommerce for Checkout API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -65,7 +65,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_PAYMENT_REQUESTS}}",
 						"type": "text"
 					}
 				],
@@ -123,7 +123,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_PAYMENT_REQUESTS}}",
 						"type": "text"
 					}
 				],
@@ -177,7 +177,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_PAYMENT_REQUESTS}}",
 						"type": "text"
 					}
 				],
@@ -279,7 +279,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
 						"type": "text"
 					}
 				],
@@ -640,7 +640,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_PAYMENT_METHODS}}",
 						"type": "text"
 					}
 				],
@@ -692,7 +692,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_PAYMENT_METHODS}}",
 						"type": "text"
 					}
 				],
@@ -804,7 +804,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
 						"type": "text"
 					}
 				],
@@ -869,7 +869,7 @@
 							"  \"email\": \"mario.rossi@example.com\"",
 							"};",
 							"",
-							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT\")",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
 							"",
 							"const requestObject = {",
 							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions\",",
@@ -913,7 +913,7 @@
 				"header": [
 					{
 						"key": "deployment",
-						"value": "{{DEPLOYMENT}}",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
 						"type": "text"
 					}
 				],
