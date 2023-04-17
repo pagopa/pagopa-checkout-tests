@@ -1,5 +1,5 @@
 {
-	"id": "79af780e-bd66-4597-aa0a-ea3a72630026",
+	"id": "b652d1d6-6025-4beb-a53e-2e64cb0ed484",
 	"name": "Checkout Tests UAT",
 	"values": [
 		{
@@ -69,12 +69,6 @@
 			"enabled": true
 		},
 		{
-			"key": "DEPLOYMENT",
-			"value": "green",
-			"type": "default",
-			"enabled": true
-		},
-		{
 			"key": "PAYMENT_METHOD_ID",
 			"value": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
 			"type": "default",
@@ -127,9 +121,27 @@
 			"value": "0",
 			"type": "default",
 			"enabled": true
+		},
+		{
+			"key": "DEPLOYMENT_PAYMENT_METHODS",
+			"value": "green",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "DEPLOYMENT_PAYMENT_REQUESTS",
+			"value": "green",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "DEPLOYMENT_TRANSACTION_SERVICE",
+			"value": "green",
+			"type": "default",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-04-12T14:09:58.481Z",
+	"_postman_exported_at": "2023-04-17T13:06:51.190Z",
 	"_postman_exported_using": "Postman/10.12.11"
 }

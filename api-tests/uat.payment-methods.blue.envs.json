@@ -1,10 +1,10 @@
 {
-	"id": "b6600d9d-e675-448a-95ee-dcd8305ed35f",
-	"name": "Checkout Tests DEV",
+	"id": "9fce5fec-f0e2-46c0-be1a-5060e68ae730",
+	"name": "Checkout Tests UAT BLUE - Payment methods service",
 	"values": [
 		{
 			"key": "CHECKOUT_HOST",
-			"value": "https://api.dev.platform.pagopa.it",
+			"value": "https://api.uat.platform.pagopa.it",
 			"enabled": true
 		},
 		{
@@ -14,7 +14,7 @@
 		},
 		{
 			"key": "VALID_NOTICE_CODE",
-			"value": "311116723749670106",
+			"value": "302000100000009424",
 			"enabled": true
 		},
 		{
@@ -25,6 +25,11 @@
 		{
 			"key": "PAID_NOTICE_CODE",
 			"value": "000000000000000009",
+			"enabled": true
+		},
+		{
+			"key": "CODICE_CONTESTO_PAGAMENTO",
+			"value": "f578bd72132b4da282bf6c35cf41011d",
 			"enabled": true
 		},
 		{
@@ -39,17 +44,17 @@
 		},
 		{
 			"key": "UNKNOWN_NOTICE_CODE",
-			"value": "302170000000000000",
+			"value": "002720356084529460",
 			"enabled": true
 		},
 		{
 			"key": "UNKNOWN_FISCAL_CODE_PA",
-			"value": "00000000001",
+			"value": "00000000000",
 			"enabled": true
 		},
 		{
 			"key": "UNKNOWN_STAZIONE_NOTICE_CODE",
-			"value": "302970000000000000",
+			"value": "002720356512737953",
 			"enabled": true
 		},
 		{
@@ -64,6 +69,12 @@
 			"enabled": true
 		},
 		{
+			"key": "PAYMENT_METHOD_ID",
+			"value": "378d0b4f-8b69-46b0-8215-07785fe1aad4",
+			"type": "default",
+			"enabled": true
+		},
+		{
 			"key": "TRANSACTION_ID",
 			"value": "",
 			"type": "any",
@@ -72,30 +83,30 @@
 		{
 			"key": "AUTH_TOKEN",
 			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "NOTICE_CODE_PREFIX",
+			"value": "3020",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "AMOUNT",
-			"value": "100",
-			"type": "any",
-			"enabled": true
-		},
-		{
-			"key": "PAYMENT_METHOD_ID",
-			"value": "e7058cac-5e1a-4002-8994-5bab31e9f385",
+			"value": "12000",
 			"type": "default",
 			"enabled": true
 		},
 		{
-			"key": "NOTICE_CODE_PREFIX",
-			"value": "3111",
+			"key": "DUE_DATE",
+			"value": "2021-07-31",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "EXPECTED_PAYMENT_REASON",
-			"value": "test",
+			"value": "TARI/TEFA 2021",
 			"type": "default",
 			"enabled": true
 		},
@@ -107,13 +118,13 @@
 		},
 		{
 			"key": "FEE",
-			"value": "100",
+			"value": "0",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "DEPLOYMENT_PAYMENT_METHODS",
-			"value": "green",
+			"value": "blue",
 			"type": "default",
 			"enabled": true
 		},
@@ -131,6 +142,6 @@
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-04-17T13:06:41.485Z",
+	"_postman_exported_at": "2023-04-17T13:07:45.354Z",
 	"_postman_exported_using": "Postman/10.12.11"
 }
