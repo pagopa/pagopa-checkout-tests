@@ -101,13 +101,13 @@
 		},
 		{
 			"key": "PSP_ID",
-			"value": "BNLIITRR",
+			"value": "BCITITMM",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "FEE",
-			"value": "100",
+			"value": "0",
 			"type": "default",
 			"enabled": true
 		},
