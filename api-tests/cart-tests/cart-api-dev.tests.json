@@ -20,6 +20,19 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"protocolProfileBehavior": {
@@ -30,7 +43,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"311100100440009424\",\n            \"fiscalCode\": \"77777777777\",\n            \"amount\": 12000,\n            \"companyName\": \"Nome EC\",\n            \"description\": \"Oggetto del pagamento\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\",\n    \"idCart\": \"3de77d19-1655-4eaa-8bbb-14be203584d4\",\n    \"allCCP\": false\n}\n\n",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": {{VALID_NOTICE_CODE}},\n            \"fiscalCode\": {{VALID_FISCAL_CODE_PA}},\n            \"amount\": 12000,\n            \"companyName\": \"Nome EC\",\n            \"description\": \"Oggetto del pagamento\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\",\n    \"idCart\": \"3de77d19-1655-4eaa-8bbb-14be203584d4\",\n    \"allCCP\": false\n}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
