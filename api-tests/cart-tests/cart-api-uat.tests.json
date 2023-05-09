@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "2830f361-9c43-4257-9914-46756ae18d99",
+		"_postman_id": "287b063a-28c2-4f82-b133-ca388250ae83",
 		"name": "Carts API (UAT)",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -142,9 +143,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 422 with multiple payment notices\", () => {",
-							"  pm.expect(pm.response.code).to.eql(422);",
-							"",
+							"pm.test(\"Status code is 400 with more than 5 payment notices\", () => {",
+							"  pm.expect(pm.response.code).to.eql(400);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -165,7 +165,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"AA\",\n            \"description\": \"BB\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"CC\",\n            \"description\": \"DD\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009421\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"AA\",\n            \"description\": \"BB\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009422\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"CC\",\n            \"description\": \"DD\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009423\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"EE\",\n            \"description\": \"FF\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"GG\",\n            \"description\": \"HH\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009425\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"JJ\",\n            \"description\": \"KK\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009426\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"II\",\n            \"description\": \"LL\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
