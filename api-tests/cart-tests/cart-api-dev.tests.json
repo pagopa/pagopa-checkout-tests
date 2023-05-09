@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "deee9d12-69c3-4f8d-b8c1-7df7a7aa840c",
+		"_postman_id": "2106a0e2-49b9-431e-85c2-52be64ae987e",
 		"name": "Carts API (DEV)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -97,6 +97,56 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"1\",\n            \"amount\": 10000,\n            \"companyName\": null,\n            \"description\": null\n        }\n    ],\n    \"returnurls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.platform.pagopa.it/checkout/ec/v1/carts",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"platform",
+						"pagopa",
+						"it"
+					],
+					"path": [
+						"checkout",
+						"ec",
+						"v1",
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post carts KO Multiple payment notices",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 with more than 5 payment notices\", () => {",
+							"  pm.expect(pm.response.code).to.eql(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": \"302000100440009421\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"AA\",\n            \"description\": \"BB\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009422\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"CC\",\n            \"description\": \"DD\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009423\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"EE\",\n            \"description\": \"FF\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009424\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"GG\",\n            \"description\": \"HH\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009425\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"JJ\",\n            \"description\": \"KK\"\n        },\n        {\n            \"noticeNumber\": \"302000100440009426\",\n            \"fiscalCode\": \"11111111111\",\n            \"amount\": 10000,\n            \"companyName\": \"II\",\n            \"description\": \"LL\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
