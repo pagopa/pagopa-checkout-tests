@@ -44,7 +44,7 @@
 							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
 							"",
 							"const requestObject = {",
-							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions\",",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions?recaptchaResponse=token\",",
 							"  method: 'POST',",
 							"  header: {",
 							"    'Content-Type': 'application/json',",
@@ -403,6 +403,12 @@
 						"checkout",
 						"v1",
 						"transactions"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "token"
+						}
 					]
 				}
 			},
