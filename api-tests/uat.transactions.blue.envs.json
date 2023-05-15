@@ -112,13 +112,13 @@
 		},
 		{
 			"key": "PSP_ID",
-			"value": "AGID_02",
+			"value": "BPPIITRRXXX",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "FEE",
-			"value": "0",
+			"value": "150",
 			"type": "default",
 			"enabled": true
 		},
