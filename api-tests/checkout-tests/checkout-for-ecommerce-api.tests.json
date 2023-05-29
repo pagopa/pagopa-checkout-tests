@@ -801,6 +801,11 @@
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_PAYMENT_METHODS}}",
 						"type": "text"
+					},
+					{
+						"key": "x-transaction-id",
+						"value": "{{TRANSACTION_ID}}",
+						"type": "text"
 					}
 				],
 				"body": {
