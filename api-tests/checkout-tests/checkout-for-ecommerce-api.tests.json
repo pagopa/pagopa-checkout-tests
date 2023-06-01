@@ -795,6 +795,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -803,7 +813,7 @@
 						"type": "text"
 					},
 					{
-						"key": "x-transaction-id",
+						"key": "x-transaction-id-from-client",
 						"value": "{{TRANSACTION_ID}}",
 						"type": "text"
 					}
