@@ -323,6 +323,7 @@
 							"                \"rptId\": requestRptId,",
 							"                \"reason\": expectedReason,",
 							"                \"amount\": 100,",
+							"                \"isAllCCP\": false,",
 							"",
 							"            }",
 							"        ],",
@@ -820,7 +821,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
+					"raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"isAllCCP\": false,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -932,7 +933,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"mail@example.com\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"Mario Rossi\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    }\n}",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"mail@example.com\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"Mario Rossi\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
