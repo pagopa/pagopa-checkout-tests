@@ -1,5 +1,5 @@
 {
-	"id": "b652d1d6-6025-4beb-a53e-2e64cb0ed484",
+	"id": "04f88d48-b488-4118-aa91-9164b28eed8c",
 	"name": "Checkout Tests UAT",
 	"values": [
 		{
@@ -142,6 +142,6 @@
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-04-17T13:06:51.190Z",
-	"_postman_exported_using": "Postman/10.12.11"
+	"_postman_exported_at": "2023-06-16T09:06:32.786Z",
+	"_postman_exported_using": "Postman/10.15.1"
 }

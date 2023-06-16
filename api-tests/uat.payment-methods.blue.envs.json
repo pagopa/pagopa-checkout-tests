@@ -1,6 +1,6 @@
 {
-	"id": "9fce5fec-f0e2-46c0-be1a-5060e68ae730",
-	"name": "Checkout Tests UAT BLUE - Payment methods service",
+	"id": "04f88d48-b488-4118-aa91-9164b28eed8c",
+	"name": "Checkout Tests UAT",
 	"values": [
 		{
 			"key": "CHECKOUT_HOST",
@@ -112,7 +112,7 @@
 		},
 		{
 			"key": "PSP_ID",
-			"value": "BPPIITRRXXX",
+			"value": "PPAYITR1XXX",
 			"type": "default",
 			"enabled": true
 		},
@@ -142,6 +142,6 @@
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-04-17T13:07:45.354Z",
-	"_postman_exported_using": "Postman/10.12.11"
+	"_postman_exported_at": "2023-06-16T09:06:32.786Z",
+	"_postman_exported_using": "Postman/10.15.1"
 }
