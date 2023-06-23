@@ -342,7 +342,7 @@
 							"    const paymentTokens = response.payments.map(e => e.paymentToken);",
 							"    ",
 							"    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
-							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList.length).eql(1);"
+							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList.length).eql(1);",
 							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList).to.satisfy((payments) => payments.every(paymentsItem =>",
 							"        Object.keys(paymentsItem).every(property => expectedPaymentTokens.has(property))",
 							"        && pm.expect(paymentsItem.amount).to.be.a(\"number\")",
