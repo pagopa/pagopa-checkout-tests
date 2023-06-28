@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "31c17369-db66-4fdb-aa95-6ba3a386ea7e",
+		"_postman_id": "d1dc9605-4e01-429a-b98c-9d518024605e",
 		"name": "Ecommerce for Checkout API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_exporter_id": "23305473"
 	},
 	"item": [
 		{
@@ -315,6 +315,7 @@
 							"    const response = pm.response.json();",
 							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
 							"    const expectedReason = pm.environment.get(\"EXPECTED_PAYMENT_REASON\");",
+							"    const expectedPaymentTokens = new Set([\"rptId\",\"reason\",\"amount\",\"isAllCCP\"]);",
 							"    const expectedTransferListTokens = new Set([\"paFiscalCode\", \"digitalStamp\", \"transferAmount\", \"transferCategory\"]);",
 							"    const expectedWithoutAuthTokenAndTransactionId = {",
 							"        \"status\": \"ACTIVATED\",",
@@ -322,7 +323,6 @@
 							"            {",
 							"                \"rptId\": requestRptId,",
 							"                \"reason\": expectedReason,",
-							"                \"amount\": 100,",
 							"                \"isAllCCP\": false,",
 							"",
 							"            }",
@@ -340,9 +340,18 @@
 							"        return rest;",
 							"    });",
 							"    const paymentTokens = response.payments.map(e => e.paymentToken);",
-							"",
+							"    ",
 							"    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
-							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList).eql(expectedWithoutAuthTokenAndTransactionId.payments);",
+							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList.length).eql(1);",
+							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList).to.satisfy((payments) => payments.every(paymentsItem =>",
+							"        Object.keys(paymentsItem).every(property => expectedPaymentTokens.has(property))",
+							"        && pm.expect(paymentsItem.amount).to.be.a(\"number\")",
+							"        && pm.expect(paymentsItem.rptId).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].rptId)",
+							"        && pm.expect(paymentsItem.reason).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].reason)",
+							"        && pm.expect(paymentsItem.isAllCCP).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].isAllCCP) ",
+							"    ));",
+							"    ",
+							"    ",
 							"    pm.expect(paymentTokens).to.satisfy((tokens) => tokens.every(token => typeof token === \"string\"));",
 							"    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
 							"    pm.expect(response.authToken).to.be.a(\"string\");",
@@ -395,7 +404,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
