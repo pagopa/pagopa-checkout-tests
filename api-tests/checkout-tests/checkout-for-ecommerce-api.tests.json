@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d1dc9605-4e01-429a-b98c-9d518024605e",
+		"_postman_id": "96efc315-3f91-491a-866f-1cc15713457b",
 		"name": "Ecommerce for Checkout API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23305473"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -413,6 +413,90 @@
 						"checkout",
 						"v1",
 						"transactions"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "token"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment Verify - Success Cache hit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Payment Verify cache hit - Status code is 200 with valid json response\", function(){",
+							"    ",
+							"    const responseJson = pm.response.json();",
+							"",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
+							"    const fixedDueDate = pm.environment.get(\"DUE_DATE\")",
+							"    const dueDate = fixedDueDate ==null ? new Date().toISOString().split('T')[0] : fixedDueDate;",
+							"    const amount = parseInt(pm.environment.get(\"AMOUNT\"));",
+							"    const expected = {",
+							"        \"amount\": amount,",
+							"        \"rptId\": requestRptId,",
+							"        \"paFiscalCode\": \"77777777777\",",
+							"        \"dueDate\": dueDate",
+							"    };",
+							"",
+							"    pm.expect(responseJson.amount).eql(expected.amount);",
+							"    pm.expect(responseJson.rptId).eql(expected.rptId);",
+							"    pm.expect(responseJson.paFiscalCode).eql(expected.paFiscalCode);",
+							"    pm.expect(responseJson.dueDate).eql(expected.dueDate);",
+							"    pm.expect(responseJson.description).to.be.a.string;",
+							"    pm.expect(responseJson.paName).to.be.a.string;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_PAYMENT_REQUESTS}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-requests/{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}?recaptchaResponse=token",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-requests",
+						"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}"
 					],
 					"query": [
 						{
