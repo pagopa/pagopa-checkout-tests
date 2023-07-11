@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "96efc315-3f91-491a-866f-1cc15713457b",
+		"_postman_id": "7eb0ae9e-9744-4aed-b3ce-9a03e9f13bb2",
 		"name": "Ecommerce for Checkout API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -971,13 +971,13 @@
 					}
 				],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/payment-methods-service/v1/payment-methods",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
-						"payment-methods-service",
+						"checkout",
 						"v1",
 						"payment-methods"
 					]
