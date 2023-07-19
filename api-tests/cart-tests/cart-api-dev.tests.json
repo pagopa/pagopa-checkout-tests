@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2106a0e2-49b9-431e-85c2-52be64ae987e",
+		"_postman_id": "de11fa46-a4ae-4b4f-ade9-9e66a2d515dd",
 		"name": "Carts API (DEV)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -45,6 +45,71 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": {{VALID_NOTICE_CODE}},\n            \"fiscalCode\": {{VALID_FISCAL_CODE_PA}},\n            \"amount\": 12000,\n            \"companyName\": \"Nome EC\",\n            \"description\": \"Oggetto del pagamento\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"test@test.it\",\n    \"idCart\": \"3de77d19-1655-4eaa-8bbb-14be203584d4\",\n    \"allCCP\": false\n}\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dev.platform.pagopa.it/checkout/ec/v1/carts",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"platform",
+						"pagopa",
+						"it"
+					],
+					"path": [
+						"checkout",
+						"ec",
+						"v1",
+						"carts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post cart OK mail in upper case",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 302 with one payment notice and mail in upper case\", () => {",
+							"  pm.expect(pm.response.code).to.eql(302);",
+							"  pm.expect(pm.response.to.have.header(\"Location\"))",
+							"  pm.environment.set(\"CART_ID\", pm.response.headers.get(\"Location\").substring((pm.response.headers.get(\"Location\").lastIndexOf(\"/\"))+1));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentNotices\": [\n        {\n            \"noticeNumber\": {{VALID_NOTICE_CODE}},\n            \"fiscalCode\": {{VALID_FISCAL_CODE_PA}},\n            \"amount\": 12000,\n            \"companyName\": \"Nome EC\",\n            \"description\": \"Oggetto del pagamento\"\n        }\n    ],\n    \"returnUrls\": {\n        \"returnOkUrl\": \"https://returnOkUrl\",\n        \"returnCancelUrl\": \"https://returnCancelUrl\",\n        \"returnErrorUrl\": \"https://returnErrorUrl\"\n    },\n    \"emailNotice\": \"TEST@test.IT\",\n    \"idCart\": \"3de77d19-1655-4eaa-8bbb-14be203584d4\",\n    \"allCCP\": false\n}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
