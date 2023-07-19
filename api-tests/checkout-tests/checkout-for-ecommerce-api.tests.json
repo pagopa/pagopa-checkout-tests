@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "e63a6ae4-8bb4-4890-ba43-f645b24927ce",
+		"_postman_id": "88fc463b-88a9-4cd6-9847-2f6d4594ea84",
 		"name": "Ecommerce for Checkout API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_exporter_id": "24209240"
 	},
 	"item": [
 		{
@@ -933,9 +933,10 @@
 						"exec": [
 							"pm.test(\"Payment method details - Status code is 200 with valid json response\", function() {",
 							"    pm.response.to.have.status(200);",
-							"",
 							"    const response = pm.response.json();",
 							"    const paymentMethodId = pm.environment.get(\"PAYMENT_METHOD_ID\");",
+							"    pm.environment.set(\"PAYMENT_METHOD_DESCRIPTION\", response.description);",
+							"    pm.environment.set(\"PAYMENT_METHOD_NAME\", response.name);",
 							"    const expectedWithoutRangesAssetAndStatus = {",
 							"        \"id\": paymentMethodId,",
 							"        \"name\": \"Carte\",",
@@ -992,14 +993,13 @@
 							"",
 							"    const response = pm.response.json();",
 							"    const expectedWithoutBundles = {",
-							"        \"paymentMethodName\": \"Carte\",",
-							"        \"paymentMethodDescription\": \"Carte di Credito e Debito\",",
 							"        \"paymentMethodStatus\": \"ENABLED\",",
 							"        \"belowThreshold\": false",
 							"    };",
-							"",
-							"    pm.expect(response.paymentMethodName).eql(expectedWithoutBundles.paymentMethodName);",
-							"    pm.expect(response.paymentMethodDescription).eql(expectedWithoutBundles.paymentMethodDescription);",
+							"    const paymentMethodDescription = pm.environment.get(\"PAYMENT_METHOD_DESCRIPTION\");",
+							"    const paymentMethodName = pm.environment.get(\"PAYMENT_METHOD_NAME\");",
+							"    pm.expect(response.paymentMethodName).eql(paymentMethodName);",
+							"    pm.expect(response.paymentMethodDescription).eql(paymentMethodDescription);",
 							"    pm.expect(response.paymentMethodStatus).eql(expectedWithoutBundles.paymentMethodStatus);",
 							"    pm.expect(response.belowThreshold).eql(expectedWithoutBundles.belowThreshold);",
 							"    pm.expect(response.bundles).to.be.not.empty;",
