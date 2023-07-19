@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "9cba1ec2-5c8b-46fa-bc96-f183fb3bfebd",
+		"_postman_id": "e63a6ae4-8bb4-4890-ba43-f645b24927ce",
 		"name": "Ecommerce for Checkout API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24209240"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -291,6 +291,125 @@
 						"v1",
 						"payment-requests",
 						"{{UNKNOWN_STAZIONE_FISCAL_CODE_PA}}{{UNKNOWN_STAZIONE_NOTICE_CODE}}"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "token"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create transaction mail case insensitive",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function () {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
+							"    const expectedReason = pm.environment.get(\"EXPECTED_PAYMENT_REASON\");",
+							"    const expectedPaymentTokens = new Set([\"rptId\",\"reason\",\"amount\",\"isAllCCP\"]);",
+							"    const expectedTransferListTokens = new Set([\"paFiscalCode\", \"digitalStamp\", \"transferAmount\", \"transferCategory\"]);",
+							"    const expectedWithoutAuthTokenAndTransactionId = {",
+							"        \"status\": \"ACTIVATED\",",
+							"        \"payments\": [",
+							"            {",
+							"                \"rptId\": requestRptId,",
+							"                \"reason\": expectedReason,",
+							"                \"isAllCCP\": false,",
+							"",
+							"            }",
+							"        ],",
+							"        \"clientId\": \"CHECKOUT\",",
+							"    };",
+							"",
+							"",
+							"    const paymentsWithoutPaymentToken = response.payments.map(p => {",
+							"        const { paymentToken, ...rest } = p;",
+							"        return rest;",
+							"    });",
+							"    const paymentsWithoutPaymentTokenAndTransferList = paymentsWithoutPaymentToken.map(p => {",
+							"        const { transferList, ...rest } = p;",
+							"        return rest;",
+							"    });",
+							"    const paymentTokens = response.payments.map(e => e.paymentToken);",
+							"    ",
+							"    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
+							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList.length).eql(1);",
+							"    pm.expect(paymentsWithoutPaymentTokenAndTransferList).to.satisfy((payments) => payments.every(paymentsItem =>",
+							"        Object.keys(paymentsItem).every(property => expectedPaymentTokens.has(property))",
+							"        && pm.expect(paymentsItem.amount).to.be.a(\"number\")",
+							"        && pm.expect(paymentsItem.rptId).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].rptId)",
+							"        && pm.expect(paymentsItem.reason).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].reason)",
+							"        && pm.expect(paymentsItem.isAllCCP).to.be.a(\"boolean\") ",
+							"    ));",
+							"    ",
+							"    ",
+							"    pm.expect(paymentTokens).to.satisfy((tokens) => tokens.every(token => typeof token === \"string\"));",
+							"    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
+							"    pm.expect(response.authToken).to.be.a(\"string\");",
+							"    pm.expect(response.transactionId).to.be.a(\"string\");",
+							"    pm.expect(paymentsWithoutPaymentToken[0].transferList).to.satisfy((transferList) => transferList.every(transferListItem =>",
+							"        Object.keys(transferListItem).every(property => expectedTransferListTokens.has(property))",
+							"        && pm.expect(transferListItem.paFiscalCode).to.be.a(\"string\")",
+							"        && pm.expect(transferListItem.digitalStamp).to.be.a(\"boolean\")",
+							"        && pm.expect(transferListItem.transferAmount).to.be.a(\"number\")",
+							"        && pm.expect(typeof transferListItem.transferCategory).to.be.oneOf([\"string\",\"undefined\"])",
+							"        ",
+							"    ));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"email\": \"TEST@test.IT\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions?recaptchaResponse=token",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions"
 					],
 					"query": [
 						{
