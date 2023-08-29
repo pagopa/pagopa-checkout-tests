@@ -939,7 +939,7 @@
 							"    pm.environment.set(\"PAYMENT_METHOD_NAME\", response.name);",
 							"    const expectedWithoutRangesAssetAndStatus = {",
 							"        \"id\": paymentMethodId,",
-							"        \"name\": \"Carte\",",
+							"        \"name\": \"CARDS\",",
 							"        \"description\": \"Carte di Credito e Debito\",",
 							"        \"paymentTypeCode\": \"CP\"",
 							"    };",
