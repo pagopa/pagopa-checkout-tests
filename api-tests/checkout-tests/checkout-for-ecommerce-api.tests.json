@@ -13,7 +13,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction cancellation - Status code is 202.\", function() {",
+							"pm.test(\"[eCommerce for checkout] Transaction in ACTIVATED status is canceled successfully with DELETE /transactions/:idTransaction\", function() {",
 							"    pm.response.to.have.status(202);",
 							"});"
 						],
@@ -112,7 +112,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 200 with valid json response\", function(){",
+							"pm.test(\"[eCommerce for checkout] Valid payment request successfully retrieved with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -201,12 +201,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
+							"pm.test(\"[eCommerce for checkout] 404 - PPT_DOMINIO_SCONOSCIUTO error retrieved for invalid notice code with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
-							"",
 							"    pm.expect(responseJson.faultCodeDetail).to.include(\"PPT_DOMINIO_SCONOSCIUTO\");",
-							"",
 							"    pm.response.to.have.status(404);",
 							"});"
 						],
@@ -255,12 +253,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_STAZIONE_INT_PA_SCONOSCIUTA\", function(){",
+							"pm.test(\"[eCommerce for checkout] 404 - PPT_STAZIONE_INT_PA_SCONOSCIUTA error retrieved for invalid notice code with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
-							"",
 							"    pm.expect(responseJson.faultCodeDetail).equals(\"PPT_STAZIONE_INT_PA_SCONOSCIUTA\");",
-							"",
 							"    pm.response.to.have.status(404);",
 							"});"
 						],
@@ -428,7 +424,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function () {",
+							"pm.test(\"[eCommerce for checkout] New transaction is activated successfully with POST /transactions\", function () {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -550,8 +546,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify cache hit - Status code is 200 with valid json response\", function(){",
-							"    ",
+							"pm.test(\"[eCommerce for checkout] Cache hit with valid payment request successfully retrieved with GET payment-request/:rptId\", function(){",
+							"   ",
 							"    const responseJson = pm.response.json();",
 							"",
 							"    pm.response.to.have.status(200);",
@@ -628,310 +624,14 @@
 			"response": []
 		},
 		{
-			"name": "Payment Support - browser info",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment Support - Status code is 200 with browsers detail\", function(){",
-							"    ",
-							"    const responseJson = pm.response.json();",
-							"",
-							"    pm.expect(responseJson.ip).not.equal(null);",
-							"    pm.expect(responseJson.accept).not.equal(null);",
-							"    pm.expect(responseJson.useragent).not.equal(null);",
-							"",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/browsers/current/info",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"browsers",
-						"current",
-						"info"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction - xpay",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function() {",
-							"    // vvv These are the same ones in the request URL! vvv",
-							"    const requestParams = {",
-							"        \"id\": \"NzA5MDEwMjg3NQ==\",",
-							"        \"esito\": \"OK\",",
-							"        \"idOperazione\": \"00054014\",",
-							"        \"timestamp\": \"1638023340310\",",
-							"        \"mac\": \"000000b500ba947c2614b547250c49e59477e6ef\",",
-							"        \"xpayNonce\": \"58a83f26-1421-3350-8dd6-aa152de80000\"",
-							"    };",
-							"    /// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
-							"",
-							"    const expectedResponseParams = {",
-							"        ...requestParams,",
-							"        \"timeStamp\": requestParams.timestamp,",
-							"        \"resumeType\": \"xpay\"",
-							"    };",
-							"    delete expectedResponseParams[\"timestamp\"];",
-							"",
-							"    pm.response.to.have.status(302);",
-							"",
-							"    const URL = require('url');",
-							"    const redirectUrl = URL.parse(pm.response.headers.get(\"Location\"));",
-							"    const responseQueryParams = Object.fromEntries(redirectUrl.query.split(\"&\").map(entry => {",
-							"        const [name, value] = entry.split(/=(.*)/s);",
-							"        return [name, value]",
-							"    }));",
-							"",
-							"    pm.expect(expectedResponseParams).to.deep.equal(responseQueryParams);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/xpay/NzA5MDEwMjg3NQ==?esito=OK&idOperazione=00054014&timeStamp=1638023340310&mac=000000b500ba947c2614b547250c49e59477e6ef&xpayNonce=58a83f26-1421-3350-8dd6-aa152de80000",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"xpay",
-						"NzA5MDEwMjg3NQ=="
-					],
-					"query": [
-						{
-							"key": "esito",
-							"value": "OK"
-						},
-						{
-							"key": "idOperazione",
-							"value": "00054014"
-						},
-						{
-							"key": "timeStamp",
-							"value": "1638023340310"
-						},
-						{
-							"key": "mac",
-							"value": "000000b500ba947c2614b547250c49e59477e6ef"
-						},
-						{
-							"key": "xpayNonce",
-							"value": "58a83f26-1421-3350-8dd6-aa152de80000"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction- xpay verify",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction xpay verify Status code is 302\", function(){",
-							"        pm.response.to.have.status(302);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/xpay/verification/NzA5MDEwMjg3NQ==?esito=OK&idOperazione=00054014&timeStamp=1638023340310&mac=000000b500ba947c2614b547250c49e59477e6ef&xpayNonce=58a83f26-1421-3350-8dd6-aa152de80000",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"xpay",
-						"verification",
-						"NzA5MDEwMjg3NQ=="
-					],
-					"query": [
-						{
-							"key": "esito",
-							"value": "OK"
-						},
-						{
-							"key": "idOperazione",
-							"value": "00054014"
-						},
-						{
-							"key": "timeStamp",
-							"value": "1638023340310"
-						},
-						{
-							"key": "mac",
-							"value": "000000b500ba947c2614b547250c49e59477e6ef"
-						},
-						{
-							"key": "xpayNonce",
-							"value": "58a83f26-1421-3350-8dd6-aa152de80000"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction - vpos challenge",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction vpos challenge - Status code is 302\", function() {",
-							"    pm.response.to.have.status(302);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/NzA5MDEwMjg3NQ==/challenge?esito=OK&idOperazione=00054014&timeStamp=1638023340310&mac=000000b500ba947c2614b547250c49e59477e6ef&xpayNonce=58a83f26-1421-3350-8dd6-aa152de80000",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"NzA5MDEwMjg3NQ==",
-						"challenge"
-					],
-					"query": [
-						{
-							"key": "esito",
-							"value": "OK"
-						},
-						{
-							"key": "idOperazione",
-							"value": "00054014"
-						},
-						{
-							"key": "timeStamp",
-							"value": "1638023340310"
-						},
-						{
-							"key": "mac",
-							"value": "000000b500ba947c2614b547250c49e59477e6ef"
-						},
-						{
-							"key": "xpayNonce",
-							"value": "58a83f26-1421-3350-8dd6-aa152de80000"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction - vpos method",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction vpos method - Status code is 200 with 3DS.Notification.Received\", function(){",
-							"    pm.expect(pm.response.text()).to.include(\"3DS.Notification.Received\");",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/NzA5MDEwMjg3NQ==/method",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"NzA5MDEwMjg3NQ==",
-						"method"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Get payment method details for credit cards",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment method details - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] Card payment method successfully retrieved with GET payment-methods/:methodId\", function(){",
+							"",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    const paymentMethodId = pm.environment.get(\"PAYMENT_METHOD_ID\");",
@@ -988,11 +688,13 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Fee compute - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] Psp and fees retrieved with POST fees\", function(){",
+							"   ",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
 							"    const expectedWithoutBundles = {",
+							"        \"paymentMethodName\": \"CARDS\",",
 							"        \"paymentMethodStatus\": \"ENABLED\",",
 							"        \"belowThreshold\": false",
 							"    };",
@@ -1066,7 +768,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Get all payment methods - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] All payment methods successfully retrieved with GET payment-methods/:methodId\", function(){",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -1113,7 +815,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction authorization - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] New autho with GET payment-methods/:methodId\", function(){",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
