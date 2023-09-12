@@ -129,13 +129,15 @@ export const fillCardDataForm = async (cardData, useXPAY = false) => {
 
   const unauthorizedCard = "4801769871971639";
 
-  const cardNumberInput = '#number';
-  const expirationDateInput = '#expirationDate';
-  const ccvInput = '#cvv';
-  const holderNameInput = '#name';
+  const cardNumberInput = '#frame_CARD_NUMBER';
+  const expirationDateInput = '#frame_EXPIRATION_DATE';
+  const ccvInput = '#frame_SECURITY_CODE';
+  const holderNameInput = '#frame_CARDHOLDER_NAME';
   const continueBtnXPath = "button[type=submit]";
   const payBtnSelector = "#paymentCheckPageButtonPay";
   const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
+
+  await page.waitForTimeout(5_000)
 
   await page.waitForSelector(cardNumberInput);
   await page.click(cardNumberInput);
