@@ -136,9 +136,8 @@ export const fillCardDataForm = async (cardData, useXPAY = false) => {
   const continueBtnXPath = "button[type=submit]";
   const payBtnSelector = "#paymentCheckPageButtonPay";
   const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
-
+  
   await page.waitForTimeout(5_000)
-
   await page.waitForSelector(cardNumberInput);
   await page.click(cardNumberInput);
   await page.keyboard.type(cardData.number);
