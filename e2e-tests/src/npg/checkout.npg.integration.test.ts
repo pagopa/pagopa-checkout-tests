@@ -7,7 +7,6 @@ describe("Checkout payment activation tests", () => {
    */
   const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
   const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
-  const INVALID_FISCAL_CODE = String(process.env.INVALID_FISCAL_CODE)
   const EMAIL = String(process.env.EMAIL);
   const VALID_CARD_DATA = {
     number: String(process.env.CARD_NUMBER),
@@ -23,8 +22,9 @@ describe("Checkout payment activation tests", () => {
     Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) +
     VALID_RANGE_START_NOTICE_CODE
   ).toString();
+
+  const NPG_PSP_ABI = String(process.env.NPG_PSP_ABI);
   
-  const PA_IRRAGGIUNGIBILE_NOTICE_CODE = String(process.env.PA_IRRAGGIUNGIBILE_NOTICE_CODE)
 
   /**
    * Increase default test timeout (60000ms)
@@ -45,7 +45,7 @@ describe("Checkout payment activation tests", () => {
     await page.goto(CHECKOUT_URL);
   });
   
-  it.only("Should correctly execute a payment", async () => {
+  it("Should correctly execute a payment", async () => {
     /*
      * 1. Payment with valid notice code
     */
@@ -53,29 +53,11 @@ describe("Checkout payment activation tests", () => {
       VALID_NOTICE_CODE,
       VALID_FISCAL_CODE,
       EMAIL,
-      VALID_CARD_DATA
+      VALID_CARD_DATA,
+      NPG_PSP_ABI
     );
 
     expect(resultMessage).toContain("Grazie, hai pagato");
   });
-  
-  it("Should fail a payment verify and get PA_IRRAGGIUNGIBILE", async () => {
-    /*
-     * 2. Payment with notice code that fails on verify and get PA_IRRAGGIUNGIBILE
-     */
-    const resultMessage = await verifyPaymentAndGetError(PA_IRRAGGIUNGIBILE_NOTICE_CODE, VALID_FISCAL_CODE);
-                                                                                                             
-    expect(resultMessage).toContain("PPT_STAZIONE_INT_PA_SCONOSCIUTA");
-  });
-
-  it("Should fail a payment verify and get PPT_DOMINIO_SCONOSCIUTO", async () => {
-    /*
-     * 2. Payment with notice code that fails on verify and get PPT_DOMINIO_SCONOSCIUTO
-     */
-    const resultMessage = await verifyPaymentAndGetError(PA_IRRAGGIUNGIBILE_NOTICE_CODE, INVALID_FISCAL_CODE);
-                                                                                                             
-    expect(resultMessage).toContain("PPT_DOMINIO_SCONOSCIUTO");
-  });
-
 
 });

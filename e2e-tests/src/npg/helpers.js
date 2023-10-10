@@ -45,33 +45,17 @@ export const acceptCookiePolicy = async () => {
   await page.waitForXPath(darkFilterXPath, { hidden: true });
 };
 
-export const payNotice = async (noticeCode, fiscalCode, email, cardData) => {
+
+export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
   const payNoticeBtnSelector = "#paymentSummaryButtonPay";
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
+
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
   await payNoticeBtn.click();
   await fillEmailForm(email);
   await choosePaymentMethod('card');
-  await fillCardDataForm(cardData);
-  await new Promise((r) => setTimeout(r, 2000));
-
-  const message = await page.waitForXPath(resultMessageXPath);
-  return await message.evaluate(el => el.textContent);
-};
-
-export const payNoticeXPay = async (noticeCode, fiscalCode, email, cardData) => {
-  const payNoticeBtnXPath = '/html/body/div[1]/div/div[2]/div/div[6]/div[1]/button';
-  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
-  await fillPaymentNotificationForm(noticeCode, fiscalCode);
-
-  const payNoticeBtn = await page.waitForXPath(payNoticeBtnXPath);
-  await payNoticeBtn.click();
-  await page.waitForNavigation();
-  
-  await fillEmailForm(email);
-  await choosePaymentMethod('card');
-  await fillCardDataForm(cardData, true);
+  await fillCardDataForm(cardData, abi);
 
   const message = await page.waitForXPath(resultMessageXPath);
   return await message.evaluate(el => el.textContent);
@@ -107,70 +91,59 @@ export const choosePaymentMethod = async method => {
   }
 };
 
-const execute_mock_authorization = async() => {
-  const dataInput = '#challengeDataEntry';
-  const confirmButton = '#confirm'
-  const mockOTPCode = '123456';
-  const verificationStep = 2;
-
-  for(let _ =0; _ < verificationStep;  _++){
-    await page.waitForSelector(dataInput, {visible: true});
-    await page.click(dataInput);
-    await page.keyboard.type(mockOTPCode);
-
-    await page.waitForSelector(confirmButton);
-    await page.click(confirmButton);
-
-    await page.waitForNavigation();
-  }
+const execute_mock_authorization_npg = async () => {
+  //no-op: NPG authentication phase is automatically performed by mock, no action to be taken
+  await page.waitForNavigation();
 }
 
-export const fillCardDataForm = async (cardData, useXPAY = false) => {
-
-  const unauthorizedCard = "4801769871971639";
+export const fillCardDataForm = async (cardData, abi) => {
 
   const cardNumberInput = '#frame_CARD_NUMBER';
   const expirationDateInput = '#frame_EXPIRATION_DATE';
   const ccvInput = '#frame_SECURITY_CODE';
   const holderNameInput = '#frame_CARDHOLDER_NAME';
   const continueBtnXPath = "button[type=submit]";
+  const disabledContinueBtnXPath = 'button[type=submit][disabled=""]';
   const payBtnSelector = "#paymentCheckPageButtonPay";
-  const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div[5]/button';
-  
-  await page.waitForTimeout(5_000)
-  await page.waitForSelector(cardNumberInput);
-  await page.click(cardNumberInput);
-  await page.keyboard.type(cardData.number);
-
-  await page.waitForSelector(expirationDateInput);
-  await page.click(expirationDateInput);
-  await page.keyboard.type(cardData.expirationDate);
-
-  await page.waitForSelector(ccvInput);
-  await page.click(ccvInput);
-  await page.keyboard.type(cardData.ccv);
-
-  await page.waitForSelector(holderNameInput);
-  await page.click(holderNameInput);
-  await page.keyboard.type(cardData.holderName);
-
-  const continueBtn = await page.waitForSelector(continueBtnXPath);
+  const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div/div[5]/button';
+  let iteration = 0;
+  let completed = false;
+  while (!completed) {
+    iteration++;
+    console.log(`Compiling fields...${iteration}`);
+    await page.waitForSelector(cardNumberInput, { visible: true });
+    await page.click(cardNumberInput, { clickCount: 3 });
+    await page.keyboard.type(cardData.number);
+    console.log("card number performed");
+    await page.waitForSelector(expirationDateInput, { visible: true });
+    await page.click(expirationDateInput, { clickCount: 3 });
+    await page.keyboard.type(cardData.expirationDate);
+    console.log("expiration performed");
+    await page.waitForSelector(ccvInput, { visible: true });
+    await page.click(ccvInput, { clickCount: 3 });
+    await page.keyboard.type(cardData.ccv);
+    console.log("cvv performed");
+    await page.waitForSelector(holderNameInput, { visible: true });
+    await page.click(holderNameInput, { clickCount: 3 });
+    await page.keyboard.type(cardData.holderName);
+    console.log("holder performed");
+    completed = !(!! await page.$(disabledContinueBtnXPath));
+    await page.waitForTimeout(1_000);
+  }
+  const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });
   await continueBtn.click();
 
-  if(useXPAY){
-    const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
-    await selectPSPBtn.click();
+  const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
+  await selectPSPBtn.click();
 
-    const XPAYBtn = await page.$x("//div[contains(., 'XPAY')]");
-    console.log(await page.evaluate(XPAYBtn))
-    // await XPAYBtn.click();
-  }
+  const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`
+  console.log(pspButton)
+  const pspDiv = await page.waitForXPath(pspButton);
+  await pspDiv.click();
 
-  const payBtn = await page.waitForSelector(payBtnSelector);
+  await page.waitForTimeout(1_000);
+  const payBtn = await page.waitForSelector(payBtnSelector, { visible: true });
   await payBtn.click();
-
-  if(!useXPAY && unauthorizedCard !== cardData.number){
-    await page.waitForNavigation();
-    await execute_mock_authorization();
-  }
+  await page.waitForNavigation();
+  await execute_mock_authorization_npg();
 };
