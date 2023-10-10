@@ -30,10 +30,11 @@ describe("Checkout payment activation tests", () => {
    * Increase default test timeout (60000ms)
    * to support entire payment flow
     */
-  jest.setTimeout(60000);
+  const timeout = 80_000
+  jest.setTimeout(timeout);
   jest.retryTimes(3);
-  page.setDefaultNavigationTimeout(60000);
-  page.setDefaultTimeout(60000)
+  page.setDefaultNavigationTimeout(timeout);
+  page.setDefaultTimeout(timeout)
 
   beforeAll( async () => {
     await page.goto(CHECKOUT_URL);
