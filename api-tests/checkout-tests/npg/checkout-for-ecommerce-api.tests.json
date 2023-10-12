@@ -7,6 +7,106 @@
 	},
 	"item": [
 		{
+			"name": "Delete transaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] Transaction in ACTIVATED status is canceled successfully with DELETE /transactions/:idTransaction\", function() {",
+							"    pm.response.to.have.status(202);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"orderId\": \"orderId\",",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"    'deployment' : deploymentHeader,",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create session",
 			"event": [
 				{
@@ -221,106 +321,6 @@
 							"key": "lang",
 							"value": "ITA"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete transaction",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"[eCommerce for checkout] Transaction in ACTIVATED status is canceled successfully with DELETE /transactions/:idTransaction\", function() {",
-							"    pm.response.to.have.status(202);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
-							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
-							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
-							"const randomNoticeCode = _.random(min, max);",
-							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
-							"",
-							"",
-							"const requestBody = {",
-							"  \"paymentNotices\": [",
-							"    {",
-							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
-							"      \"amount\": 100",
-							"    }",
-							"  ],",
-							"  \"orderId\": \"orderId\",",
-							"  \"email\": \"mario.rossi@example.com\"",
-							"};",
-							"",
-							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
-							"",
-							"const requestObject = {",
-							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
-							"  method: 'POST',",
-							"  header: {",
-							"    'Content-Type': 'application/json',",
-							"    'deployment' : deploymentHeader,",
-							"  },",
-							"  body: {",
-							"    mode: 'raw',",
-							"    raw: JSON.stringify(requestBody)",
-							"  }",
-							"};",
-							"",
-							"pm.sendRequest(requestObject, (error, response) => {",
-							"  if (error) {",
-							"    console.log(error);",
-							"  } else {",
-							"      const responseBody = response.json();",
-							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
-							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
-							"  }",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{AUTH_TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "deployment",
-						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"ecommerce",
-						"checkout",
-						"v1",
-						"transactions",
-						"{{TRANSACTION_ID}}"
 					]
 				}
 			},
@@ -643,6 +643,72 @@
 			"response": []
 		},
 		{
+			"name": "Create transaction KO for missing order id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] 400 creating new transaction for missing order id\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"email\": \"mario.rossi@example.com\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/transactions?recaptchaResponse=token",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v2",
+						"transactions"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "token"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Create transaction",
 			"event": [
 				{
@@ -843,52 +909,6 @@
 							"key": "recaptchaResponse",
 							"value": "token"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment Support - browser info",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment Support - Status code is 200 with browsers detail\", function(){",
-							"    ",
-							"    const responseJson = pm.response.json();",
-							"",
-							"    pm.expect(responseJson.ip).not.equal(null);",
-							"    pm.expect(responseJson.accept).not.equal(null);",
-							"    pm.expect(responseJson.useragent).not.equal(null);",
-							"",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/browsers/current/info",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"browsers",
-						"current",
-						"info"
 					]
 				}
 			},
@@ -1175,21 +1195,19 @@
 							"pm.test(\"[eCommerce for checkout] Card data successfully retrieved with GET payment-methods/:methodId/sessions/:orderId\", function () {",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
-							"    const sessionId = pm.environment.get(\"NPG_SESSION_ID\");",
+							"    const sessionId = escape(pm.environment.get(\"NPG_SESSION_ID\"));",
 							"    const expirationDate = pm.environment.get(\"NPG_TEST_EXPIRATION_DATE\");",
 							"    const cardBrand = pm.environment.get(\"NPG_TEST_CARD_BRAND\");",
-							"    const cardPan = pm.environment.get(\"NPG_TEST_CARDHOLDER_NAME\");",
+							"    const cardPan = pm.environment.get(\"NPG_TEST_CARD_PAN\");",
 							"    const bin = cardPan.substring(0, 8);",
 							"    const cardPanLength = cardPan.length;",
 							"    const lastFourDigit = cardPan.substring(cardPanLength - 4, cardPanLength);",
-							"    const expectedResponse = {",
-							"        \"sessionId\": sessionId,",
-							"        \"bin\": bin,",
-							"        \"lastFourDigits\": lastFourDigit,",
-							"        \"expiringDate\": expirationDate,",
-							"        \"brand\": cardBrand",
-							"    }",
-							"    pm.expect(response).eql(expectedResponse);",
+							"   ",
+							"    pm.expect(sessionId).eql(response.sessionId);",
+							"    pm.expect(bin).eql(response.bin);",
+							"    pm.expect(lastFourDigit).eql(response.lastFourDigits);",
+							"    pm.expect(expirationDate).eql(response.expiringDate);",
+							"    pm.expect(cardBrand).eql(response.brand);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1233,6 +1251,223 @@
 						"{{PAYMENT_METHOD_ID}}",
 						"sessions",
 						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data KO for mismatch order id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for mismatching order id with jwt token\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					},
+					{
+						"key": "x-transaction-id-from-client",
+						"value": "{{TRANSACTION_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}1",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions",
+						"{{ORDER_ID}}1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data KO for mismatch transaction id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for mismatching transaction id with jwt token\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					},
+					{
+						"key": "x-transaction-id-from-client",
+						"value": "{{TRANSACTION_ID}}1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data KO for missing auth token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for missing auth token\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					},
+					{
+						"key": "x-transaction-id-from-client",
+						"value": "{{TRANSACTION_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions",
+						"{{ORDER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request authorization KO for missing jwt token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token\", function(){",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}1\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"orderId\": \"{{ORDER_ID}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"auth-requests"
 					]
 				}
 			},
