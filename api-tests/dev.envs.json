@@ -1,5 +1,5 @@
 {
-	"id": "37d48792-91a7-48eb-b69d-fdd0a6892516",
+	"id": "b5f72b8d-be49-42e4-ac4d-d0c41503ba97",
 	"name": "Checkout Tests DEV",
 	"values": [
 		{
@@ -181,9 +181,39 @@
 			"value": "2021-07-31",
 			"type": "default",
 			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARD_PAN",
+			"value": "4349940199004549",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_EXPIRATION_DATE",
+			"value": "12/25",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_SECURITY_CODE",
+			"value": "123",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARDHOLDER_NAME",
+			"value": "Test Test",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARD_BRAND",
+			"value": "VISA",
+			"type": "default",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-10-12T17:53:15.672Z",
+	"_postman_exported_at": "2023-10-12T23:01:15.095Z",
 	"_postman_exported_using": "Postman/10.19.0"
 }

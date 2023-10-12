@@ -1143,7 +1143,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"fieldValues\": [\n        {\n            \"id\": \"EXPIRATION_DATE\",\n            \"value\": \"12/25\"\n        },\n        {\n            \"id\": \"CARD_NUMBER\",\n            \"value\": \"4349940199004549\"\n        },\n        {\n            \"id\": \"SECURITY_CODE\",\n            \"value\": \"123\"\n        },\n        {\n            \"id\": \"CARDHOLDER_NAME\",\n            \"value\": \"Test test\"\n        }\n    ]\n}",
+					"raw": "{\n    \"fieldValues\": [\n        {\n            \"id\": \"EXPIRATION_DATE\",\n            \"value\": \"{{NPG_TEST_EXPIRATION_DATE}}\"\n        },\n        {\n            \"id\": \"CARD_NUMBER\",\n            \"value\": \"{{NPG_TEST_CARD_PAN}}\"\n        },\n        {\n            \"id\": \"SECURITY_CODE\",\n            \"value\": \"{{NPG_TEST_SECURITY_CODE}}\"\n        },\n        {\n            \"id\": \"CARDHOLDER_NAME\",\n            \"value\": \"{{NPG_TEST_CARDHOLDER_NAME}}\"\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1160,6 +1160,79 @@
 						"build",
 						"text",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get card data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] Card data successfully retrieved with GET payment-methods/:methodId/sessions/:orderId\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    const sessionId = pm.environment.get(\"NPG_SESSION_ID\");",
+							"    const expirationDate = pm.environment.get(\"NPG_TEST_EXPIRATION_DATE\");",
+							"    const cardBrand = pm.environment.get(\"NPG_TEST_CARD_BRAND\");",
+							"    const cardPan = pm.environment.get(\"NPG_TEST_CARDHOLDER_NAME\");",
+							"    const bin = cardPan.substring(0, 8);",
+							"    const cardPanLength = cardPan.length;",
+							"    const lastFourDigit = cardPan.substring(cardPanLength - 4, cardPanLength);",
+							"    const expectedResponse = {",
+							"        \"sessionId\": sessionId,",
+							"        \"bin\": bin,",
+							"        \"lastFourDigits\": lastFourDigit,",
+							"        \"expiringDate\": expirationDate,",
+							"        \"brand\": cardBrand",
+							"    }",
+							"    pm.expect(response).eql(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT}}",
+						"type": "text"
+					},
+					{
+						"key": "x-transaction-id-from-client",
+						"value": "{{TRANSACTION_ID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions/{{ORDER_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions",
+						"{{ORDER_ID}}"
 					]
 				}
 			},
