@@ -101,11 +101,6 @@ stages:
           - script: |
              cd e2e-tests &&  yarn test
             displayName: 'Yarn test execution'
-          - script: |
-              docker cp ui_test:/puppeteer/test_reports  test_reports
-            displayName: 'Copy test result'
-            condition: succeededOrFailed()
-
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
