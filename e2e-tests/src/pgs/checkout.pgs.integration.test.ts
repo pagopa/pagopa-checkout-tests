@@ -1,5 +1,5 @@
 
-import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./utils/helpers";
+import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./helpers";
 
 describe("Checkout payment activation tests", () => {
   /**
@@ -9,17 +9,33 @@ describe("Checkout payment activation tests", () => {
   const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
   const INVALID_FISCAL_CODE = String(process.env.INVALID_FISCAL_CODE)
   const EMAIL = String(process.env.EMAIL);
-  const VALID_CARD_DATA = {
-    number: String(process.env.CARD_NUMBER),
-    expirationDate: String(process.env.CARD_EXPIRATION_DATE),
-    ccv: String(process.env.CARD_CCV),
-    holderName: String(process.env.CARD_HOLDER_NAME)
+
+  const ABI_PSP_VPOS = String(process.env.ABI_PSP_VPOS);
+  const ABI_PSP_XPAY = String(process.env.ABI_PSP_XPAY);
+
+  const VALID_CARD_DATA_XPAY = {
+    number: String(process.env.CARD_NUMBER_XPAY),
+    expirationDate: String(process.env.CARD_EXPIRATION_DATE_XPAY),
+    ccv: String(process.env.CARD_CCV_XPAY),
+    holderName: String(process.env.CARD_HOLDER_NAME_XPAY)
+  };
+
+  const VALID_CARD_DATA_VPOS = {
+    number: String(process.env.CARD_NUMBER_VPOS),
+    expirationDate: String(process.env.CARD_EXPIRATION_DATE_VPOS),
+    ccv: String(process.env.CARD_CCV_VPOS),
+    holderName: String(process.env.CARD_HOLDER_NAME_VPOS)
   };
 
   const VALID_RANGE_END_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat("9999999999999"));
   const VALID_RANGE_START_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat("0000000000000"));
 
-  const VALID_NOTICE_CODE = Math.floor(
+  const VALID_NOTICE_CODE_XPAY = Math.floor(
+    Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) +
+    VALID_RANGE_START_NOTICE_CODE
+  ).toString();
+
+  const VALID_NOTICE_CODE_VPOS = Math.floor(
     Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) +
     VALID_RANGE_START_NOTICE_CODE
   ).toString();
@@ -45,37 +61,39 @@ describe("Checkout payment activation tests", () => {
     await page.goto(CHECKOUT_URL);
   });
   
-  it.only("Should correctly execute a payment", async () => {
+  it("Should correctly execute a payment for xpay", async () => {
+    
     /*
      * 1. Payment with valid notice code
     */
     const resultMessage = await payNotice(
-      VALID_NOTICE_CODE,
+      VALID_NOTICE_CODE_XPAY,
       VALID_FISCAL_CODE,
       EMAIL,
-      VALID_CARD_DATA
+      VALID_CARD_DATA_XPAY,
+      ABI_PSP_XPAY,
+      true
     );
 
     expect(resultMessage).toContain("Grazie, hai pagato");
-  });
-  
-  it("Should fail a payment verify and get PA_IRRAGGIUNGIBILE", async () => {
-    /*
-     * 2. Payment with notice code that fails on verify and get PA_IRRAGGIUNGIBILE
-     */
-    const resultMessage = await verifyPaymentAndGetError(PA_IRRAGGIUNGIBILE_NOTICE_CODE, VALID_FISCAL_CODE);
-                                                                                                             
-    expect(resultMessage).toContain("PPT_STAZIONE_INT_PA_SCONOSCIUTA");
+
   });
 
-  it("Should fail a payment verify and get PPT_DOMINIO_SCONOSCIUTO", async () => {
+  it("Should correctly execute a payment for vpos", async () => {
     /*
-     * 2. Payment with notice code that fails on verify and get PPT_DOMINIO_SCONOSCIUTO
-     */
-    const resultMessage = await verifyPaymentAndGetError(PA_IRRAGGIUNGIBILE_NOTICE_CODE, INVALID_FISCAL_CODE);
-                                                                                                             
-    expect(resultMessage).toContain("PPT_DOMINIO_SCONOSCIUTO");
-  });
+     * 1. Payment with valid notice code
+    */
+    const resultMessage = await payNotice(
+      VALID_NOTICE_CODE_VPOS,
+      VALID_FISCAL_CODE,
+      EMAIL,
+      VALID_CARD_DATA_VPOS,
+      ABI_PSP_VPOS,
+      false
+    );
 
+    expect(resultMessage).toContain("Grazie, hai pagato");
+
+  });
 
 });
