@@ -99,7 +99,7 @@ stages:
              cd e2e-tests && yarn install
             displayName: 'Yarn install'
           - script: |
-              yarn test
+             cd e2e-tests &&  yarn test
             displayName: 'Yarn test execution'
           - script: |
               docker cp ui_test:/puppeteer/test_reports  test_reports
