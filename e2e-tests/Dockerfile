@@ -1,7 +1,7 @@
 FROM node:18.17.1
 
 #Chrome version used by puppeteer tests
-ENV CHROME_VERSION="Version: 116.0.5845.96-1"
+ENV CHROME_VERSION="116.0.5845.96-1"
 # See https://crbug.com/795759
 RUN apt-get update && apt-get install -yq libgconf-2-4
 
