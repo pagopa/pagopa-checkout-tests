@@ -28,15 +28,18 @@ COPY .  /puppeteer/
 
 WORKDIR /puppeteer
 
-RUN yarn install
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /puppeteer
+   && chown -R pptruser:pptruser /puppeteer
 
 # Run everything after as non-privileged user.
 USER pptruser
+
+RUN yarn install
+
+RUN unset PUPPETEER_SKIP_CHROMIUM_DOWNLOAD && node ./node_modules/puppeteer/install.js
 
 CMD yarn test
