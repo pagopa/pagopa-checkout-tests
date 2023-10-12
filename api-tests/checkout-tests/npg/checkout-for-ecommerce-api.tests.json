@@ -1,11 +1,231 @@
 {
 	"info": {
-		"_postman_id": "88fc463b-88a9-4cd6-9847-2f6d4594ea84",
-		"name": "Ecommerce for Checkout API",
+		"_postman_id": "e2cbcf1b-7c7c-40fe-83c1-a0d8d245d371",
+		"name": "Ecommerce for Checkout API - NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24209240"
+		"_exporter_id": "23963988"
 	},
 	"item": [
+		{
+			"name": "Create session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const sdk = require('postman-collection');",
+							"",
+							"pm.test(\"Create Session - Status code is 200 with valid json response\", function() {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    ",
+							"    const paymentMethodDataWithoutSrc = response.paymentMethodData.form.map(form => {",
+							"        const { src, ...rest } = form;",
+							"        return rest;",
+							"    });",
+							"    const expectedPaymentMethodDataWithoutSrc =",
+							"     [",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"CARD_NUMBER\"",
+							"            },",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"EXPIRATION_DATE\"",
+							"            },",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"SECURITY_CODE\"",
+							"            },",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"CARDHOLDER_NAME\"",
+							"            }",
+							"        ];",
+							"    saveNpgData(response);",
+							"    pm.expect(expectedPaymentMethodDataWithoutSrc).eql(paymentMethodDataWithoutSrc);",
+							"    pm.expect(response.orderId).to.be.a(\"string\");",
+							"    pm.expect(response.paymentMethodData.paymentMethod).to.be.eq(\"CARDS\");",
+							" ",
+							"});",
+							"",
+							"function saveNpgData(response){",
+							"    console.log(\"Read NPG response data...\");",
+							"    const orderId = response.orderId;",
+							"    const fieldUrl = response.paymentMethodData.form[0].src;",
+							"    ",
+							"    const parsedUrl = new sdk.Url(fieldUrl).toJSON();",
+							"    const correlationId = parsedUrl.query.find((queryParam) =>queryParam.key==\"correlationid\").value;",
+							"    const sessionId= unescape(parsedUrl.query.find((queryParam) =>queryParam.key==\"sessionid\").value);",
+							"    const fieldId= parsedUrl.query.find((queryParam) =>queryParam.key==\"id\").value;",
+							"    console.log(`Order id: [${orderId}]`);",
+							"    console.log(`Field url: [${fieldUrl}]`);",
+							"    console.log(`correlation id: [${correlationId}]`);",
+							"    console.log(`session id: [${sessionId}]`);",
+							"    console.log(`field id: [${fieldId}]`);",
+							"    pm.environment.set(\"ORDER_ID\", response.orderId);",
+							"    pm.environment.set(\"NPG_IFRAME_FIELD_URL\", fieldUrl);",
+							"    pm.environment.set(\"NPG_CORRELATION_ID\", correlationId);",
+							"    pm.environment.set(\"NPG_SESSION_ID\", sessionId);",
+							"    pm.environment.set(\"NPG_IFRAME_FIELD_ID\", fieldId);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions?recaptchaResponse=test",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get NPG field (populate NPG cookies)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"user-agent": true,
+					"accept": true,
+					"accept-encoding": true,
+					"connection": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json; charset=utf-8",
+						"type": "text"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty",
+						"type": "text"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors",
+						"type": "text"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-origin",
+						"type": "text"
+					},
+					{
+						"key": "Idempotency-Key",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Correlation-Id",
+						"value": "{{NPG_CORRELATION_ID}}",
+						"type": "text"
+					},
+					{
+						"key": "session",
+						"value": "{{NPG_SESSION_ID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NPG_HOST}}/fe/build/field_settings/{{NPG_IFRAME_FIELD_ID}}?lang=ITA",
+					"host": [
+						"{{NPG_HOST}}"
+					],
+					"path": [
+						"fe",
+						"build",
+						"field_settings",
+						"{{NPG_IFRAME_FIELD_ID}}"
+					],
+					"query": [
+						{
+							"key": "lang",
+							"value": "ITA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
 		{
 			"name": "Delete transaction",
 			"event": [
@@ -38,13 +258,14 @@
 							"      \"amount\": 100",
 							"    }",
 							"  ],",
+							"  \"orderId\": \"orderId\",",
 							"  \"email\": \"mario.rossi@example.com\"",
 							"};",
 							"",
 							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
 							"",
 							"const requestObject = {",
-							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/transactions?recaptchaResponse=token\",",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
 							"  method: 'POST',",
 							"  header: {",
 							"    'Content-Type': 'application/json',",
@@ -393,7 +614,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"email\": \"TEST@test.IT\"\n}\n",
+					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"orderId\": \"{{ORDER_ID}}\",\n  \"email\": \"TEST@test.IT\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -401,14 +622,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/transactions?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
 						"checkout",
-						"v1",
+						"v2",
 						"transactions"
 					],
 					"query": [
@@ -515,7 +736,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"email\": \"mario.rossi@example.com\"\n}\n",
+					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"orderId\": \"{{ORDER_ID}}\",\n  \"email\": \"mario.rossi@example.com\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -523,14 +744,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions?recaptchaResponse=token",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/transactions?recaptchaResponse=token",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"ecommerce",
 						"checkout",
-						"v1",
+						"v2",
 						"transactions"
 					],
 					"query": [
@@ -668,257 +889,6 @@
 						"browsers",
 						"current",
 						"info"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction - xpay",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function() {",
-							"    // vvv These are the same ones in the request URL! vvv",
-							"    const requestParams = {",
-							"        \"id\": \"NzA5MDEwMjg3NQ==\",",
-							"        \"esito\": \"OK\",",
-							"        \"idOperazione\": \"00054014\",",
-							"        \"timestamp\": \"1638023340310\",",
-							"        \"mac\": \"000000b500ba947c2614b547250c49e59477e6ef\",",
-							"        \"xpayNonce\": \"58a83f26-1421-3350-8dd6-aa152de80000\"",
-							"    };",
-							"    /// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
-							"",
-							"    const expectedResponseParams = {",
-							"        ...requestParams,",
-							"        \"timeStamp\": requestParams.timestamp,",
-							"        \"resumeType\": \"xpay\"",
-							"    };",
-							"    delete expectedResponseParams[\"timestamp\"];",
-							"",
-							"    pm.response.to.have.status(302);",
-							"",
-							"    const URL = require('url');",
-							"    const redirectUrl = URL.parse(pm.response.headers.get(\"Location\"));",
-							"    const responseQueryParams = Object.fromEntries(redirectUrl.query.split(\"&\").map(entry => {",
-							"        const [name, value] = entry.split(/=(.*)/s);",
-							"        return [name, value]",
-							"    }));",
-							"",
-							"    pm.expect(expectedResponseParams).to.deep.equal(responseQueryParams);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/xpay/NzA5MDEwMjg3NQ==?esito=OK&idOperazione=00054014&timeStamp=1638023340310&mac=000000b500ba947c2614b547250c49e59477e6ef&xpayNonce=58a83f26-1421-3350-8dd6-aa152de80000",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"xpay",
-						"NzA5MDEwMjg3NQ=="
-					],
-					"query": [
-						{
-							"key": "esito",
-							"value": "OK"
-						},
-						{
-							"key": "idOperazione",
-							"value": "00054014"
-						},
-						{
-							"key": "timeStamp",
-							"value": "1638023340310"
-						},
-						{
-							"key": "mac",
-							"value": "000000b500ba947c2614b547250c49e59477e6ef"
-						},
-						{
-							"key": "xpayNonce",
-							"value": "58a83f26-1421-3350-8dd6-aa152de80000"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction- xpay verify",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction xpay verify Status code is 302\", function(){",
-							"        pm.response.to.have.status(302);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/xpay/verification/NzA5MDEwMjg3NQ==?esito=OK&idOperazione=00054014&timeStamp=1638023340310&mac=000000b500ba947c2614b547250c49e59477e6ef&xpayNonce=58a83f26-1421-3350-8dd6-aa152de80000",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"xpay",
-						"verification",
-						"NzA5MDEwMjg3NQ=="
-					],
-					"query": [
-						{
-							"key": "esito",
-							"value": "OK"
-						},
-						{
-							"key": "idOperazione",
-							"value": "00054014"
-						},
-						{
-							"key": "timeStamp",
-							"value": "1638023340310"
-						},
-						{
-							"key": "mac",
-							"value": "000000b500ba947c2614b547250c49e59477e6ef"
-						},
-						{
-							"key": "xpayNonce",
-							"value": "58a83f26-1421-3350-8dd6-aa152de80000"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction - vpos challenge",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction vpos challenge - Status code is 302\", function() {",
-							"    pm.response.to.have.status(302);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/NzA5MDEwMjg3NQ==/challenge?esito=OK&idOperazione=00054014&timeStamp=1638023340310&mac=000000b500ba947c2614b547250c49e59477e6ef&xpayNonce=58a83f26-1421-3350-8dd6-aa152de80000",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"NzA5MDEwMjg3NQ==",
-						"challenge"
-					],
-					"query": [
-						{
-							"key": "esito",
-							"value": "OK"
-						},
-						{
-							"key": "idOperazione",
-							"value": "00054014"
-						},
-						{
-							"key": "timeStamp",
-							"value": "1638023340310"
-						},
-						{
-							"key": "mac",
-							"value": "000000b500ba947c2614b547250c49e59477e6ef"
-						},
-						{
-							"key": "xpayNonce",
-							"value": "58a83f26-1421-3350-8dd6-aa152de80000"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Payment transaction - vpos method",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Payment transaction vpos method - Status code is 200 with 3DS.Notification.Received\", function(){",
-							"    pm.expect(pm.response.text()).to.include(\"3DS.Notification.Received\");",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "{{CHECKOUT_HOST}}/api/checkout/payment-transactions/v1/transactions/NzA5MDEwMjg3NQ==/method",
-					"host": [
-						"{{CHECKOUT_HOST}}"
-					],
-					"path": [
-						"api",
-						"checkout",
-						"payment-transactions",
-						"v1",
-						"transactions",
-						"NzA5MDEwMjg3NQ==",
-						"method"
 					]
 				}
 			},
@@ -1107,6 +1077,93 @@
 			"response": []
 		},
 		{
+			"name": "Fill NPG text data (populate iframe card data fields)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"user-agent": true,
+					"accept": true,
+					"accept-encoding": true,
+					"connection": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json; charset=utf-8",
+						"type": "text"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty",
+						"type": "text"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors",
+						"type": "text"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-origin",
+						"type": "text"
+					},
+					{
+						"key": "Idempotency-Key",
+						"value": "{{$guid}}",
+						"type": "text"
+					},
+					{
+						"key": "Correlation-Id",
+						"value": "{{NPG_CORRELATION_ID}}",
+						"type": "text"
+					},
+					{
+						"key": "session",
+						"value": "{{NPG_SESSION_ID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fieldValues\": [\n        {\n            \"id\": \"EXPIRATION_DATE\",\n            \"value\": \"12/25\"\n        },\n        {\n            \"id\": \"CARD_NUMBER\",\n            \"value\": \"4349940199004549\"\n        },\n        {\n            \"id\": \"SECURITY_CODE\",\n            \"value\": \"123\"\n        },\n        {\n            \"id\": \"CARDHOLDER_NAME\",\n            \"value\": \"Test test\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{NPG_HOST}}/fe/build/text/",
+					"host": [
+						"{{NPG_HOST}}"
+					],
+					"path": [
+						"fe",
+						"build",
+						"text",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Request authorization",
 			"event": [
 				{
@@ -1147,7 +1204,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"card\",\n        \"accountEmail\": \"mail@example.com\",\n        \"cvv\": \"123\",\n        \"pan\": \"5111114000023477\",\n        \"expiryDate\": \"203012\",\n        \"holderName\": \"Mario Rossi\",\n        \"threeDsData\": \"3dsdata\",\n        \"brand\":\"VISA\"\n    }\n}",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"orderId\": \"{{ORDER_ID}}\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
