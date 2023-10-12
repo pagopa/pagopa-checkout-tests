@@ -9,16 +9,8 @@ parameters:
     type: string
     default: self
 
-resources:
-  repositories:
-    - repository: checkoutTests
-      type: github
-      name: pagopa/pagopa-checkout-tests
-      ref: main
-      endpoint: 'io-azure-devops-github-ro'
-
 steps:
-  - checkout: checkoutTests
+  - checkout: ${{parameters.CHECKOUT_TESTS_REPO_NAME}}
   - script: |
       rm -f e2e-tests/.env && cp e2e-tests/dev.env e2e-tests/.env
     displayName: 'Set env for E2E test (DEV)'
