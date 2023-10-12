@@ -88,6 +88,14 @@ stages:
       - job: e2e_tests
         steps:
           - script: |
+              rm e2e-tests/.env && cp e2e-tests/dev.env e2e-tests/.env
+            displayName: 'Set env for E2E test (DEV)'
+            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'DEV'))
+          - script: |
+              rm e2e-tests/.env && cp e2e-tests/uat.env e2e-tests/.env
+            displayName: 'Set env for E2E test (UAT)'
+            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
+          - script: |
              docker build -t ui_test e2e-tests
             displayName: 'Build test image'
 
