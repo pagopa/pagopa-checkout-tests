@@ -6,14 +6,6 @@ parameters:
       - DEV
       - UAT
 
-resources:
-  repositories:
-    - repository: checkoutTests
-      type: github
-      name: pagopa/pagopa-checkout-tests
-      ref: main
-      endpoint: 'io-azure-devops-github-ro'
-
 steps:
   - checkout: checkoutTests
   - script: |
