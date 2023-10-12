@@ -87,7 +87,7 @@ stages:
     jobs:
       - job: e2e_tests
         steps:
-          - template: azure-templates/e2e-tests.yml
+          - template: azure-templates/e2e-tests.yaml
             parameters:
               ENVIRONMENT: ${{parameters.ENVIRONMENT}}
 
