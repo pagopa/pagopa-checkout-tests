@@ -8,14 +8,7 @@ parameters:
     values:
       - DEV
       - UAT
-resources:
-  repositories:
-    - repository: checkoutTests
-      type: github
-      name: pagopa/pagopa-checkout-tests
-      ref: main
-      endpoint: 'io-azure-devops-github-ro'
-      
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -97,4 +90,5 @@ stages:
           - template: azure-templates/e2e-tests.yaml
             parameters:
               ENVIRONMENT: ${{parameters.ENVIRONMENT}}
+              CHECKOUT_RESOURCE_REPO_NAME: self
 
