@@ -97,15 +97,14 @@ const execute_mock_authorization_vpos = async() => {
   const mockOTPCode = '123456';
   const verificationStep = 2;
 
-  for(let _ =0; _ < verificationStep;  _++){
+  for(let idx =0; idx < verificationStep;  idx++){
+    console.log(`executing vpos verification step: ${idx}`);
     await page.waitForSelector(dataInput, {visible: true});
     await page.click(dataInput);
     await page.keyboard.type(mockOTPCode);
 
     await page.waitForSelector(confirmButton);
     await page.click(confirmButton);
-
-    await page.waitForNavigation();
   }
 }
 
@@ -113,7 +112,6 @@ const execute_mock_authorization_xpay = async() => {
   const dataInput = '#otipee';
   const confirmButton = 'button[name=btnAction]'
   const mockOTPCode = '123456';
-  const verificationStep = 2;
   await page.waitForSelector(dataInput, {visible: true});
   await page.click(dataInput);
   await page.keyboard.type(mockOTPCode);
