@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e2cbcf1b-7c7c-40fe-83c1-a0d8d245d371",
+		"_postman_id": "637afb61-bc08-4661-ab3c-87d281f0476b",
 		"name": "Ecommerce for Checkout API - NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -15,7 +15,7 @@
 						"exec": [
 							"const sdk = require('postman-collection');",
 							"",
-							"pm.test(\"Create Session - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -233,7 +233,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction cancellation - Status code is 202.\", function() {",
+							"pm.test(\"[eCommerce for checkout] Transaction in ACTIVATED status is canceled successfully with DELETE /transactions/:idTransaction\", function() {",
 							"    pm.response.to.have.status(202);",
 							"});"
 						],
@@ -333,7 +333,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 200 with valid json response\", function(){",
+							"pm.test(\"[eCommerce for checkout] Valid payment request successfully retrieved with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -422,7 +422,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
+							"pm.test(\"[eCommerce for checkout] 404 - PPT_DOMINIO_SCONOSCIUTO error retrieved for invalid notice code with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -476,7 +476,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_STAZIONE_INT_PA_SCONOSCIUTA\", function(){",
+							"pm.test(\"[eCommerce for checkout] 404 - PPT_STAZIONE_INT_PA_SCONOSCIUTA error retrieved for invalid notice code with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -530,7 +530,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction creation with mail case insensitive - Status code is 200 with valid json response\", function () {",
+							"pm.test(\"[eCommerce for checkout] New transaction is activated successfully with POST /transactions with email in both upper and lower case\", function () {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -649,7 +649,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function () {",
+							"pm.test(\"[eCommerce for checkout] New transaction is activated successfully with POST /transactions\", function () {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -771,7 +771,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify cache hit - Status code is 200 with valid json response\", function(){",
+							"pm.test(\"[eCommerce for checkout] Cache hit with valid payment request successfully retrieved with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -901,7 +901,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment method details - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] Card payment method successfully retrieved with GET payment-methods/:methodId\", function(){",
+							"",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    const paymentMethodId = pm.environment.get(\"PAYMENT_METHOD_ID\");",
@@ -958,7 +959,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Fee compute - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] Psp and fees retrieved with POST fees\", function(){",
+							"   ",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -1036,7 +1038,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Get all payment methods - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] All payment methods successfully retrieved with GET payment-methods/:methodId\", function(){",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -1170,13 +1172,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction authorization - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request\", function(){",
 							"    pm.response.to.have.status(200);",
-							"",
 							"    const response = pm.response.json();",
-							"",
 							"    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
-							"    pm.expect(response.authorizationRequestId).to.be.a(\"string\");",
+							"    const expectedAuthorizationRequestId = pm.environment.get(\"ORDER_ID\");",
+							"    pm.expect(response.authorizationRequestId).to.be.eq(expectedAuthorizationRequestId);",
 							"});"
 						],
 						"type": "text/javascript"
