@@ -96,13 +96,11 @@ stages:
             displayName: 'Set env for E2E test (UAT)'
             condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
           - script: |
-             docker build -t ui_test e2e-tests
-            displayName: 'Build test image'
-
+             cd e2e-tests && yarn install
+            displayName: 'Yarn install'
           - script: |
-              docker run --name=ui_test ui_test
-            displayName: 'Run UI test container'
-
+              yarn test
+            displayName: 'Yarn test execution'
           - script: |
               docker cp ui_test:/puppeteer/test_reports  test_reports
             displayName: 'Copy test result'
