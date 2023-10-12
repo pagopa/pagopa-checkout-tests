@@ -108,7 +108,7 @@ Once add this repository to pipeline repository section, e2e test template can b
     jobs:
       - job: e2e_tests
         steps:
-          - template: azure-templates/e2e-tests.yaml
+          - template: azure-templates/e2e-tests.yaml@checkoutTests
             parameters:
               ENVIRONMENT: DEV
               CHECKOUT_RESOURCE_REPO_NAME: checkoutTests
