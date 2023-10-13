@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "88fc463b-88a9-4cd6-9847-2f6d4594ea84",
-		"name": "Ecommerce for Checkout API",
+		"_postman_id": "9bb99d31-00f7-40d8-965f-e125b84d2b69",
+		"name": "Ecommerce for Checkout API - PGS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "24209240"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -13,7 +13,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction cancellation - Status code is 202.\", function() {",
+							"pm.test(\"[eCommerce for checkout] Transaction in ACTIVATED status is canceled successfully with DELETE /transactions/:idTransaction\", function() {",
 							"    pm.response.to.have.status(202);",
 							"});"
 						],
@@ -112,7 +112,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 200 with valid json response\", function(){",
+							"pm.test(\"[eCommerce for checkout] Valid payment request successfully retrieved with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -201,7 +201,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_DOMINIO_SCONOSCIUTO\", function(){",
+							"pm.test(\"[eCommerce for checkout] 404 - PPT_DOMINIO_SCONOSCIUTO error retrieved for invalid notice code with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -255,7 +255,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify - Status code is 400 with detail equals to PPT_STAZIONE_INT_PA_SCONOSCIUTA\", function(){",
+							"pm.test(\"[eCommerce for checkout] 404 - PPT_STAZIONE_INT_PA_SCONOSCIUTA error retrieved for invalid notice code with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -428,7 +428,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction creation - Status code is 200 with valid json response\", function () {",
+							"pm.test(\"[eCommerce for checkout] New transaction is activated successfully with POST /transactions\", function () {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -550,7 +550,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Verify cache hit - Status code is 200 with valid json response\", function(){",
+							"pm.test(\"[eCommerce for checkout] Cache hit with valid payment request successfully retrieved with GET payment-request/:rptId\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -634,7 +634,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment Support - Status code is 200 with browsers detail\", function(){",
+							"pm.test(\"[Payment Support] - Status code is 200 with browsers detail\", function(){",
 							"    ",
 							"    const responseJson = pm.response.json();",
 							"",
@@ -680,7 +680,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction xpay - Status code is 302 with params\", function() {",
+							"pm.test(\"[PGS] Payment transaction xpay - Status code is 302 with params\", function() {",
 							"    // vvv These are the same ones in the request URL! vvv",
 							"    const requestParams = {",
 							"        \"id\": \"NzA5MDEwMjg3NQ==\",",
@@ -768,7 +768,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction xpay verify Status code is 302\", function(){",
+							"pm.test(\"[PGS] Payment transaction xpay verify Status code is 302\", function(){",
 							"        pm.response.to.have.status(302);",
 							"});"
 						],
@@ -830,7 +830,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction vpos challenge - Status code is 302\", function() {",
+							"pm.test(\"[PGS] Payment transaction vpos challenge - Status code is 302\", function() {",
 							"    pm.response.to.have.status(302);",
 							"});"
 						],
@@ -891,7 +891,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment transaction vpos method - Status code is 200 with 3DS.Notification.Received\", function(){",
+							"pm.test(\"[PGS] Payment transaction vpos method - Status code is 200 with 3DS.Notification.Received\", function(){",
 							"    pm.expect(pm.response.text()).to.include(\"3DS.Notification.Received\");",
 							"    pm.response.to.have.status(200);",
 							"});"
@@ -931,7 +931,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Payment method details - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] Card payment method successfully retrieved with GET payment-methods/:methodId\", function(){",
+							"",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    const paymentMethodId = pm.environment.get(\"PAYMENT_METHOD_ID\");",
@@ -988,7 +989,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Fee compute - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] Psp and fees retrieved with POST fees\", function(){",
+							"   ",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -1066,7 +1068,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Get all payment methods - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] All payment methods successfully retrieved with GET payment-methods/:methodId\", function(){",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -1113,7 +1115,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Transaction authorization - Status code is 200 with valid json response\", function() {",
+							"pm.test(\"[eCommerce for checkout] New PGS authorization request with POST transactions/:transactionId/auth-request\", function(){",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",

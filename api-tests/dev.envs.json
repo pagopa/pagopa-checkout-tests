@@ -1,5 +1,5 @@
 {
-	"id": "98997647-06c3-4133-a499-23d8221307c0",
+	"id": "b5f72b8d-be49-42e4-ac4d-d0c41503ba97",
 	"name": "Checkout Tests DEV",
 	"values": [
 		{
@@ -14,7 +14,7 @@
 		},
 		{
 			"key": "VALID_NOTICE_CODE",
-			"value": "311116723749670106",
+			"value": "10095545846194",
 			"enabled": true
 		},
 		{
@@ -49,7 +49,7 @@
 		},
 		{
 			"key": "UNKNOWN_STAZIONE_NOTICE_CODE",
-			"value": "302970000000000000",
+			"value": "002720356512737953",
 			"enabled": true
 		},
 		{
@@ -77,7 +77,7 @@
 		},
 		{
 			"key": "AMOUNT",
-			"value": "100",
+			"value": "12000",
 			"type": "any",
 			"enabled": true
 		},
@@ -101,13 +101,13 @@
 		},
 		{
 			"key": "NOTICE_CODE_PREFIX",
-			"value": "3111",
+			"value": "3020",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "EXPECTED_PAYMENT_REASON",
-			"value": "test",
+			"value": "TARI/TEFA 2021",
 			"type": "default",
 			"enabled": true
 		},
@@ -119,7 +119,7 @@
 		},
 		{
 			"key": "FEE",
-			"value": "0",
+			"value": "100",
 			"type": "default",
 			"enabled": true
 		},
@@ -140,9 +140,80 @@
 			"value": "green",
 			"type": "default",
 			"enabled": true
+		},
+		{
+			"key": "ORDER_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_HOST",
+			"value": "https://stg-ta.nexigroup.com",
+			"enabled": true
+		},
+		{
+			"key": "NPG_CORRELATION_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_SESSION_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_IFRAME_FIELD_URL",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_IFRAME_FIELD_ID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "DUE_DATE",
+			"value": "2021-07-31",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARD_PAN",
+			"value": "4349940199004549",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_EXPIRATION_DATE",
+			"value": "12/25",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_SECURITY_CODE",
+			"value": "123",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARDHOLDER_NAME",
+			"value": "Test Test",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARD_BRAND",
+			"value": "VISA",
+			"type": "default",
+			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2023-07-19T15:42:28.961Z",
-	"_postman_exported_using": "Postman/10.16.0"
+	"_postman_exported_at": "2023-10-13T07:19:27.132Z",
+	"_postman_exported_using": "Postman/10.19.0"
 }
