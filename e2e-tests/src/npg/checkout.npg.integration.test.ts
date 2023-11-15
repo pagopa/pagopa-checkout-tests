@@ -79,7 +79,7 @@ describe("Checkout payment activation tests", () => {
     expect(resultMessage).toContain("Grazie, hai pagato");
   });
 
-  it.skip("Should correctly execute a payment with PSP Unicredit", async () => {
+  it("Should correctly execute a payment with PSP Unicredit", async () => {
     /*
      * 1. Payment with valid notice code
     */
@@ -99,7 +99,7 @@ describe("Checkout payment activation tests", () => {
     expect(resultMessage).toContain("Grazie, hai pagato");
   });
 
-  it.skip("Should correctly execute a payment with PSP Poste", async () => {
+  it("Should correctly execute a payment with PSP Poste", async () => {
     /*
      * 1. Payment with valid notice code
     */
@@ -119,7 +119,7 @@ describe("Checkout payment activation tests", () => {
     expect(resultMessage).toContain("Grazie, hai pagato");
   });
 
-  it.skip("Should correctly execute a payment with PSP Postepay", async () => {
+  it("Should correctly execute a payment with PSP Postepay", async () => {
     /*
      * 1. Payment with valid notice code
     */
