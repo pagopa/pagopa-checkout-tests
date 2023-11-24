@@ -1,5 +1,7 @@
 
-import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./helpers";
+import { payNotice, acceptCookiePolicy,  generateRandomNoticeCode } from "./helpers";
+
+
 
 describe("Checkout payment activation tests", () => {
   /**
@@ -15,17 +17,8 @@ describe("Checkout payment activation tests", () => {
     holderName: String(process.env.CARD_HOLDER_NAME)
   };
 
-  const VALID_RANGE_END_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat("9999999999999"));
-  const VALID_RANGE_START_NOTICE_CODE = Number(String(process.env.VALID_NOTICE_CODE_PREFIX).concat("0000000000000"));
-
-  const VALID_NOTICE_CODE = Math.floor(
-    Math.random() * (VALID_RANGE_END_NOTICE_CODE - VALID_RANGE_START_NOTICE_CODE + 1) +
-    VALID_RANGE_START_NOTICE_CODE
-  ).toString();
-
   const NPG_PSP_ABI = String(process.env.NPG_PSP_ABI);
-  
-
+  const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
   /**
    * Increase default test timeout (60000ms)
    * to support entire payment flow
@@ -46,19 +39,105 @@ describe("Checkout payment activation tests", () => {
     await page.goto(CHECKOUT_URL);
   });
   
-  it("Should correctly execute a payment", async () => {
+  it.skip("Should correctly execute a payment with PSP Nexi", async () => {
     /*
      * 1. Payment with valid notice code
     */
     const resultMessage = await payNotice(
-      VALID_NOTICE_CODE,
+      generateRandomNoticeCode(CARD_TEST_DATA.nexi.fiscalCodePrefix),
       VALID_FISCAL_CODE,
       EMAIL,
-      VALID_CARD_DATA,
-      NPG_PSP_ABI
+      {
+        number: String(CARD_TEST_DATA.nexi.pan),
+        expirationDate: String(CARD_TEST_DATA.nexi.expirationDate),
+        ccv: String(CARD_TEST_DATA.nexi.cvv),
+        holderName: "Test test"
+      },
+      CARD_TEST_DATA.nexi.pspAbi
+    );
+
+    expect(resultMessage).toContain("Grazie, hai pagato");
+  });
+
+  it("Should correctly execute a payment with PSP Intesa", async () => {
+    /*
+     * 1. Payment with valid notice code
+    */
+    const resultMessage = await payNotice(
+      generateRandomNoticeCode(CARD_TEST_DATA.intesa.fiscalCodePrefix),
+      VALID_FISCAL_CODE,
+      EMAIL,
+      {
+        number: String(CARD_TEST_DATA.intesa.pan),
+        expirationDate: String(CARD_TEST_DATA.intesa.expirationDate),
+        ccv: String(CARD_TEST_DATA.intesa.cvv),
+        holderName: "Test test"
+      },
+      CARD_TEST_DATA.intesa.pspAbi
+    );
+
+    expect(resultMessage).toContain("Grazie, hai pagato");
+  });
+
+  it.skip("Should correctly execute a payment with PSP Unicredit", async () => {
+    /*
+     * 1. Payment with valid notice code
+    */
+    const resultMessage = await payNotice(
+      generateRandomNoticeCode(CARD_TEST_DATA.unicredit.fiscalCodePrefix),
+      VALID_FISCAL_CODE,
+      EMAIL,
+      {
+        number: String(CARD_TEST_DATA.unicredit.pan),
+        expirationDate: String(CARD_TEST_DATA.unicredit.expirationDate),
+        ccv: String(CARD_TEST_DATA.unicredit.cvv),
+        holderName: "Test test"
+      },
+      CARD_TEST_DATA.unicredit.pspAbi
+    );
+
+    expect(resultMessage).toContain("Grazie, hai pagato");
+  });
+
+  it.skip("Should correctly execute a payment with PSP Poste", async () => {
+    /*
+     * 1. Payment with valid notice code
+    */
+    const resultMessage = await payNotice(
+    generateRandomNoticeCode(CARD_TEST_DATA.poste.fiscalCodePrefix),
+    VALID_FISCAL_CODE,
+    EMAIL,
+    {
+      number: String(CARD_TEST_DATA.poste.pan),
+      expirationDate: String(CARD_TEST_DATA.poste.expirationDate),
+      ccv: String(CARD_TEST_DATA.poste.cvv),
+      holderName: "Test test"
+    },
+    CARD_TEST_DATA.poste.pspAbi
+    );
+
+    expect(resultMessage).toContain("Grazie, hai pagato");
+  });
+
+  it.skip("Should correctly execute a payment with PSP Postepay", async () => {
+    /*
+     * 1. Payment with valid notice code
+    */
+    const resultMessage = await payNotice(
+    generateRandomNoticeCode(CARD_TEST_DATA.postepay.fiscalCodePrefix),
+    VALID_FISCAL_CODE,
+    EMAIL,
+    {
+      number: String(CARD_TEST_DATA.postepay.pan),
+      expirationDate: String(CARD_TEST_DATA.postepay.expirationDate),
+      ccv: String(CARD_TEST_DATA.postepay.cvv),
+      holderName: "Test test"
+    },
+    CARD_TEST_DATA.postepay.pspAbi
     );
 
     expect(resultMessage).toContain("Grazie, hai pagato");
   });
 
 });
+

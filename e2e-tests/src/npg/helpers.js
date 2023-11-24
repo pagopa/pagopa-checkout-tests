@@ -47,6 +47,14 @@ export const acceptCookiePolicy = async () => {
 
 
 export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
+  console.log(
+    `Testing happy path transaction.
+    notice code: ${noticeCode},
+    fiscal code: ${fiscalCode},
+    email: ${email},
+    cardData: ${JSON.stringify(cardData)}
+    psp abi: ${abi}
+    `);
   const payNoticeBtnSelector = "#paymentSummaryButtonPay";
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
@@ -137,7 +145,6 @@ export const fillCardDataForm = async (cardData, abi) => {
   await selectPSPBtn.click();
 
   const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`
-  console.log(pspButton)
   const pspDiv = await page.waitForXPath(pspButton);
   await pspDiv.click();
 
@@ -146,4 +153,14 @@ export const fillCardDataForm = async (cardData, abi) => {
   await payBtn.click();
   await page.waitForNavigation();
   await execute_mock_authorization_npg();
+};
+
+
+export const generateRandomNoticeCode = (noticeCodePrefix) =>{
+  const validRangeEnd = Number(String(noticeCodePrefix).concat("9999999999999"));
+  const validRangeStart = Number(String(noticeCodePrefix).concat("0000000000000"));
+  return Math.floor(
+    Math.random() * (validRangeEnd - validRangeStart + 1) +
+    validRangeStart
+  ).toString();
 };
