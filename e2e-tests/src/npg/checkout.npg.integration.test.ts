@@ -39,7 +39,7 @@ describe("Checkout payment activation tests", () => {
     await page.goto(CHECKOUT_URL);
   });
   
-  it.skip("Should correctly execute a payment with PSP Nexi", async () => {
+  it("Should correctly execute a payment with PSP Nexi", async () => {
     /*
      * 1. Payment with valid notice code
     */
