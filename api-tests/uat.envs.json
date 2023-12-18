@@ -130,7 +130,7 @@
 		},
 		{
 			"key": "FEE",
-			"value": "120",
+			"value": "150",
 			"type": "default",
 			"enabled": true
 		},
@@ -151,7 +151,7 @@
 			"value": "green",
 			"type": "default",
 			"enabled": true
-		}
+				}
 	],
 	"_postman_variable_scope": "environment",
 	"_postman_exported_at": "2023-07-19T15:42:47.397Z",
