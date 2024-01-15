@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "637afb61-bc08-4661-ab3c-87d281f0476b",
+		"_postman_id": "16079046-bafc-418c-bbb1-6785c9e41d47",
 		"name": "Ecommerce for Checkout API - NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_exporter_id": "23305473"
 	},
 	"item": [
 		{
@@ -1063,7 +1063,7 @@
 							"",
 							"    const response = pm.response.json();",
 							"",
-							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\",\"methodManagement\"]);",
 							"    //this line handle transient time for which response will differs from DEV and UAT until Checkout develop branch deploy in UAT env",
 							"    const paymentMethods = response.paymentMethods == null ? response : response.paymentMethods;",
 							"    pm.expect(paymentMethods).to.be.not.empty;",
