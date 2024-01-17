@@ -1073,7 +1073,7 @@
 							"",
 							"    const response = pm.response.json();",
 							"",
-							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\"]);",
+							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\",\"methodManagement\"]);",
 							"    //this line handle transient time for which response will differs from DEV and UAT until Checkout develop branch deploy in UAT env",
 							"    const paymentMethods = response.paymentMethods == null ? response : response.paymentMethods;",
 							"    pm.expect(paymentMethods).to.be.not.empty;",
