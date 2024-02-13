@@ -611,6 +611,11 @@
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
 						"type": "text"
+					},
+					{
+						"key": "x-correlation-id",
+						"value": "{{CORRELATION_ID}}",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -676,6 +681,11 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "x-correlation-id",
+						"value": "{{CORRELATION_ID}}",
 						"type": "text"
 					}
 				],
