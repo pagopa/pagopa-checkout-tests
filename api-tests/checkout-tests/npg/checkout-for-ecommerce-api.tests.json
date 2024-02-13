@@ -49,6 +49,7 @@
 							"  method: 'POST',",
 							"  header: {",
 							"    'Content-Type': 'application/json',",
+							"    'x-correlation-id': 'b6bb9f02-a20d-409b-8699-8603b83cd950',",
 							"    'deployment' : deploymentHeader,",
 							"  },",
 							"  body: {",
