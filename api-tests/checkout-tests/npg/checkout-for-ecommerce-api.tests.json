@@ -801,7 +801,7 @@
 						"type": "text"
 					},
 					{
-						"key": "correlationId",
+						"key": "x-correlation-id",
 						"value": "{{CORRELATION_ID}}",
 						"type": "text"
 					}
