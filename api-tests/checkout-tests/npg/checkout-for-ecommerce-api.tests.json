@@ -169,6 +169,7 @@
 							"    console.log(`session id: [${sessionId}]`);",
 							"    console.log(`field id: [${fieldId}]`);",
 							"    pm.environment.set(\"ORDER_ID\", response.orderId);",
+							"    pm.environment.set(\"CORRELATION_ID\", response.correlationId);",
 							"    pm.environment.set(\"NPG_IFRAME_FIELD_URL\", fieldUrl);",
 							"    pm.environment.set(\"NPG_CORRELATION_ID\", correlationId);",
 							"    pm.environment.set(\"NPG_SESSION_ID\", sessionId);",
@@ -797,6 +798,11 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "x-correlation-id",
+						"value": "{{CORRELATION_ID}}",
 						"type": "text"
 					}
 				],
