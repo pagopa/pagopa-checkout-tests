@@ -799,11 +799,16 @@
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
 						"type": "text"
+					},
+					{
+						"key": "correlationId",
+						"value": "{{CORRELATION_ID}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"orderId\": \"{{ORDER_ID}}\",\n  \"correlationId\": \"{{CORRELATION_ID}}\",\n  \"email\": \"mario.rossi@example.com\"\n}\n",
+					"raw": "{\n  \"paymentNotices\": [\n    {\n      \"rptId\": \"{{VALID_FISCAL_CODE_PA}}{{VALID_NOTICE_CODE}}\",\n      \"amount\": 100\n    }\n  ],\n  \"orderId\": \"{{ORDER_ID}}\",\n  \"email\": \"mario.rossi@example.com\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
