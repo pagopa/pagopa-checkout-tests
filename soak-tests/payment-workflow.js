@@ -1,6 +1,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import { URL, URLSearchParams } from 'https://jslib.k6.io/url/1.0.0/index.js';
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 export let options = {
     stages: [
@@ -57,7 +58,7 @@ function createTransaction(orderId, paFiscalCode, noticeCode, amount, tags) {
             "orderId": orderId,
             "email": "mario.rossi@example.com"
         }),
-        { headers: Object.assign({}, HEADERS.headers, {"x-correlation-id": "7706c27c-3ad2-43c6-9bda-89f106fb0271" }), tags },
+        { headers: Object.assign({}, HEADERS.headers, {"x-correlation-id": uuidv4() }), tags },
     );
 }
 
@@ -118,7 +119,7 @@ function fillGatewayCardData(npgCorrelationId, npgSessionId, tags) {
         headers: Object.assign({},
             HEADERS.headers,
             {
-                "Idempotency-Key": "2eb5b2ba-5aec-451a-b184-590eb7cff832",
+                "Idempotency-Key": uuidv4(),
                 "Correlation-Id": npgCorrelationId,
                 "session": npgSessionId
             }),
