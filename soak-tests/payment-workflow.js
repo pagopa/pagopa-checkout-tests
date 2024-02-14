@@ -23,9 +23,7 @@ const CARD_DATA = {
 }
 
 const HEADERS = {
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    'Content-Type': 'application/json',
 };
 
 
@@ -36,12 +34,12 @@ export function setup() {
 
 function getPaymentInfo(paFiscalCode, noticeCode, tags) {
     const url = `${BASE_PATH}/ecommerce/checkout/v1/payment-requests/${paFiscalCode}${noticeCode}?recaptchaResponse=token`;
-    return http.get(url, Object.assign({}, HEADERS.headers, tags));
+    return http.get(url, { headers: HEADERS, tags });
 }
 
 function createSession(tags) {
     const url = `${BASE_PATH}/ecommerce/checkout/v1/payment-methods/${PAYMENT_METHOD_ID}/sessions?recaptchaResponse=test`;
-    return http.post(url, "", Object.assign({}, HEADERS.headers, tags));
+    return http.post(url, "", { headers: HEADERS, tags });
 }
 
 function createTransaction(orderId, paFiscalCode, noticeCode, amount, tags) {
@@ -58,7 +56,7 @@ function createTransaction(orderId, paFiscalCode, noticeCode, amount, tags) {
             "orderId": orderId,
             "email": "mario.rossi@example.com"
         }),
-        { headers: Object.assign({}, HEADERS.headers, {"x-correlation-id": uuidv4() }), tags },
+        { headers: Object.assign({}, HEADERS, {"x-correlation-id": uuidv4() }), tags },
     );
 }
 
@@ -82,7 +80,7 @@ function computeFees(token, paFiscalCode, transactionId, bin, amount, tags) {
         {
             headers: Object.assign(
                 {},
-                HEADERS.headers,
+                HEADERS,
                 {
                     "Authorization": `Bearer ${token}`,
                     "x-transaction-id-from-client": transactionId
@@ -117,7 +115,7 @@ function fillGatewayCardData(npgCorrelationId, npgSessionId, tags) {
     }),
     {
         headers: Object.assign({},
-            HEADERS.headers,
+            HEADERS,
             {
                 "Idempotency-Key": uuidv4(),
                 "Correlation-Id": npgCorrelationId,
@@ -143,7 +141,7 @@ function requestAuthorization(token, transactionId, amount, fee, pspId, orderId,
                 orderId: orderId
             }
         }),
-        { headers: Object.assign({}, HEADERS.headers, { "Authorization": `Bearer ${token}` }), tags },
+        { headers: Object.assign({}, HEADERS, { "Authorization": `Bearer ${token}` }), tags },
     );
 }
 
