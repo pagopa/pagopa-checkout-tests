@@ -25,7 +25,7 @@ describe("Checkout payment activation tests", () => {
     */
   const timeout = 80_000
   jest.setTimeout(timeout);
-  jest.retryTimes(3);
+  jest.retryTimes(2);
   page.setDefaultNavigationTimeout(timeout);
   page.setDefaultTimeout(timeout)
 
