@@ -39,7 +39,7 @@ describe("Checkout payment activation tests", () => {
     await page.goto(CHECKOUT_URL);
   });
   
-  it.each(CARD_TEST_DATA.cards)("Should correctly execute a payment with configuration %s", async (testData) => {
+  it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
     /*
      * 1. Payment with valid notice code
     */
