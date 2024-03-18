@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9bb99d31-00f7-40d8-965f-e125b84d2b69",
+		"_postman_id": "6e3cc4db-2f47-45a5-a973-9c79ddf9c356",
 		"name": "Ecommerce for Checkout API - PGS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -1068,19 +1068,30 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[eCommerce for checkout] All payment methods successfully retrieved with GET payment-methods/:methodId\", function(){",
+							"pm.test(\"[eCommerce for checkout] All payment methods successfully retrieved with GET payment-methods/:methodId\", function () {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
 							"",
-							"    const expectedPaymentMehtodKeys = new Set([\"asset\",\"description\",\"id\",\"name\",\"paymentTypeCode\",\"ranges\",\"status\",\"methodManagement\"]);",
+							"    const expectedPaymentMethodKeys = new Set([\"asset\", \"description\", \"id\", \"name\", \"paymentTypeCode\", \"ranges\", \"status\", \"methodManagement\"]);",
+							"    const paymentMethodsWithoutBrandAssets = response.paymentMethods.map(p => {",
+							"        const { brandAssets, ...rest } = p;",
+							"        return rest;",
+							"    });",
+							"    const cardsPaymentMethods = response.paymentMethods.filter(p => p.paymentTypeCode == \"CP\");",
 							"    //this line handle transient time for which response will differs from DEV and UAT until Checkout develop branch deploy in UAT env",
 							"    const paymentMethods = response.paymentMethods == null ? response : response.paymentMethods;",
 							"    pm.expect(paymentMethods).to.be.not.empty;",
-							"    pm.expect(paymentMethods).to.satisfy((methods) => methods.every(method => Object.keys(method).every(property => expectedPaymentMehtodKeys.has(property))));",
+							"    pm.expect(paymentMethods).to.satisfy((methods) => paymentMethodsWithoutBrandAssets.every(method => Object.keys(method).every(property => expectedPaymentMethodKeys.has(property))));",
+							"    pm.expect(cardsPaymentMethods).to.satisfy((methods) => methods.every(method =>",
+							"        pm.expect(method.brandAssets.VISA).eql(\"https://assets.cdn.platform.pagopa.it/creditcard/visa.png\")",
+							"        && pm.expect(method.brandAssets.MC).eql(\"https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png\")",
+							"        && pm.expect(method.brandAssets.MASTERCARD).eql(\"https://assets.cdn.platform.pagopa.it/creditcard/mastercard.png\")",
+							"    ));",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
