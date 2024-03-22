@@ -28,11 +28,6 @@
 			"enabled": true
 		},
 		{
-			"key": "CODICE_CONTESTO_PAGAMENTO",
-			"value": "f578bd72132b4da282bf6c35cf41011d",
-			"enabled": true
-		},
-		{
 			"key": "IN_PROGRESS_FISCAL_CODE_PA",
 			"value": "00000000000",
 			"enabled": true
@@ -65,6 +60,24 @@
 		{
 			"key": "CART_ID",
 			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "TRANSACTION_ID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "AUTH_TOKEN",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "AMOUNT",
+			"value": "12000",
 			"type": "any",
 			"enabled": true
 		},
@@ -124,13 +137,13 @@
 		},
 		{
 			"key": "PSP_ID",
-			"value": "PPAYITR1XXX",
+			"value": "BCITITMM",
 			"type": "default",
 			"enabled": true
 		},
 		{
 			"key": "FEE",
-			"value": "150",
+			"value": "100",
 			"type": "default",
 			"enabled": true
 		},
@@ -149,6 +162,77 @@
 		{
 			"key": "DEPLOYMENT_TRANSACTION_SERVICE",
 			"value": "green",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ORDER_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_HOST",
+			"value": "https://stg-ta.nexigroup.com",
+			"enabled": true
+		},
+		{
+			"key": "NPG_CORRELATION_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_SESSION_ID",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_IFRAME_FIELD_URL",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_IFRAME_FIELD_ID",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "DUE_DATE",
+			"value": "2021-07-31",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARD_PAN",
+			"value": "4349940199004549",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_EXPIRATION_DATE",
+			"value": "12/25",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_SECURITY_CODE",
+			"value": "123",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARDHOLDER_NAME",
+			"value": "Test Test",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "NPG_TEST_CARD_BRAND",
+			"value": "VISA",
 			"type": "default",
 			"enabled": true
 		}

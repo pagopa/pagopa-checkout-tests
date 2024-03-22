@@ -40,7 +40,7 @@ stages:
             condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'DEV'))
 
           - script: |
-              newman run --ignore-redirects api-tests/checkout-tests/pgs/checkout-for-ecommerce-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-for-ecommerce-api-TEST.xml
+              newman run --ignore-redirects api-tests/checkout-tests/npg/checkout-for-ecommerce-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-for-ecommerce-api-TEST.xml
             displayName: 'Run API tests (UAT)'
             condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
 
