@@ -33,6 +33,7 @@ stages:
     jobs:
       - job: api_tests_dev
         condition: eq('${{parameters.RUN_DEV}}', true)
+        displayName: 'Run API Tests on Checkout (DEV)'
         steps:
           - script: |
               yarn global add newman
@@ -51,6 +52,7 @@ stages:
 
       - job: api_tests_uat
         condition: eq('${{parameters.RUN_UAT}}', true)
+        displayName: 'Run API Tests on Checkout (UAT)'
         steps:
           - script: |
               yarn global add newman
@@ -74,6 +76,7 @@ stages:
     jobs:
       - job: api_tests_dev
         condition: eq('${{parameters.RUN_DEV}}', true)
+        displayName: 'Run API Tests on Checkout Carts (DEV)'
         steps:
           - script: |
               yarn global add newman
@@ -92,6 +95,7 @@ stages:
 
       - job: api_tests_uat
         condition: eq('${{parameters.RUN_UAT}}', true)
+        displayName: 'Run API Tests on Checkout Carts (UAT)'
         steps:
           - script: |
               yarn global add newman
