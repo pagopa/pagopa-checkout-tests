@@ -45,6 +45,7 @@ stages:
 
           - task: PublishTestResults@2
             inputs:
+              testRunTitle: "API Tests on Checkout (DEV)"
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/*-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
@@ -64,6 +65,7 @@ stages:
 
           - task: PublishTestResults@2
             inputs:
+              testRunTitle: "API Tests on Checkout (UAT)"
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/*-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
@@ -88,6 +90,7 @@ stages:
 
           - task: PublishTestResults@2
             inputs:
+              testRunTitle: "API Tests on Checkout Carts (DEV)"
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/cart-api-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
@@ -107,6 +110,7 @@ stages:
 
           - task: PublishTestResults@2
             inputs:
+              testRunTitle: "API Tests on Checkout Carts (UAT)"
               testResultsFormat: 'JUnit'
               testResultsFiles: '**/cart-api-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
