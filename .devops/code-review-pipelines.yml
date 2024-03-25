@@ -2,12 +2,15 @@ trigger: none
 pr: none
 
 parameters:
-  - name: 'ENVIRONMENT'
-    displayName: 'Which environment to run tests for?'
-    type: string
-    values:
-      - DEV
-      - UAT
+  - name: 'RUN_DEV'
+    displayName: "Run on DEV"
+    type: boolean
+    default: true
+
+  - name: 'RUN_UAT'
+    displayName: "Run on UAT"
+    type: boolean
+    default: true
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -28,7 +31,8 @@ stages:
       vmImage: 'ubuntu-latest'
     dependsOn: Setup_Project
     jobs:
-      - job: api_tests
+      - job: api_tests_dev
+        condition: eq('${{parameters.RUN_DEV}}', true)
         steps:
           - script: |
               yarn global add newman
@@ -37,12 +41,24 @@ stages:
           - script: |
               newman run --ignore-redirects api-tests/checkout-tests/npg/checkout-for-ecommerce-api.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
             displayName: 'Run API tests (DEV)'
-            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'DEV'))
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
+
+      - job: api_tests_uat
+        condition: eq('${{parameters.RUN_UAT}}', true)
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
 
           - script: |
               newman run --ignore-redirects api-tests/checkout-tests/npg/checkout-for-ecommerce-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-for-ecommerce-api-TEST.xml
             displayName: 'Run API tests (UAT)'
-            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
 
           - task: PublishTestResults@2
             inputs:
@@ -56,7 +72,8 @@ stages:
       vmImage: 'ubuntu-latest'
     dependsOn: Setup_Project
     jobs:
-      - job: api_tests
+      - job: api_tests_dev
+        condition: eq('${{parameters.RUN_DEV}}', true)
         steps:
           - script: |
               yarn global add newman
@@ -65,12 +82,24 @@ stages:
           - script: |
               newman run --ignore-redirects api-tests/cart-tests/cart-api-dev.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
             displayName: 'Run API tests (DEV)'
-            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'DEV'))
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/cart-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
+
+      - job: api_tests_uat
+        condition: eq('${{parameters.RUN_UAT}}', true)
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
 
           - script: |
               newman run --ignore-redirects api-tests/cart-tests/cart-api-uat.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
             displayName: 'Run API tests (UAT)'
-            condition: and(succeeded(), eq('${{parameters.ENVIRONMENT}}', 'UAT'))
 
           - task: PublishTestResults@2
             inputs:
@@ -84,10 +113,19 @@ stages:
       vmImage: 'ubuntu-latest'
     dependsOn: Setup_Project
     jobs:
-      - job: e2e_tests
+      - job: e2e_tests_dev
+        condition: eq('${{parameters.RUN_DEV}}', true)
+        displayName: 'Run E2E tests (DEV)'
         steps:
           - template: azure-templates/e2e-tests.yaml
             parameters:
-              ENVIRONMENT: ${{parameters.ENVIRONMENT}}
+              ENVIRONMENT: "DEV"
               CHECKOUT_RESOURCE_REPO_NAME: self
-
+      - job: e2e_tests_uat
+        condition: eq('${{parameters.RUN_DEV}}', true)
+        displayName: 'Run E2E tests (UAT)'
+        steps:
+          - template: azure-templates/e2e-tests.yaml
+            parameters:
+              ENVIRONMENT: "UAT"
+              CHECKOUT_RESOURCE_REPO_NAME: self
