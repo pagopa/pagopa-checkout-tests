@@ -1,2 +1,4 @@
 node_modules
 test_reports
+jsconfig.json
+package-lock.json
