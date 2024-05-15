@@ -1,5 +1,6 @@
 
 import { payNotice, acceptCookiePolicy,  generateRandomNoticeCode } from "./helpers";
+import { CodeCategory, EMAIL, TestData, TestExecutor, VALID_FISCAL_CODE } from "./type.tests";
 
 
 
@@ -8,8 +9,7 @@ describe("Checkout payment activation tests", () => {
    * Test input and configuration
    */
   const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
-  const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
-  const EMAIL = String(process.env.EMAIL);
+
   const VALID_CARD_DATA = {
     number: String(process.env.CARD_NUMBER),
     expirationDate: String(process.env.CARD_EXPIRATION_DATE),
@@ -38,26 +38,14 @@ describe("Checkout payment activation tests", () => {
   beforeEach(async () => {
     await page.goto(CHECKOUT_URL);
   });
-  
-  it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
-    /*
-     * 1. Payment with valid notice code
-    */
-    const resultMessage = await payNotice(
-      generateRandomNoticeCode(testData.fiscalCodePrefix),
-      VALID_FISCAL_CODE,
-      EMAIL,
-      {
-        number: String(testData.pan),
-        expirationDate: String(testData.expirationDate),
-        ccv: String(testData.cvv),
-        holderName: "Test test"
-      },
-      testData.pspAbi
-    );
 
-    expect(resultMessage).toContain("Grazie, hai pagato");
-  });
-
+  // run all tests defined in the testCases map (TestExecutor) for each card.
+  CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)).forEach( 
+    (testData:TestData) => {
+      let testExc = new TestExecutor(testData);
+      [...testExc.testCases.keys()].forEach( key => {
+        it.each([testData])(CodeCategory[key], async() => {await testExc.runTests(testData, key)})
+      })
+    });
 });
 
