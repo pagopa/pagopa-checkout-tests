@@ -1,4 +1,5 @@
 
+import { verifyActivatePaymentTest } from "../verify/helpers";
 import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./helpers";
 
 describe("Checkout payment activation tests", () => {
@@ -60,7 +61,10 @@ describe("Checkout payment activation tests", () => {
   beforeEach(async () => {
     await page.goto(CHECKOUT_URL);
   });
-  
+
+  // execute verify/activate payment tests
+  verifyActivatePaymentTest();
+
   it("Should correctly execute a payment for xpay", async () => {
     
     /*
