@@ -43,7 +43,7 @@ export const TEST_CASES: TestCase[] = [
             rangeEnd: Number(String(NAV_PREFIX).concat(PAA_PAGAMENTO_SCADUTO_END))
         },
         header: {
-            message: "L’avviso è scaduto e non è più possibile pagarlo",
+            message: "Spiacenti, l’avviso è scaduto e non è più possibile pagarlo",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
 		body: {
@@ -53,7 +53,9 @@ export const TEST_CASES: TestCase[] = [
 		errorCodeXpath: undefined,
 		skipTest: false
 	},
-	{
+
+	/**
+     {
         category: {
             codeCategory: CodeCategory.PPT_STAZIONE_INT_PA_TIMEOUT,
             rangeStart: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_TIMEOUT_START)),
@@ -69,6 +71,24 @@ export const TEST_CASES: TestCase[] = [
         },
 		errorCodeXpath: "/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div",
 		skipTest: false
+	}, 
+    */
+    {
+        category: {
+            codeCategory: CodeCategory.PPT_STAZIONE_INT_PA_TIMEOUT,
+            rangeStart: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_TIMEOUT_START)),
+            rangeEnd: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_TIMEOUT_END))
+        },
+        header: {
+            message: "Spiacenti, si è verificato un errore imprevisto",
+            xpath: "/html/body/div[3]/div[3]/div/h2/div"
+        },
+		body: {
+            message: "Prova di nuovo o contattaci per ricevere assistenza",
+            xpath: "/html/body/div[3]/div[3]/div/div/div[1]"
+        },
+		errorCodeXpath: undefined,
+		skipTest: false
 	},
 	{
         category: {
@@ -77,7 +97,7 @@ export const TEST_CASES: TestCase[] = [
             rangeEnd: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE_END))
         },
         header: {
-            message: "L’Ente Creditore sta avendo problemi nella risposta",
+            message: "Spiacenti, l’Ente Creditore sta avendo problemi nella risposta",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
 		body: {
