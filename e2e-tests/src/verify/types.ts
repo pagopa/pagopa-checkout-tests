@@ -12,15 +12,15 @@ interface Box {
 }
 
 export interface Category {
-    codeCategory:CodeCategory,
-    rangeStart:number,
-    rangeEnd:number
+    codeCategory: CodeCategory,
+    rangeStart: number, // Indicate the start range for the generation of the noticeCode.
+    rangeEnd: number    // Indicate the end range for the generation of the noticeCode.
 }
 
 export interface TestCase{
-    category:Category,
-    header:Box | undefined,
-    body:Box | undefined,
-    errorCodeXpath:string | undefined,
-    skipTest:boolean
+    category :Category,
+    header: Box | undefined,
+    body: Box | undefined,
+    errorCodeXpath: string | undefined,
+    skipTest: boolean
 }

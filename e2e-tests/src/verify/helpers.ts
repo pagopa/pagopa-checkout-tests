@@ -2,11 +2,14 @@ import { fillPaymentNotificationForm } from "../npg/helpers"
 import { NAV_PAA_PAGAMENTO_DUPLICATO, TEST_CASES, VALID_FISCAL_CODE } from "./constants";
 import { Category, CodeCategory, TestCase } from "./types";
 
-export const  verifyActivatePaymentTest = () =>{
-    TEST_CASES.filter(t => !t.skipTest).forEach( testCase => {test(`Should throw ${testCase.category.codeCategory}`, async () => {await runPayment(testCase)})})
-}
+export const  verifyActivatePaymentTest = () => {
+    TEST_CASES.filter(t => !t.skipTest)
+        .forEach( testCase => {
+            test(`Should throw ${testCase.category.codeCategory}`, async () => {await runTest(testCase)})
+        });
+};
 
-/* 
+/**
 * Based on the type of test case category, a specific noticeCode is generated for that case.
 */
 export const generateRandomNoticeCode = (category: Category) => {
@@ -17,8 +20,10 @@ export const generateRandomNoticeCode = (category: Category) => {
         : Math.floor(Math.random() * (rangeEnd - rangeStart + 1) + rangeStart).toString();
 };
 
-
-export async function runPayment(testCase:TestCase){
+/**
+* Execute the steps to generate the error modal.
+*/
+export async function runTest(testCase: TestCase) {
 
     const noticeCode = generateRandomNoticeCode(testCase.category);
     
