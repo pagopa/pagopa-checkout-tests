@@ -5,7 +5,11 @@ import { Category, CodeCategory, TestCase } from "./types";
 export const  verifyActivatePaymentTest = () => {
     TEST_CASES.filter(t => !t.skipTest)
         .forEach( testCase => {
-            test(`Should throw ${testCase.category.codeCategory}`, async () => {await runTest(testCase)})
+            const noticeCode = generateRandomNoticeCode(testCase.category);
+            test(`Should throw ${testCase.category.codeCategory} {
+                notice code: ${noticeCode},
+                fiscal code: ${VALID_FISCAL_CODE}
+            }}`, async () => {await runTest(testCase, noticeCode)})
         });
 };
 
@@ -23,9 +27,7 @@ export const generateRandomNoticeCode = (category: Category) => {
 /**
 * Execute the steps to generate the error modal.
 */
-export async function runTest(testCase: TestCase) {
-
-    const noticeCode = generateRandomNoticeCode(testCase.category);
+export async function runTest(testCase: TestCase, noticeCode:string) {
     
     console.log(
       `Testing error case ${testCase.category.codeCategory}.
