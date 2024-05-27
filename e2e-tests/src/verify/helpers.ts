@@ -6,10 +6,10 @@ export const  verifyActivatePaymentTest = () => {
     TEST_CASES.filter(t => !t.skipTest)
         .forEach( testCase => {
             const noticeCode = generateRandomNoticeCode(testCase.category);
-            test(`Should throw ${testCase.category.codeCategory} {
+            it(`Should throw ${testCase.category.codeCategory} {
                 notice code: ${noticeCode},
                 fiscal code: ${VALID_FISCAL_CODE}
-            }}`, async () => {await runTest(testCase, noticeCode)})
+            }}`, async () => {await runErrorModalTest(testCase, noticeCode)})
         });
 };
 
@@ -27,7 +27,7 @@ export const generateRandomNoticeCode = (category: Category) => {
 /**
 * Execute the steps to generate the error modal.
 */
-export async function runTest(testCase: TestCase, noticeCode:string) {
+export async function runErrorModalTest(testCase: TestCase, noticeCode:string) {
     
     console.log(
       `Testing error case ${testCase.category.codeCategory}.

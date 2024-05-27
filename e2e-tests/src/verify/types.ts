@@ -1,9 +1,9 @@
 export enum CodeCategory {
-    PAA_PAGAMENTO_SCONOSCIUTO="PAA_PAGAMENTO_SCONOSCIUTO",
-    PAA_PAGAMENTO_SCADUTO="PAA_PAGAMENTO_SCADUTO",
-    PPT_STAZIONE_INT_PA_TIMEOUT="PPT_STAZIONE_INT_PA_TIMEOUT",
-    PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE="PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE",
-    PAA_PAGAMENTO_DUPLICATO="PAA_PAGAMENTO_DUPLICATO",
+    PAA_PAGAMENTO_SCONOSCIUTO = "PAA_PAGAMENTO_SCONOSCIUTO",
+    PAA_PAGAMENTO_SCADUTO = "PAA_PAGAMENTO_SCADUTO",
+    PPT_STAZIONE_INT_PA_TIMEOUT = "PPT_STAZIONE_INT_PA_TIMEOUT",
+    PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE = "PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE",
+    PAA_PAGAMENTO_DUPLICATO = "PAA_PAGAMENTO_DUPLICATO",
 }
 
 interface Box {
@@ -17,8 +17,8 @@ export interface Category {
     rangeEnd: number    // Indicate the end range for the generation of the noticeCode.
 }
 
-export interface TestCase{
-    category :Category,
+export interface TestCase {
+    category: Category,
     header: Box | undefined,
     body: Box | undefined,
     errorCodeXpath: string | undefined,

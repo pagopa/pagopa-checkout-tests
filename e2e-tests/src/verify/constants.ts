@@ -25,7 +25,7 @@ export const TEST_CASES: TestCase[] = [
             rangeStart: Number(String(NAV_PREFIX).concat(PAA_PAGAMENTO_SCONOSCIUTO_START)),
             rangeEnd: Number(String(NAV_PREFIX).concat(PAA_PAGAMENTO_SCONOSCIUTO_END))
         },
-		header: {
+        header: {
             message: "Non riusciamo a trovare l'avviso",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
@@ -97,7 +97,7 @@ export const TEST_CASES: TestCase[] = [
             message: "Questo avviso è stato già pagato!",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
-		body: undefined,
+        body: undefined,
 		errorCodeXpath: undefined,
 		skipTest: false
 	}
