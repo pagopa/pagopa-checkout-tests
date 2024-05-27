@@ -19,7 +19,7 @@ export const PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE_START = "970000000000000";
 export const NAV_PAA_PAGAMENTO_DUPLICATO = "302000100443009424";
 
 export const TEST_CASES: TestCase[] = [
-	{
+    {
         category: {
             codeCategory: CodeCategory.PAA_PAGAMENTO_SCONOSCIUTO,
             rangeStart: Number(String(NAV_PREFIX).concat(PAA_PAGAMENTO_SCONOSCIUTO_START)),
@@ -29,14 +29,14 @@ export const TEST_CASES: TestCase[] = [
             message: "Non riusciamo a trovare l'avviso",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
-		body: {
+        body: {
             message: "L'avviso potrebbe essere stato già pagato. Per ricevere assistenza, contatta l'Ente Creditore che lo ha emesso.",
             xpath: "/html/body/div[3]/div[3]/div/div/div[1]"
         },
-		errorCodeXpath: undefined,
-		skipTest: false
-	},
-	{
+        errorCodeXpath: undefined,
+        skipTest: false
+    },
+    {
         category: {
             codeCategory: CodeCategory.PAA_PAGAMENTO_SCADUTO,
             rangeStart: Number(String(NAV_PREFIX).concat(PAA_PAGAMENTO_SCADUTO_START)),
@@ -46,13 +46,13 @@ export const TEST_CASES: TestCase[] = [
             message: "Spiacenti, l’avviso è scaduto e non è più possibile pagarlo",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
-		body: {
+        body: {
             message: "Contatta l’Ente per maggiori informazioni.",
             xpath: "/html/body/div[3]/div[3]/div/div/div[1]"
         },
-		errorCodeXpath: undefined,
-		skipTest: false
-	},
+        errorCodeXpath: undefined,
+        skipTest: false
+    },
     {
         category: {
             codeCategory: CodeCategory.PPT_STAZIONE_INT_PA_TIMEOUT,
@@ -63,14 +63,14 @@ export const TEST_CASES: TestCase[] = [
             message: "Spiacenti, si è verificato un errore imprevisto",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
-		body: {
+        body: {
             message: "Prova di nuovo o contattaci per ricevere assistenza",
             xpath: "/html/body/div[3]/div[3]/div/div/div[1]"
         },
-		errorCodeXpath: undefined,
-		skipTest: false
-	},
-	{
+        errorCodeXpath: undefined,
+        skipTest: false
+    },
+    {
         category: {
             codeCategory: CodeCategory.PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE,
             rangeStart: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE_START)),
@@ -84,10 +84,10 @@ export const TEST_CASES: TestCase[] = [
             message: "Codice di errore per l'assistenza",
             xpath: "/html/body/div[3]/div[3]/div/div/div[1]"
         },
-		errorCodeXpath: "/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div",
-		skipTest: false
-	},
-	{
+        errorCodeXpath: "/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div",
+        skipTest: false
+    },
+    {
         category: {
             codeCategory: CodeCategory.PAA_PAGAMENTO_DUPLICATO,
             rangeStart: 0,
@@ -98,7 +98,7 @@ export const TEST_CASES: TestCase[] = [
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
         body: undefined,
-		errorCodeXpath: undefined,
-		skipTest: false
-	}
+        errorCodeXpath: undefined,
+        skipTest: false
+    }
 ];
