@@ -53,26 +53,6 @@ export const TEST_CASES: TestCase[] = [
 		errorCodeXpath: undefined,
 		skipTest: false
 	},
-
-	/**
-     {
-        category: {
-            codeCategory: CodeCategory.PPT_STAZIONE_INT_PA_TIMEOUT,
-            rangeStart: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_TIMEOUT_START)),
-            rangeEnd: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_TIMEOUT_END))
-        },
-        header: {
-            message: "L’Ente Creditore sta avendo problemi nella risposta",
-            xpath: "/html/body/div[3]/div[3]/div/h2/div"
-        },
-		body: {
-            message: "Codice di errore per l'assistenza",
-            xpath: "/html/body/div[3]/div[3]/div/div/div[1]"
-        },
-		errorCodeXpath: "/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div",
-		skipTest: false
-	}, 
-    */
     {
         category: {
             codeCategory: CodeCategory.PPT_STAZIONE_INT_PA_TIMEOUT,
