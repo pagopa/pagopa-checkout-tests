@@ -80,7 +80,7 @@ export const TEST_CASES: TestCase[] = [
             message: "Spiacenti, l’Ente Creditore sta avendo problemi nella risposta",
             xpath: "/html/body/div[3]/div[3]/div/h2/div"
         },
-		body: {
+        body: {
             message: "Codice di errore per l'assistenza",
             xpath: "/html/body/div[3]/div[3]/div/div/div[1]"
         },
