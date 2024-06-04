@@ -35,16 +35,11 @@ export const verifyPayment = async (noticeCode, fiscalCode) => {
 };
 
 export const acceptCookiePolicy = async () => {
-  const acceptPolicyBtn = '#onetrust-accept-btn-handler';
-  const darkFilterXPath = '/html/body/div[2]/div[1]';
+  const acceptPolicyBtn = '#onetrust-close-btn-container > button';
 
   await page.waitForSelector(acceptPolicyBtn);
   await page.click(acceptPolicyBtn);
-
-  // Avoid click on form button when dark filter is still enabled
-  await page.waitForXPath(darkFilterXPath, { hidden: true });
 };
-
 
 export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
   console.log(
@@ -54,8 +49,9 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
     email: ${email},
     cardData: ${JSON.stringify(cardData)}
     psp abi: ${abi}
-    `);
-  const payNoticeBtnSelector = "#paymentSummaryButtonPay";
+    `,
+  );
+  const payNoticeBtnSelector = '#paymentSummaryButtonPay';
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
@@ -72,7 +68,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
 export const fillEmailForm = async email => {
   const emailInput = '#email';
   const confirmEmailInput = '#confirmEmail';
-  const continueBtnSelector = "#paymentEmailPageButtonContinue";
+  const continueBtnSelector = '#paymentEmailPageButtonContinue';
 
   await page.waitForSelector(emailInput);
   await page.click(emailInput);
@@ -84,7 +80,6 @@ export const fillEmailForm = async email => {
 
   const continueBtn = await page.waitForSelector(continueBtnSelector);
   await continueBtn.click();
-
 };
 
 export const choosePaymentMethod = async method => {
@@ -102,17 +97,16 @@ export const choosePaymentMethod = async method => {
 const execute_mock_authorization_npg = async () => {
   //no-op: NPG authentication phase is automatically performed by mock, no action to be taken
   await page.waitForNavigation();
-}
+};
 
 export const fillCardDataForm = async (cardData, abi) => {
-
   const cardNumberInput = '#frame_CARD_NUMBER';
   const expirationDateInput = '#frame_EXPIRATION_DATE';
   const ccvInput = '#frame_SECURITY_CODE';
   const holderNameInput = '#frame_CARDHOLDER_NAME';
-  const continueBtnXPath = "button[type=submit]";
+  const continueBtnXPath = 'button[type=submit]';
   const disabledContinueBtnXPath = 'button[type=submit][disabled=""]';
-  const payBtnSelector = "#paymentCheckPageButtonPay";
+  const payBtnSelector = '#paymentCheckPageButtonPay';
   const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div/div[5]/button';
   let iteration = 0;
   let completed = false;
@@ -122,20 +116,20 @@ export const fillCardDataForm = async (cardData, abi) => {
     await page.waitForSelector(cardNumberInput, { visible: true });
     await page.click(cardNumberInput, { clickCount: 3 });
     await page.keyboard.type(cardData.number);
-    console.log("card number performed");
+    console.log('card number performed');
     await page.waitForSelector(expirationDateInput, { visible: true });
     await page.click(expirationDateInput, { clickCount: 3 });
     await page.keyboard.type(cardData.expirationDate);
-    console.log("expiration performed");
+    console.log('expiration performed');
     await page.waitForSelector(ccvInput, { visible: true });
     await page.click(ccvInput, { clickCount: 3 });
     await page.keyboard.type(cardData.ccv);
-    console.log("cvv performed");
+    console.log('cvv performed');
     await page.waitForSelector(holderNameInput, { visible: true });
     await page.click(holderNameInput, { clickCount: 3 });
     await page.keyboard.type(cardData.holderName);
-    console.log("holder performed");
-    completed = !(!! await page.$(disabledContinueBtnXPath));
+    console.log('holder performed');
+    completed = !!!(await page.$(disabledContinueBtnXPath));
     await page.waitForTimeout(1_000);
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });
@@ -144,7 +138,7 @@ export const fillCardDataForm = async (cardData, abi) => {
   const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
   await selectPSPBtn.click();
 
-  const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`
+  const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`;
   const pspDiv = await page.waitForXPath(pspButton);
   await pspDiv.click();
 
@@ -155,12 +149,8 @@ export const fillCardDataForm = async (cardData, abi) => {
   await execute_mock_authorization_npg();
 };
 
-
-export const generateRandomNoticeCode = (noticeCodePrefix) =>{
-  const validRangeEnd = Number(String(noticeCodePrefix).concat("9999999999999"));
-  const validRangeStart = Number(String(noticeCodePrefix).concat("0000000000000"));
-  return Math.floor(
-    Math.random() * (validRangeEnd - validRangeStart + 1) +
-    validRangeStart
-  ).toString();
+export const generateRandomNoticeCode = noticeCodePrefix => {
+  const validRangeEnd = Number(String(noticeCodePrefix).concat('9999999999999'));
+  const validRangeStart = Number(String(noticeCodePrefix).concat('0000000000000'));
+  return Math.floor(Math.random() * (validRangeEnd - validRangeStart + 1) + validRangeStart).toString();
 };
