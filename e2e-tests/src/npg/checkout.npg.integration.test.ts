@@ -33,7 +33,7 @@ describe("Checkout payment activation tests", () => {
   beforeAll( async () => {
     await page.goto(CHECKOUT_URL);
     await page.setViewport({ width: 1200, height: 907 });
-    await acceptCookiePolicy();
+    //await acceptCookiePolicy();
   })
 
   beforeEach(async () => {
