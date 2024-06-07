@@ -34,13 +34,6 @@ export const verifyPayment = async (noticeCode, fiscalCode) => {
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 };
 
-export const acceptCookiePolicy = async () => {
-  const acceptPolicyBtn = '#onetrust-close-btn-container > button';
-
-  await page.waitForSelector(acceptPolicyBtn);
-  await page.click(acceptPolicyBtn);
-};
-
 export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
   console.log(
     `Testing happy path transaction.
