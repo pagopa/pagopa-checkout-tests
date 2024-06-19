@@ -39,23 +39,23 @@ describe("Checkout payment activation tests", () => {
   const languages = [
     {
       loc: "it",
-      value: "Grazie, hai pagato"
+      value: "Hai pagato"
     },
     {
       loc: "en",
-      value: "Thanks, you paid"
+      value: "You have paid "
     },
     {
       loc: "fr",
-      value: "Merci, vous avez payé"
+      value: "Vous avez payé "
     },
     {
       loc: "de",
-      value: "Danke, Sie haben bezahlt"
+      value: "Du hast "
     },
     {
       loc: "sl",
-      value: "Hvala, plačali ste"
+      value: "Plačali ste "
     }
   ]
 

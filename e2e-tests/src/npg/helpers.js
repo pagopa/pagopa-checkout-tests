@@ -57,7 +57,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
     `,
   );
   const payNoticeBtnSelector = '#paymentSummaryButtonPay';
-  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
+  const resultMessageSelector = '#responsePageMessageTitle';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
@@ -66,7 +66,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
   await choosePaymentMethod('card');
   await fillCardDataForm(cardData, abi);
 
-  const message = await page.waitForXPath(resultMessageXPath);
+  const message = await page.waitForSelector(resultMessageSelector);
   return await message.evaluate(el => el.textContent);
 };
 

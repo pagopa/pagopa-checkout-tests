@@ -6,5 +6,5 @@ module.exports = {
         args: ["--no-sandbox"] // to fix
     },
     browserContext: 'incognito',
-    //exitOnPageError: false // for fe develop branch 
+    exitOnPageError: false // for fe develop branch 
 }
