@@ -11,14 +11,6 @@ describe("Checkout payment activation tests", () => {
   const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
   const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
   const EMAIL = String(process.env.EMAIL);
-  const VALID_CARD_DATA = {
-    number: String(process.env.CARD_NUMBER),
-    expirationDate: String(process.env.CARD_EXPIRATION_DATE),
-    ccv: String(process.env.CARD_CCV),
-    holderName: String(process.env.CARD_HOLDER_NAME)
-  };
-
-  const NPG_PSP_ABI = String(process.env.NPG_PSP_ABI);
   const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
   /**
    * Increase default test timeout (60000ms)
@@ -33,8 +25,8 @@ describe("Checkout payment activation tests", () => {
   beforeAll( async () => {
     await page.goto(CHECKOUT_URL);
     await page.setViewport({ width: 1200, height: 907 });
-    //await acceptCookiePolicy();
-    await selectLanguage("it");
+    await acceptCookiePolicy();
+    await selectLanguage('it');
   })
 
   beforeEach(async () => {
@@ -68,9 +60,9 @@ describe("Checkout payment activation tests", () => {
   ]
 
   languages.forEach(language => {
-    it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
+    it.each(CARD_TEST_DATA.cards.filter(el => !el.skipTest))("Should correctly execute a payment with configuration %s", async (testData) => {
       // select language
-      selectLanguage(language.loc)
+      selectLanguage(language.loc);
 
       console.log(`language selected: ${language.loc}`);
       /*

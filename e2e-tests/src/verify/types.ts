@@ -16,7 +16,7 @@ export enum Language {
 
 interface Message {
     language: Language,
-    value: String
+    value: string
 }
 
 interface Box {
