@@ -6,8 +6,21 @@ export enum CodeCategory {
     PAA_PAGAMENTO_DUPLICATO = "PAA_PAGAMENTO_DUPLICATO",
 }
 
+export enum Language {
+    DE = "de",
+    EN = "en",
+    FR = "fr",
+    IT = "it",
+    SL = "sl"
+}
+
+interface Message {
+    language: Language,
+    value: String
+}
+
 interface Box {
-    message: string,
+    message: Message[],
     xpath: string
 }
 

@@ -41,6 +41,11 @@ export const acceptCookiePolicy = async () => {
   await page.click(acceptPolicyBtn);
 };
 
+export const selectLanguage = async (lan) => {
+  const selectElementId = '#languageMenu';
+  await page.select(selectElementId, lan);
+};
+
 export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
   console.log(
     `Testing happy path transaction.
@@ -129,7 +134,7 @@ export const fillCardDataForm = async (cardData, abi) => {
     await page.click(holderNameInput, { clickCount: 3 });
     await page.keyboard.type(cardData.holderName);
     console.log('holder performed');
-    completed = !!!(await page.$(disabledContinueBtnXPath));
+    completed = !await page.$(disabledContinueBtnXPath);
     await page.waitForTimeout(1_000);
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });

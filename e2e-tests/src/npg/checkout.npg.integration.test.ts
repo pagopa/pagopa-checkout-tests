@@ -1,6 +1,6 @@
 
 import { verifyActivatePaymentTest } from "../verify/helpers";
-import { payNotice, acceptCookiePolicy,  generateRandomNoticeCode } from "./helpers";
+import { payNotice, acceptCookiePolicy,  generateRandomNoticeCode, selectLanguage } from "./helpers";
 
 
 
@@ -33,7 +33,8 @@ describe("Checkout payment activation tests", () => {
   beforeAll( async () => {
     await page.goto(CHECKOUT_URL);
     await page.setViewport({ width: 1200, height: 907 });
-    await acceptCookiePolicy();
+    //await acceptCookiePolicy();
+    await selectLanguage("it");
   })
 
   beforeEach(async () => {
@@ -43,24 +44,52 @@ describe("Checkout payment activation tests", () => {
   // execute verify-activate payment tests
   verifyActivatePaymentTest();
 
-  it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
-    /*
-     * 1. Payment with valid notice code
-    */
-    const resultMessage = await payNotice(
-      generateRandomNoticeCode(testData.fiscalCodePrefix),
-      VALID_FISCAL_CODE,
-      EMAIL,
-      {
-        number: String(testData.pan),
-        expirationDate: String(testData.expirationDate),
-        ccv: String(testData.cvv),
-        holderName: "Test test"
-      },
-      testData.pspAbi
-    );
+  const languages = [
+    {
+      loc: "it",
+      value: "Grazie, hai pagato"
+    },
+    {
+      loc: "en",
+      value: "Thanks, you paid"
+    },
+    {
+      loc: "fr",
+      value: "Merci, vous avez payé"
+    },
+    {
+      loc: "de",
+      value: "Danke, Sie haben bezahlt"
+    },
+    {
+      loc: "sl",
+      value: "Hvala, plačali ste"
+    }
+  ]
 
-    expect(resultMessage).toContain("Grazie, hai pagato");
+  languages.forEach(language => {
+    it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
+      // select language
+      selectLanguage(language.loc)
+
+      console.log(`language selected: ${language.loc}`);
+      /*
+       * 1. Payment with valid notice code
+      */
+      const resultMessage = await payNotice(
+        generateRandomNoticeCode(testData.fiscalCodePrefix),
+        VALID_FISCAL_CODE,
+        EMAIL,
+        {
+          number: String(testData.pan),
+          expirationDate: String(testData.expirationDate),
+          ccv: String(testData.cvv),
+          holderName: "Test test"
+        },
+        testData.pspAbi
+      );
+  
+      expect(resultMessage).toContain(language.value);
+    });
   });
-
 });
