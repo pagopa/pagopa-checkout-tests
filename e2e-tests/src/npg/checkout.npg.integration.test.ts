@@ -25,7 +25,7 @@ describe("Checkout payment activation tests", () => {
   beforeAll( async () => {
     await page.goto(CHECKOUT_URL);
     await page.setViewport({ width: 1200, height: 907 });
-    await acceptCookiePolicy();
+    //await acceptCookiePolicy();
     await selectLanguage('it');
   })
 
@@ -60,11 +60,9 @@ describe("Checkout payment activation tests", () => {
   ]
 
   languages.forEach(language => {
-    it.each(CARD_TEST_DATA.cards.filter(el => !el.skipTest))("Should correctly execute a payment with configuration %s", async (testData) => {
+    it.each(CARD_TEST_DATA.cards.filter(el => !el.skipTest))(`Should correctly execute a payment with language ${language.loc} and configuration %s`, async (testData) => {
       // select language
       selectLanguage(language.loc);
-
-      console.log(`language selected: ${language.loc}`);
       /*
        * 1. Payment with valid notice code
       */
