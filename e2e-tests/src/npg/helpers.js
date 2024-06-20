@@ -46,14 +46,15 @@ export const selectLanguage = async (lan) => {
   await page.select(selectElementId, lan);
 };
 
-export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
+export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi, language) => {
   console.log(
     `Testing happy path transaction.
     notice code: ${noticeCode},
     fiscal code: ${fiscalCode},
     email: ${email},
     cardData: ${JSON.stringify(cardData)}
-    psp abi: ${abi}
+    psp abi: ${abi},
+    language: ${language}
     `,
   );
   const payNoticeBtnSelector = '#paymentSummaryButtonPay';

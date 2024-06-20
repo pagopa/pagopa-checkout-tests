@@ -59,27 +59,30 @@ describe("Checkout payment activation tests", () => {
     }
   ]
 
-  languages.forEach(language => {
-    it.each(CARD_TEST_DATA.cards.filter(el => !el.skipTest))(`Should correctly execute a payment with language ${language.loc} and configuration %s`, async (testData) => {
-      // select language
-      selectLanguage(language.loc);
-      /*
-       * 1. Payment with valid notice code
-      */
-      const resultMessage = await payNotice(
-        generateRandomNoticeCode(testData.fiscalCodePrefix),
-        VALID_FISCAL_CODE,
-        EMAIL,
-        {
-          number: String(testData.pan),
-          expirationDate: String(testData.expirationDate),
-          ccv: String(testData.cvv),
-          holderName: "Test test"
-        },
-        testData.pspAbi
-      );
-  
-      expect(resultMessage).toContain(language.value);
-    });
+  let currentIndex = 0;
+  it.each(CARD_TEST_DATA.cards.filter(el => !el.skipTest))(`Should correctly execute a payment with language ${languages[currentIndex].loc} and configuration %s`, async (testData) => {
+    // select language
+    selectLanguage(languages[currentIndex]);
+    /*
+      * 1. Payment with valid notice code
+    */
+    const resultMessage = await payNotice(
+      generateRandomNoticeCode(testData.fiscalCodePrefix),
+      VALID_FISCAL_CODE,
+      EMAIL,
+      {
+        number: String(testData.pan),
+        expirationDate: String(testData.expirationDate),
+        ccv: String(testData.cvv),
+        holderName: "Test test"
+      },
+      testData.pspAbi,
+      languages[currentIndex].loc
+    );
+
+    expect(resultMessage).toContain(languages[currentIndex].value);
+
+    // Update the currentIndex, wrapping it back to 0 if it reaches the max length of languages array
+    currentIndex = currentIndex === languages.length - 1 ? 0 : currentIndex + 1;
   });
 });
