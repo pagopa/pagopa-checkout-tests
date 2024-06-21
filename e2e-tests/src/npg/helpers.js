@@ -41,18 +41,24 @@ export const acceptCookiePolicy = async () => {
   await page.click(acceptPolicyBtn);
 };
 
-export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
+export const selectLanguage = async (lan) => {
+  const selectElementId = '#languageMenu';
+  await page.select(selectElementId, lan);
+};
+
+export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi, language) => {
   console.log(
     `Testing happy path transaction.
     notice code: ${noticeCode},
     fiscal code: ${fiscalCode},
     email: ${email},
     cardData: ${JSON.stringify(cardData)}
-    psp abi: ${abi}
+    psp abi: ${abi},
+    language: ${language}
     `,
   );
   const payNoticeBtnSelector = '#paymentSummaryButtonPay';
-  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
+  const resultMessageSelector = '#responsePageMessageTitle';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
@@ -61,7 +67,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
   await choosePaymentMethod('card');
   await fillCardDataForm(cardData, abi);
 
-  const message = await page.waitForXPath(resultMessageXPath);
+  const message = await page.waitForSelector(resultMessageSelector);
   return await message.evaluate(el => el.textContent);
 };
 
@@ -129,7 +135,7 @@ export const fillCardDataForm = async (cardData, abi) => {
     await page.click(holderNameInput, { clickCount: 3 });
     await page.keyboard.type(cardData.holderName);
     console.log('holder performed');
-    completed = !!!(await page.$(disabledContinueBtnXPath));
+    completed = !await page.$(disabledContinueBtnXPath);
     await page.waitForTimeout(1_000);
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });

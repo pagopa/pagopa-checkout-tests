@@ -1,6 +1,6 @@
 
 import { verifyActivatePaymentTest } from "../verify/helpers";
-import { payNotice, acceptCookiePolicy,  generateRandomNoticeCode } from "./helpers";
+import { payNotice, acceptCookiePolicy,  generateRandomNoticeCode, selectLanguage } from "./helpers";
 
 
 
@@ -11,14 +11,6 @@ describe("Checkout payment activation tests", () => {
   const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
   const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
   const EMAIL = String(process.env.EMAIL);
-  const VALID_CARD_DATA = {
-    number: String(process.env.CARD_NUMBER),
-    expirationDate: String(process.env.CARD_EXPIRATION_DATE),
-    ccv: String(process.env.CARD_CCV),
-    holderName: String(process.env.CARD_HOLDER_NAME)
-  };
-
-  const NPG_PSP_ABI = String(process.env.NPG_PSP_ABI);
   const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
   /**
    * Increase default test timeout (60000ms)
@@ -33,7 +25,8 @@ describe("Checkout payment activation tests", () => {
   beforeAll( async () => {
     await page.goto(CHECKOUT_URL);
     await page.setViewport({ width: 1200, height: 907 });
-    await acceptCookiePolicy();
+    // await acceptCookiePolicy();
+    await selectLanguage('it');
   })
 
   beforeEach(async () => {
@@ -43,24 +36,45 @@ describe("Checkout payment activation tests", () => {
   // execute verify-activate payment tests
   verifyActivatePaymentTest();
 
-  it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
-    /*
-     * 1. Payment with valid notice code
-    */
-    const resultMessage = await payNotice(
-      generateRandomNoticeCode(testData.fiscalCodePrefix),
-      VALID_FISCAL_CODE,
-      EMAIL,
-      {
-        number: String(testData.pan),
-        expirationDate: String(testData.expirationDate),
-        ccv: String(testData.cvv),
-        holderName: "Test test"
-      },
-      testData.pspAbi
-    );
+  const languages = [
+    { loc: "it", value: "Hai pagato" },
+    { loc: "en", value: "You have paid" },
+    { loc: "fr", value: "Vous avez payé" },
+    { loc: "de", value: "Du hast" },
+    { loc: "sl", value: "Plačali ste" },
+  ];
 
-    expect(resultMessage).toContain("Grazie, hai pagato");
+  let languageIndex = 0;
+
+  CARD_TEST_DATA.cards.filter((el) => !el.skipTest).forEach((testData) => {
+    const { loc, value } = languages[languageIndex];
+    // Update the languageIndex, wrapping it back to 0 if it reaches the max length of languages array
+    languageIndex = (languageIndex + 1) % languages.length;
+
+    it(`Should correctly execute a payment with language ${loc} and configuration ${JSON.stringify(
+      testData,
+      null,
+      2
+    )}`, async () => {
+      // Select language
+      await selectLanguage(loc);
+
+      // 1. Payment with valid notice code
+      const resultMessage = await payNotice(
+        generateRandomNoticeCode(testData.fiscalCodePrefix),
+        VALID_FISCAL_CODE,
+        EMAIL,
+        {
+          number: String(testData.pan),
+          expirationDate: String(testData.expirationDate),
+          ccv: String(testData.cvv),
+          holderName: "Test test",
+        },
+        testData.pspAbi,
+        loc
+      );
+
+      expect(resultMessage).toContain(value);
+    });
   });
-
 });
