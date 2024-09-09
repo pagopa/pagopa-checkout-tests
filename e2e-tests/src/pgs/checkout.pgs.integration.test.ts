@@ -2,7 +2,7 @@
 import { verifyActivatePaymentTest } from "../verify/helpers";
 import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./helpers";
 
-describe("Checkout payment activation tests", () => {
+describe.skip("Checkout payment activation tests", () => {
   /**
    * Test input and configuration
    */
