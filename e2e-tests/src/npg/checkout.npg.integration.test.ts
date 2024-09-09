@@ -42,7 +42,7 @@ describe("Checkout payment activation tests", () => {
 
   // execute verify-activate payment tests
   
-  //verifyActivatePaymentTest();
+  verifyActivatePaymentTest();
 
   it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
     /*
