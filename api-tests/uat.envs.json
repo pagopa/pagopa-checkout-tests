@@ -8,11 +8,6 @@
 			"enabled": true
 		},
 		{
-			"key": "PAID_FISCAL_CODE_PA",
-			"value": "00000000000",
-			"enabled": true
-		},
-		{
 			"key": "VALID_NOTICE_CODE",
 			"value": "302000100000009424",
 			"enabled": true
@@ -20,21 +15,6 @@
 		{
 			"key": "VALID_FISCAL_CODE_PA",
 			"value": "77777777777",
-			"enabled": true
-		},
-		{
-			"key": "PAID_NOTICE_CODE",
-			"value": "000000000000000009",
-			"enabled": true
-		},
-		{
-			"key": "IN_PROGRESS_FISCAL_CODE_PA",
-			"value": "00000000000",
-			"enabled": true
-		},
-		{
-			"key": "IN_PROGRESS_NOTICE_CODE",
-			"value": "002720356084529460",
 			"enabled": true
 		},
 		{
