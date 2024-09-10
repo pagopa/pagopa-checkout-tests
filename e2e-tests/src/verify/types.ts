@@ -8,7 +8,7 @@ export enum CodeCategory {
 
 interface Box {
     message: string,
-    xpath: string
+    selector: string
 }
 
 export interface Category {

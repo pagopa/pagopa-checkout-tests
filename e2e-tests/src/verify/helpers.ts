@@ -38,8 +38,8 @@ export async function runErrorModalTest(testCase: TestCase, noticeCode:string) {
     await fillPaymentNotificationForm(noticeCode, VALID_FISCAL_CODE);
 
     // Gets the messages from the modal.
-    const messageHeader = testCase?.header?.xpath && await page.waitForSelector(testCase?.header?.xpath);
-    const messageBody = testCase.body?.xpath && await page.waitForSelector(testCase.body?.xpath);
+    const messageHeader = testCase?.header?.selector && await page.waitForSelector(testCase?.header?.selector);
+    const messageBody = testCase.body?.selector && await page.waitForSelector(testCase.body?.selector);
     const messageErrorCode = testCase.errorCodeXpath && await page.waitForXPath(testCase.errorCodeXpath);
 
     // Compare the modal messages with the expected ones.

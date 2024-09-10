@@ -27,11 +27,11 @@ export const TEST_CASES: TestCase[] = [
         },
         header: {
             message: "Non riusciamo a trovare l'avviso",
-            xpath: "#verifyPaymentTitleError"
+            selector: "#verifyPaymentTitleError"
         },
         body: {
             message: "L'avviso potrebbe essere stato già pagato. Per ricevere assistenza, contatta l'Ente Creditore che lo ha emesso.",
-            xpath: "#verifyPaymentBodyError"
+            selector: "#verifyPaymentBodyError"
         },
         errorCodeXpath: undefined,
         skipTest: false
@@ -44,11 +44,11 @@ export const TEST_CASES: TestCase[] = [
         },
         header: {
             message: "Spiacenti, l’avviso è scaduto e non è più possibile pagarlo",
-            xpath: "#verifyPaymentTitleError"
+            selector: "#verifyPaymentTitleError"
         },
         body: {
             message: "Contatta l’Ente per maggiori informazioni.",
-            xpath: "#verifyPaymentBodyError"
+            selector: "#verifyPaymentBodyError"
         },
         errorCodeXpath: undefined,
         skipTest: false
@@ -61,11 +61,11 @@ export const TEST_CASES: TestCase[] = [
         },
         header: {
             message: "Spiacenti, si è verificato un errore imprevisto",
-            xpath: "#verifyPaymentTitleError"
+            selector: "#verifyPaymentTitleError"
         },
         body: {
             message: "Prova di nuovo o contattaci per ricevere assistenza",
-            xpath: "#verifyPaymentBodyError"
+            selector: "#verifyPaymentBodyError"
         },
         errorCodeXpath: undefined,
         skipTest: false
@@ -78,11 +78,11 @@ export const TEST_CASES: TestCase[] = [
         },
         header: {
             message: "Spiacenti, l’Ente Creditore sta avendo problemi nella risposta",
-            xpath: "#verifyPaymentTitleError"
+            selector: "#verifyPaymentTitleError"
         },
         body: {
             message: "Codice di errore per l'assistenza",
-            xpath: "#verifyPaymentBodyError"
+            selector: "#verifyPaymentBodyError"
         },
         errorCodeXpath: "/html/body/div[2]/div[3]/div/div/div[2]/div[2]/div",
         skipTest: false
@@ -95,10 +95,10 @@ export const TEST_CASES: TestCase[] = [
         },
         header: {
             message: "Questo avviso è stato già pagato!",
-            xpath: "#verifyPaymentTitleError"
+            selector: "#verifyPaymentTitleError"
         },
         body: undefined,
         errorCodeXpath: undefined,
-        skipTest: true
+        skipTest: false
     }
 ];
