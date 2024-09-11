@@ -130,21 +130,25 @@ export const fillCardDataForm = async (cardData, abi) => {
     await page.keyboard.type(cardData.holderName);
     console.log('holder performed');
     completed = !!!(await page.$(disabledContinueBtnXPath));
-    await page.waitForTimeout(1_000);
+    await page.waitForTimeout(80);
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });
+  console.log('continueBtn found');
   await continueBtn.click();
 
   const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
+  console.log('selectPSPBtn found');
   await selectPSPBtn.click();
 
   const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`;
   const pspDiv = await page.waitForXPath(pspButton);
+  console.log('psp button found');
   await pspDiv.click();
-
-  await page.waitForTimeout(1_000);
-  const payBtn = await page.waitForSelector(payBtnSelector, { visible: true });
+  await page.waitForTimeout(4000)
+  const payBtn = await page.waitForSelector(payBtnSelector, { visible: true, enabled: true });
+  console.log('pay button found');
   await payBtn.click();
+  console.log('pay button clicked');
   await page.waitForNavigation();
   await execute_mock_authorization_npg();
 };
