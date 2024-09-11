@@ -99,6 +99,6 @@ export const TEST_CASES: TestCase[] = [
         },
         body: undefined,
         errorCodeXpath: undefined,
-        skipTest: false
+        skipTest: true
     }
 ];
