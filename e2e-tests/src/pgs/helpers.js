@@ -34,19 +34,8 @@ export const verifyPayment = async (noticeCode, fiscalCode) => {
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 };
 
-export const acceptCookiePolicy = async () => {
-  const acceptPolicyBtn = '#onetrust-accept-btn-handler';
-  const darkFilterXPath = '/html/body/div[2]/div[1]';
-
-  await page.waitForSelector(acceptPolicyBtn);
-  await page.click(acceptPolicyBtn);
-
-  // Avoid click on form button when dark filter is still enabled
-  await page.waitForXPath(darkFilterXPath, { hidden: true });
-};
-
 export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi, isXpay) => {
-  const payNoticeBtnSelector = "#paymentSummaryButtonPay";
+  const payNoticeBtnSelector = '#paymentSummaryButtonPay';
   const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
@@ -54,17 +43,16 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi, is
   await fillEmailForm(email);
   await choosePaymentMethod('card');
   await fillCardDataForm(cardData, abi, isXpay);
-  await new Promise((r) => setTimeout(r, 2000));
+  await new Promise(r => setTimeout(r, 2000));
 
   const message = await page.waitForXPath(resultMessageXPath);
   return await message.evaluate(el => el.textContent);
 };
 
-
 export const fillEmailForm = async email => {
   const emailInput = '#email';
   const confirmEmailInput = '#confirmEmail';
-  const continueBtnSelector = "#paymentEmailPageButtonContinue";
+  const continueBtnSelector = '#paymentEmailPageButtonContinue';
 
   await page.waitForSelector(emailInput);
   await page.click(emailInput);
@@ -76,7 +64,6 @@ export const fillEmailForm = async email => {
 
   const continueBtn = await page.waitForSelector(continueBtnSelector);
   await continueBtn.click();
-
 };
 
 export const choosePaymentMethod = async method => {
@@ -91,47 +78,44 @@ export const choosePaymentMethod = async method => {
   }
 };
 
-const execute_mock_authorization_vpos = async() => {
+const execute_mock_authorization_vpos = async () => {
   const dataInput = '#challengeDataEntry';
-  const confirmButton = '#confirm'
+  const confirmButton = '#confirm';
   const mockOTPCode = '123456';
   const verificationStep = 2;
 
-  for(let idx =0; idx < verificationStep;  idx++){
+  for (let idx = 0; idx < verificationStep; idx++) {
     console.log(`executing vpos verification step: ${idx}`);
-    await page.waitForSelector(dataInput, {visible: true});
+    await page.waitForSelector(dataInput, { visible: true });
     await page.click(dataInput);
     await page.keyboard.type(mockOTPCode);
 
     await page.waitForSelector(confirmButton);
     await page.click(confirmButton);
   }
-}
+};
 
-const execute_mock_authorization_xpay = async() => {
+const execute_mock_authorization_xpay = async () => {
   const dataInput = '#otipee';
-  const confirmButton = 'button[name=btnAction]'
+  const confirmButton = 'button[name=btnAction]';
   const mockOTPCode = '123456';
-  await page.waitForSelector(dataInput, {visible: true});
+  await page.waitForSelector(dataInput, { visible: true });
   await page.click(dataInput);
   await page.keyboard.type(mockOTPCode);
   await page.waitForSelector(confirmButton);
   await page.click(confirmButton);
   await page.waitForNavigation();
-  
-}
+};
 
 export const fillCardDataForm = async (cardData, abi, isXpay) => {
-
   const cardNumberInput = '#number';
   const expirationDateInput = '#expirationDate';
   const ccvInput = '#cvv';
   const holderNameInput = '#name';
-  const continueBtnXPath = "button[type=submit]";
-  const payBtnSelector = "#paymentCheckPageButtonPay";
+  const continueBtnXPath = 'button[type=submit]';
+  const payBtnSelector = '#paymentCheckPageButtonPay';
   const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div/div[5]/button';
-                          
-  
+
   await page.waitForSelector(cardNumberInput);
   await page.click(cardNumberInput);
   await page.keyboard.type(cardData.number);
@@ -154,20 +138,18 @@ export const fillCardDataForm = async (cardData, abi, isXpay) => {
   const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
   await selectPSPBtn.click();
 
-  const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`
-  console.log(pspButton)
+  const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`;
+  console.log(pspButton);
   const pspDiv = await page.waitForXPath(pspButton);
   await pspDiv.click();
-  
-  await page.waitForTimeout(1_000)
+
+  await page.waitForTimeout(1_000);
   const payBtn = await page.waitForSelector(payBtnSelector);
   await payBtn.click();
   await page.waitForNavigation();
-  if(isXpay){
+  if (isXpay) {
     await execute_mock_authorization_xpay();
-  } else{
+  } else {
     await execute_mock_authorization_vpos();
   }
-  
-
 };

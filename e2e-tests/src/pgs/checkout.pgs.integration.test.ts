@@ -1,6 +1,6 @@
 
 import { verifyActivatePaymentTest } from "../verify/helpers";
-import { payNotice, acceptCookiePolicy, verifyPaymentAndGetError } from "./helpers";
+import { payNotice, verifyPaymentAndGetError } from "./helpers";
 
 describe("Checkout payment activation tests", () => {
   /**
@@ -55,7 +55,6 @@ describe("Checkout payment activation tests", () => {
   beforeAll( async () => {
     await page.goto(CHECKOUT_URL);
     await page.setViewport({ width: 1200, height: 907 });
-    await acceptCookiePolicy();
   })
 
   beforeEach(async () => {
