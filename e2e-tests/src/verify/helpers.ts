@@ -48,3 +48,9 @@ export async function runErrorModalTest(testCase: TestCase, noticeCode:string) {
     (testCase?.errorCodeXpath && messageErrorCode) && 
         expect(await messageErrorCode.evaluate(el => el.textContent)).toContain(testCase.category.codeCategory);  
 }
+/**
+* Select desired language
+*/
+export const selectLanguage = async (language) => {
+    await page.select('#languageMenu', language)
+}

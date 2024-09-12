@@ -16,7 +16,7 @@ export const PPT_STAZIONE_INT_PA_TIMEOUT_START = "980000000000000";
 export const PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE_END = "979999999999999";
 export const PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE_START = "970000000000000";
 
-export const NAV_PAA_PAGAMENTO_DUPLICATO = "302000100443009424";
+export const NAV_PAA_PAGAMENTO_DUPLICATO = "302950100443009424";
 
 export const TEST_CASES: TestCase[] = [
     {
@@ -26,11 +26,11 @@ export const TEST_CASES: TestCase[] = [
             rangeEnd: Number(String(NAV_PREFIX).concat(PAA_PAGAMENTO_SCONOSCIUTO_END))
         },
         header: {
-            message: "Non riusciamo a trovare l'avviso",
+            message: "Non riusciamo a trovare l’avviso",
             selector: "#verifyPaymentTitleError"
         },
         body: {
-            message: "L'avviso potrebbe essere stato già pagato. Per ricevere assistenza, contatta l'Ente Creditore che lo ha emesso.",
+            message: "L'avviso potrebbe essere stato già pagato. Per ricevere assistenza, contatta l’Ente Creditore.",
             selector: "#verifyPaymentBodyError"
         },
         errorCodeXpath: undefined,
@@ -43,7 +43,7 @@ export const TEST_CASES: TestCase[] = [
             rangeEnd: Number(String(NAV_PREFIX).concat(PAA_PAGAMENTO_SCADUTO_END))
         },
         header: {
-            message: "Spiacenti, l’avviso è scaduto e non è più possibile pagarlo",
+            message: "L’avviso è scaduto e non è più possibile pagarlo",
             selector: "#verifyPaymentTitleError"
         },
         body: {
@@ -60,11 +60,11 @@ export const TEST_CASES: TestCase[] = [
             rangeEnd: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_TIMEOUT_END))
         },
         header: {
-            message: "Spiacenti, si è verificato un errore imprevisto",
+            message: "Si è verificato un errore imprevisto",
             selector: "#verifyPaymentTitleError"
         },
         body: {
-            message: "Prova di nuovo o contattaci per ricevere assistenza",
+            message: "Riprova, oppure contatta l’assistenza",
             selector: "#verifyPaymentBodyError"
         },
         errorCodeXpath: undefined,
@@ -77,7 +77,7 @@ export const TEST_CASES: TestCase[] = [
             rangeEnd: Number(String(NAV_PREFIX).concat(PPT_STAZIONE_INT_PA_IRRAGGIUNGIBILE_END))
         },
         header: {
-            message: "Spiacenti, l’Ente Creditore sta avendo problemi nella risposta",
+            message: "L’Ente Creditore sta avendo problemi nella risposta",
             selector: "#verifyPaymentTitleError"
         },
         body: {
@@ -99,6 +99,6 @@ export const TEST_CASES: TestCase[] = [
         },
         body: undefined,
         errorCodeXpath: undefined,
-        skipTest: true
+        skipTest: false
     }
 ];

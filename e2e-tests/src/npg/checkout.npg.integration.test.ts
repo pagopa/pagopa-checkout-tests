@@ -1,6 +1,6 @@
 
-import { verifyActivatePaymentTest } from "../verify/helpers";
-import { payNotice, acceptCookiePolicy,  generateRandomNoticeCode } from "./helpers";
+import { selectLanguage, verifyActivatePaymentTest } from "../verify/helpers";
+import { payNotice, generateRandomNoticeCode } from "./helpers";
 
 
 
@@ -38,6 +38,7 @@ describe("Checkout payment activation tests", () => {
 
   beforeEach(async () => {
     await page.goto(CHECKOUT_URL);
+    await selectLanguage("it");
   });
 
   // execute verify-activate payment tests
@@ -61,7 +62,7 @@ describe("Checkout payment activation tests", () => {
       testData.pspAbi
     );
 
-    expect(resultMessage).toContain("Grazie, hai pagato");
+    expect(resultMessage).toContain("Hai pagato");
   });
 
 });
