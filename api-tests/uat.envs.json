@@ -127,9 +127,28 @@
 			"type": "default",
 			"enabled": true
 		},
+
 		{
 			"key": "OPERATION_LANGUAGE_IT",
 			"value": "it",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_ES",
+			"value": "es",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_DE",
+			"value": "de",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_EN",
+			"value": "en",
 			"type": "default",
 			"enabled": true
 		},
