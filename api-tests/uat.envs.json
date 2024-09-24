@@ -128,6 +128,18 @@
 			"enabled": true
 		},
 		{
+			"key": "OPERATION_LANGUAGE_IT",
+			"value": "it",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_FR",
+			"value": "fr",
+			"type": "default",
+			"enabled": true
+		},
+		{
 			"key": "DEPLOYMENT_PAYMENT_METHODS",
 			"value": "green",
 			"type": "default",

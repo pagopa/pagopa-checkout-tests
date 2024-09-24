@@ -122,6 +122,18 @@
 			"enabled": true
 		},
 		{
+			"key": "OPERATION_LANGUAGE_IT",
+			"value": "it",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_FR",
+			"value": "fr",
+			"type": "default",
+			"enabled": true
+		},
+		{
 			"key": "ORDER_ID",
 			"value": "",
 			"type": "default",

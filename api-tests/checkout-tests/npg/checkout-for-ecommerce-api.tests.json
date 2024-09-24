@@ -39,7 +39,7 @@
 							"    }",
 							"  ],",
 							"  \"orderId\": \"orderId\",",
-							"  \"email\": \"mario.rossi@example.com\"",
+							"  \"email\": \{\n\t\t\t\t\t\"listen\": \"prerequest\",\n\t\t\t\t\t\"script\": {\n\t\t\t\t\t\t\"exec\": [\n\t\t\t\t\t\t\t\"const noticeCodePrefix = pm.environment.get(\\\"NOTICE_CODE_PREFIX\\\");\",\n\t\t\t\t\t\t\t\"const min = Number(noticeCodePrefix.concat(\\\"10000000000000\\\"));\",\n\t\t\t\t\t\t\t\"const max = Number(noticeCodePrefix.concat(\\\"19999999999999\\\"));\",\n\t\t\t\t\t\t\t\"const randomNoticeCode = _.random(min, max);\",\n\t\t\t\t\t\t\t\"pm.environment.set(\\\"VALID_NOTICE_CODE\\\", randomNoticeCode);\",\n\t\t\t\t\t\t\t\"\",\n\t\t\t\t\t\t\t\"\",\n\t\t\t\t\t\t\t\"const requestBody = {\",\n\t\t\t\t\t\t\t\"  \\\"paymentNotices\\\": [\",\n\t\t\t\t\t\t\t\"    {\",\n\t\t\t\t\t\t\t\"      \\\"rptId\\\": pm.environment.get(\\\"VALID_FISCAL_CODE_PA\\\") + pm.environment.get(\\\"VALID_NOTICE_CODE\\\"),\",\n\t\t\t\t\t\t\t\"      \\\"amount\\\": 100\",\n\t\t\t\t\t\t\t\"    }\",\n\t\t\t\t\t\t\t\"  ],\",\n\t\t\t\t\t\t\t\"  \\\"orderId\\\": \\\"orderId\\\",\",\n\t\t\t\t\t\t\t\"  \\\"email\\\": \\\"mario.rossi@example.com\\\"\",\n\t\t\t\t\t\t\t\"};\",\n\t\t\t\t\t\t\t\"\",\n\t\t\t\t\t\t\t\"const deploymentHeader = pm.environment.get(\\\"DEPLOYMENT_TRANSACTION_SERVICE\\\")\",\n\t\t\t\t\t\t\t\"\",\n\t\t\t\t\t\t\t\"const requestObject = {\",\n\t\t\t\t\t\t\t\"  url: pm.environment.get(\\\"CHECKOUT_HOST\\\") + \\\"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\\\",\",\n\t\t\t\t\t\t\t\"  method: 'POST',\",\n\t\t\t\t\t\t\t\"  header: {\",\n\t\t\t\t\t\t\t\"    'Content-Type': 'application/json',\",\n\t\t\t\t\t\t\t\"    'x-correlation-id': 'b6bb9f02-a20d-409b-8699-8603b83cd950',\",\n\t\t\t\t\t\t\t\"    'deployment' : deploymentHeader,\",\n\t\t\t\t\t\t\t\"  },\",\n\t\t\t\t\t\t\t\"  body: {\",\n\t\t\t\t\t\t\t\"    mode: 'raw',\",\n\t\t\t\t\t\t\t\"    raw: JSON.stringify(requestBody)\",\n\t\t\t\t\t\t\t\"  }\",\n\t\t\t\t\t\t\t\"};\",\n\t\t\t\t\t\t\t\"\",\n\t\t\t\t\t\t\t\"pm.sendRequest(requestObject, (error, response) => {\",\n\t\t\t\t\t\t\t\"  if (error) {\",\n\t\t\t\t\t\t\t\"    console.log(error);\",\n\t\t\t\t\t\t\t\"  } else {\",\n\t\t\t\t\t\t\t\"      const responseBody = response.json();\",\n\t\t\t\t\t\t\t\"      pm.environment.set(\\\"TRANSACTION_ID\\\", responseBody.transactionId);\",\n\t\t\t\t\t\t\t\"      pm.environment.set(\\\"AUTH_TOKEN\\\", responseBody.authToken);\",\n\t\t\t\t\t\t\t\"  }\",\n\t\t\t\t\t\t\t\"});\"\n\t\t\t\t\t\t],\n\t\t\t\t\t\t\"type\": \"text/javascript\"\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"request\": {\n\t\t\t\t\"auth\": {\n\t\t\t\t\t\"type\": \"bearer\",\n\t\t\t\t\t\"bearer\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"key\": \"token\",\n\t\t\t\t\t\t\t\"value\": \"{{AUTH_TOKEN}}\",\n\t\t\t\t\t\t\t\"type\": \"string\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t\"method\": \"DELETE\",\n\t\t\t\t\"header\": [\n\t\t\t\t\t{\n\t\t\t\t\t\t\"key\": \"deployment\",\n\t\t\t\t\t\t\"value\": \"{{DEPLOYMENT_TRANSACTION_SERVICE}}\",\n\t\t\t\t\t\t\"type\": \"text\"\n\t\t\t\t\t}",mario.rossi@example.com\"",
 							"};",
 							"",
 							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
@@ -108,7 +108,7 @@
 			"response": []
 		},
 		{
-			"name": "Create session",
+			"name": "Create session (lang: it)",
 			"event": [
 				{
 					"listen": "test",
@@ -199,6 +199,143 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "lang",
+						"value": "{{OPERATION_LANGUAGE_IT}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions?recaptchaResponse=test",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"payment-methods",
+						"{{PAYMENT_METHOD_ID}}",
+						"sessions"
+					],
+					"query": [
+						{
+							"key": "recaptchaResponse",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create session (lang: fr)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const sdk = require('postman-collection');",
+							"",
+							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions\", function() {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const response = pm.response.json();",
+							"    ",
+							"    const paymentMethodDataWithoutSrc = response.paymentMethodData.form.map(form => {",
+							"        const { src, ...rest } = form;",
+							"        return rest;",
+							"    });",
+							"    const expectedPaymentMethodDataWithoutSrc =",
+							"     [",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"CARD_NUMBER\"",
+							"            },",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"EXPIRATION_DATE\"",
+							"            },",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"SECURITY_CODE\"",
+							"            },",
+							"            {",
+							"                \"type\": \"TEXT\",",
+							"                \"class\": \"CARD_FIELD\",",
+							"                \"id\": \"CARDHOLDER_NAME\"",
+							"            }",
+							"        ];",
+							"    saveNpgData(response);",
+							"    pm.expect(expectedPaymentMethodDataWithoutSrc).eql(paymentMethodDataWithoutSrc);",
+							"    pm.expect(response.orderId).to.be.a(\"string\");",
+							"    pm.expect(response.paymentMethodData.paymentMethod).to.be.eq(\"CARDS\");",
+							" ",
+							"});",
+							"",
+							"function saveNpgData(response){",
+							"    console.log(\"Read NPG response data...\");",
+							"    const orderId = response.orderId;",
+							"    const fieldUrl = response.paymentMethodData.form[0].src;",
+							"    ",
+							"    const parsedUrl = new sdk.Url(fieldUrl).toJSON();",
+							"    const correlationId = parsedUrl.query.find((queryParam) =>queryParam.key==\"correlationid\").value;",
+							"    const sessionId= parsedUrl.query.find((queryParam) =>queryParam.key==\"sessionid\").value.replaceAll(\"%2F\",\"/\").replaceAll(\"%2B\",\"+\").replaceAll(\"%3D\",\"=\");",
+							"    const fieldId= parsedUrl.query.find((queryParam) =>queryParam.key==\"id\").value;",
+							"    console.log(`Order id: [${orderId}]`);",
+							"    console.log(`Field url: [${fieldUrl}]`);",
+							"    console.log(`correlation id: [${correlationId}]`);",
+							"    console.log(`session id: [${sessionId}]`);",
+							"    console.log(`field id: [${fieldId}]`);",
+							"    pm.environment.set(\"ORDER_ID\", response.orderId);",
+							"    pm.environment.set(\"CORRELATION_ID\", response.correlationId);",
+							"    pm.environment.set(\"NPG_IFRAME_FIELD_URL\", fieldUrl);",
+							"    pm.environment.set(\"NPG_CORRELATION_ID\", correlationId);",
+							"    pm.environment.set(\"NPG_SESSION_ID\", sessionId);",
+							"    pm.environment.set(\"NPG_IFRAME_FIELD_ID\", fieldId);",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "lang",
+						"value": "{{OPERATION_LANGUAGE_FR}}",
 						"type": "text"
 					}
 				],
@@ -1449,7 +1586,7 @@
 			"response": []
 		},
 		{
-			"name": "Request authorization KO for missing jwt token",
+			"name": "Request authorization KO for missing jwt token (lang: it)",
 			"event": [
 				{
 					"listen": "test",
@@ -1472,6 +1609,69 @@
 					{
 						"key": "deployment",
 						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "lang",
+						"value": "{{OPERATION_LANGUAGE_IT}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": {{AMOUNT}},\n    \"fee\": {{FEE}},\n    \"paymentInstrumentId\": \"{{PAYMENT_METHOD_ID}}\",\n    \"pspId\": \"{{PSP_ID}}1\",\n    \"isAllCCP\": false,\n    \"language\": \"IT\",\n    \"details\": {\n        \"detailType\": \"cards\",\n        \"orderId\": \"{{ORDER_ID}}\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}/auth-requests",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}",
+						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request authorization KO for missing jwt token (lang: fr)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token\", function(){",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "lang",
+						"value": "{{OPERATION_LANGUAGE_FR}}",
 						"type": "text"
 					}
 				],
