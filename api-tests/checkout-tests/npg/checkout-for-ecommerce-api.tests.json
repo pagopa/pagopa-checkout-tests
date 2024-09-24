@@ -2288,7 +2288,59 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"orderId\": \"orderId\",",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"    'x-correlation-id': 'b6bb9f02-a20d-409b-8699-8603b83cd950',",
+							"    'deployment' : deploymentHeader,",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
 				}
+
 			],
 			"request": {
 				"auth": {
@@ -2357,7 +2409,59 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"orderId\": \"orderId\",",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"    'x-correlation-id': 'b6bb9f02-a20d-409b-8699-8603b83cd950',",
+							"    'deployment' : deploymentHeader,",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
 				}
+
 			],
 			"request": {
 				"auth": {
@@ -2426,7 +2530,59 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"orderId\": \"orderId\",",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"    'x-correlation-id': 'b6bb9f02-a20d-409b-8699-8603b83cd950',",
+							"    'deployment' : deploymentHeader,",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
 				}
+
 			],
 			"request": {
 				"auth": {
@@ -2495,7 +2651,59 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"orderId\": \"orderId\",",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"    'x-correlation-id': 'b6bb9f02-a20d-409b-8699-8603b83cd950',",
+							"    'deployment' : deploymentHeader,",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
 				}
+
 			],
 			"request": {
 				"auth": {
@@ -2560,6 +2768,57 @@
 							"    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
 							"    const expectedAuthorizationRequestId = pm.environment.get(\"ORDER_ID\");",
 							"    pm.expect(response.authorizationRequestId).to.be.eq(expectedAuthorizationRequestId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const noticeCodePrefix = pm.environment.get(\"NOTICE_CODE_PREFIX\");",
+							"const min = Number(noticeCodePrefix.concat(\"10000000000000\"));",
+							"const max = Number(noticeCodePrefix.concat(\"19999999999999\"));",
+							"const randomNoticeCode = _.random(min, max);",
+							"pm.environment.set(\"VALID_NOTICE_CODE\", randomNoticeCode);",
+							"",
+							"",
+							"const requestBody = {",
+							"  \"paymentNotices\": [",
+							"    {",
+							"      \"rptId\": pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\"),",
+							"      \"amount\": 100",
+							"    }",
+							"  ],",
+							"  \"orderId\": \"orderId\",",
+							"  \"email\": \"mario.rossi@example.com\"",
+							"};",
+							"",
+							"const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
+							"",
+							"const requestObject = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
+							"  method: 'POST',",
+							"  header: {",
+							"    'Content-Type': 'application/json',",
+							"    'x-correlation-id': 'b6bb9f02-a20d-409b-8699-8603b83cd950',",
+							"    'deployment' : deploymentHeader,",
+							"  },",
+							"  body: {",
+							"    mode: 'raw',",
+							"    raw: JSON.stringify(requestBody)",
+							"  }",
+							"};",
+							"",
+							"pm.sendRequest(requestObject, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  } else {",
+							"      const responseBody = response.json();",
+							"      pm.environment.set(\"TRANSACTION_ID\", responseBody.transactionId);",
+							"      pm.environment.set(\"AUTH_TOKEN\", responseBody.authToken);",
+							"  }",
 							"});"
 						],
 						"type": "text/javascript"

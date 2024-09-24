@@ -80,12 +80,6 @@
 			"enabled": true
 		},
 		{
-			"key": "TRANSACTION_ID",
-			"value": "",
-			"type": "any",
-			"enabled": true
-		},
-		{
 			"key": "AUTH_TOKEN",
 			"value": "",
 			"type": "any",
