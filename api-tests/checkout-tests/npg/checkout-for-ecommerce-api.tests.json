@@ -116,7 +116,7 @@
 						"exec": [
 							"const sdk = require('postman-collection');",
 							"",
-							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions\", function() {",
+							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: it)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -248,7 +248,7 @@
 						"exec": [
 							"const sdk = require('postman-collection');",
 							"",
-							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions\", function() {",
+							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: fr)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -380,7 +380,7 @@
 						"exec": [
 							"const sdk = require('postman-collection');",
 							"",
-							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions\", function() {",
+							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: de)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -512,7 +512,7 @@
 						"exec": [
 							"const sdk = require('postman-collection');",
 							"",
-							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions\", function() {",
+							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: sl)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
@@ -644,7 +644,7 @@
 						"exec": [
 							"const sdk = require('postman-collection');",
 							"",
-							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions\", function() {",
+							"pm.test(\"[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: en)\", function() {",
 							"    pm.response.to.have.status(200);",
 							"",
 							"    const response = pm.response.json();",
