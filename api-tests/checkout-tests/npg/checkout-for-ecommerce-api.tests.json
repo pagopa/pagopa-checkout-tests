@@ -2046,7 +2046,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token\", function(){",
+							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: fr)\", function(){",
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
@@ -2104,7 +2104,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token\", function(){",
+							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: sl)\", function(){",
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
@@ -2162,7 +2162,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token\", function(){",
+							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: de)\", function(){",
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
@@ -2220,7 +2220,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token\", function(){",
+							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: en)\", function(){",
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
