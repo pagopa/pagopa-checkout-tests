@@ -1988,7 +1988,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token\", function(){",
+							"pm.test(\"[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: it)\", function(){",
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
@@ -2278,7 +2278,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"[eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request\", function(){",
+							"pm.test(\"[eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request (lang: it)\", function(){",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
