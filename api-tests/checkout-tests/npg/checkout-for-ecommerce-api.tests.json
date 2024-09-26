@@ -599,7 +599,7 @@
 					},
 					{
 						"key": "lang",
-						"value": "{{OPERATION_LANGUAGE_ES}}",
+						"value": "{{OPERATION_LANGUAGE_SL}}",
 						"type": "text"
 					}
 				],
@@ -2125,7 +2125,7 @@
 					},
 					{
 						"key": "lang",
-						"value": "{{OPERATION_LANGUAGE_ES}}",
+						"value": "{{OPERATION_LANGUAGE_SL}}",
 						"type": "text"
 					}
 				],

@@ -128,8 +128,8 @@
 			"enabled": true
 		},
 		{
-			"key": "OPERATION_LANGUAGE_ES",
-			"value": "es",
+			"key": "OPERATION_LANGUAGE_SL",
+			"value": "sl",
 			"type": "default",
 			"enabled": true
 		},
