@@ -504,7 +504,7 @@
 			"response": []
 		},
 		{
-			"name": "Create session (lang: es)",
+			"name": "Create session (lang: sl)",
 			"event": [
 				{
 					"listen": "test",
@@ -2098,7 +2098,7 @@
 			"response": []
 		},
 		{
-			"name": "Request authorization KO for missing jwt token (lang: es)",
+			"name": "Request authorization KO for missing jwt token (lang: sl)",
 			"event": [
 				{
 					"listen": "test",
