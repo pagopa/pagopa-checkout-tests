@@ -80,12 +80,6 @@
 			"enabled": true
 		},
 		{
-			"key": "TRANSACTION_ID",
-			"value": "",
-			"type": "any",
-			"enabled": true
-		},
-		{
 			"key": "AUTH_TOKEN",
 			"value": "",
 			"type": "any",
@@ -124,6 +118,37 @@
 		{
 			"key": "FEE",
 			"value": "100",
+			"type": "default",
+			"enabled": true
+		},
+
+		{
+			"key": "OPERATION_LANGUAGE_IT",
+			"value": "it",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_SL",
+			"value": "sl",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_DE",
+			"value": "de",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_EN",
+			"value": "en",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "OPERATION_LANGUAGE_FR",
+			"value": "fr",
 			"type": "default",
 			"enabled": true
 		},
