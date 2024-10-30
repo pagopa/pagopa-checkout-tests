@@ -30,7 +30,7 @@ beforeEach(async () => {
 
 describe("Checkout fails to calculate fee", () => {
 
-  it("Should fails calculate fee with 404", async() => {
+  it("Should fails calculate fee with 404 and show a dedicated error message", async() => {
    
     // notice code with 6000 euro as amount (according Mock EC)
     const PSP_NOT_FOUND_FAIL = "30212" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
