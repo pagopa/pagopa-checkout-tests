@@ -70,6 +70,11 @@ describe("Checkout fails to calculate fee", () => {
     const errorDescriptionText = await errorDescriptionElem.evaluate((el) => el.textContent);
     expect(errorDescriptionText).toContain(errorDescriptionTextExpected);
 
+    
+    await pspNotFoundCtaElem.click();
+ 
+    const currentUrl = await page.evaluate(() => location.href);
+    expect(currentUrl).toContain("/scegli-metodo");
   });
 
 });
