@@ -82,16 +82,11 @@ export const fillEmailForm = async email => {
   await continueBtn.click();
 };
 
-export const choosePaymentMethod = async method => {
-  const cardOptionXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div/div[1]/div[1]/div';
+export const choosePaymentMethod = async (method) => {
+  const cardOptionXPath = `[data-qaid=${method}]`;
 
-  switch (method) {
-    case 'card': {
-      const cardOptionBtn = await page.waitForXPath(cardOptionXPath);
-      await cardOptionBtn.click();
-      break;
-    }
-  }
+  const cardOptionBtn = await page.waitForSelector(cardOptionXPath);
+  await cardOptionBtn.click();
 };
 
 const execute_mock_authorization_npg = async () => {
