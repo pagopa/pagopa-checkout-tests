@@ -39,7 +39,7 @@ describe("Checkout fails to calculate fee", () => {
     const errorDescriptionTextExpected = "Può succedere quando l’importo da pagare è particolarmente elevato, o se stai cercando di pagare una marca da bollo digitale.";
 
     console.log(
-      `Testing error message psp unavailable given SATISPAY given amaount of 6000 euro .
+      `Testing error message psp unavailable given BancomatPay given amaount of 6000 euro .
       notice code: ${PSP_NOT_FOUND_FAIL},
       fiscal code: ${VALID_FISCAL_CODE}
       `,
