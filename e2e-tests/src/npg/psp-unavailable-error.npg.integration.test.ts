@@ -25,6 +25,7 @@ beforeAll( async () => {
 
 beforeEach(async () => {
   await page.goto(CHECKOUT_URL);
+  await selectLanguage("it");
 });
 
 
@@ -78,3 +79,7 @@ describe("Checkout fails to calculate fee", () => {
   });
 
 });
+function selectLanguage(arg0: string) {
+  throw new Error("Function not implemented.");
+}
+
