@@ -1,4 +1,5 @@
 import { choosePaymentMethod, fillEmailForm, fillPaymentNotificationForm } from "./helpers";
+import { selectLanguage } from "../verify/helpers";
 
 /**
  * Test input and configuration
@@ -79,7 +80,3 @@ describe("Checkout fails to calculate fee", () => {
   });
 
 });
-function selectLanguage(arg0: string) {
-  throw new Error("Function not implemented.");
-}
-
