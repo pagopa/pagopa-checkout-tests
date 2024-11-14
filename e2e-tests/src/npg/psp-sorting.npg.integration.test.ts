@@ -101,12 +101,6 @@ describe("Checkout show and sort psp list", () => {
       expect(decreasingPspFeeListValues[i]).toBeGreaterThanOrEqual(decreasingPspFeeListValues[i + 1]);
     }
 
-    await new Promise(r => setTimeout(r, 1000));
-    const closePspListButton = await page.waitForSelector("#closePspList");
-    await closePspListButton.click();
-    await new Promise(r => setTimeout(r, 1000));
-    //Annulla pagamento
-
   });
 
 });
