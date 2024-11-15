@@ -30,7 +30,7 @@ beforeEach(async () => {
 });
 
 
-describe("Checkout show and sort psp list", () => {
+describe("Checkout show and sort psp list by fee", () => {
 
   it("Should show psp sorted list", async() => {
    
@@ -105,7 +105,7 @@ describe("Checkout show and sort psp list", () => {
 
 
   
-  it("Should show psp sorted list", async() => {
+  it("Should show psp sorted list by Name", async() => {
    
     // notice code with 6000 euro as amount (according Mock EC)
     const CODICE_AVVISO = "30202" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
