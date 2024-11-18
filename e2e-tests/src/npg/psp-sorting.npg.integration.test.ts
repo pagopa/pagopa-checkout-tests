@@ -135,43 +135,37 @@ describe("Checkout show and sort psp list", () => {
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
     await new Promise(r => setTimeout(r, 1000));
-    const pspOriginalElements = await page.$$(".pspFeeValue");
+    const pspOriginalElements = await page.$$(".pspFeeName");
     const originalPspFeeLisValues = await Promise.all(
       Array.from(pspOriginalElements).map(async (element) => {
         const text = await element.evaluate((el) => el.textContent);
-        // We want to skip the Dollar, Euro, or any currency placeholder
-        let numbers = text.match(/[\d,]+/g); // This will match sequences of digits and commas
-        let result = numbers ? numbers.join("").replace(",",".") : ""; // Join the matched numbers if any and replace , as separator with .
-        return parseFloat(result) || 0; // Convert to number, default to 0 if NaN
+        return (text) || ""; // Convert to number, default to 0 if NaN
       })
     );
 
     expect(Array.isArray(originalPspFeeLisValues)).toBe(true);
     expect(originalPspFeeLisValues.length > 0).toBe(true);
     for (let i = 0; i < originalPspFeeLisValues.length - 1; i++) {
-      expect(originalPspFeeLisValues[i]).toBeLessThanOrEqual(originalPspFeeLisValues[i + 1]);
+      expect(originalPspFeeLisValues[i].localeCompare(originalPspFeeLisValues[i + 1])).toBeLessThanOrEqual(0);
     }
 
     const pspNameSortButton = await page.waitForSelector(pspNameSortButtonId);
     await pspNameSortButton.click();
     await new Promise(r => setTimeout(r, 1000));
     // Wait for the elements and get the list of divs
-    const pspSortedElements = await page.$$(".pspFeeValue");
+    const pspSortedElements = await page.$$(".pspFeeName");
     // Extract numeric content from each div and return as an array
     const decreasingPspFeeListValues = await Promise.all(
       Array.from(pspSortedElements).map(async (element) => {
         const text = await element.evaluate((el) => el.textContent);
-        // We want to skip the Dollar, Euro, or any currency placeholder
-        let numbers = text.match(/[\d,]+/g); // This will match sequences of digits and commas
-        let result = numbers ? numbers.join("").replace(",",".") : ""; // Join the matched numbers if any and replace , as separator with .
-        return parseFloat(result) || 0; // Convert to number, default to 0 if NaN
+        return parseFloat(text) || ""; 
       })
     );
 
     expect(Array.isArray(decreasingPspFeeListValues)).toBe(true);
     expect(decreasingPspFeeListValues.length > 0).toBe(true);
     for (let i = 0; i < decreasingPspFeeListValues.length - 1; i++) {
-      expect(decreasingPspFeeListValues[i]).toBeGreaterThanOrEqual(decreasingPspFeeListValues[i + 1]);
+      expect(originalPspFeeLisValues[i].localeCompare(originalPspFeeLisValues[i + 1])).toBeGreaterThanOrEqual(0);
     }
 
   });
