@@ -139,7 +139,7 @@ describe("Checkout show and sort psp list", () => {
     const originalPspFeeLisValues = await Promise.all(
       Array.from(pspOriginalElements).map(async (element) => {
         const text = await element.evaluate((el) => el.textContent);
-        return (text) || ""; // Convert to number, default to 0 if NaN
+        return (text) || ""; 
       })
     );
 
