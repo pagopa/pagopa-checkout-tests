@@ -191,3 +191,15 @@ export const generateRandomNoticeCode = noticeCodePrefix => {
   const validRangeStart = Number(String(noticeCodePrefix).concat('0000000000000'));
   return Math.floor(Math.random() * (validRangeEnd - validRangeStart + 1) + validRangeStart).toString();
 };
+
+export const cancelPaymentAction = async () => {
+  console.log('cancelPaymentAction');
+  //use page.$eval since click doesn't work after animation triggered
+  await page.$eval("#paymentCheckPageButtonCancel", el => el.click())
+  console.log('paymentCheckPageButtonCancel clicked');
+  const cancPayment = await page.waitForSelector("#confirm", {clickable: true, visible: true, enabled: true, timeout: 1000});
+  console.log('cancPayment found');
+  await cancPayment.click();
+  console.log('payment canceled');
+  await page.waitForNavigation();
+};

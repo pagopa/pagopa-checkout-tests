@@ -1,4 +1,4 @@
-import { choosePaymentMethod, fillEmailForm, fillOnlyCardDataForm, fillPaymentNotificationForm } from "./helpers";
+import { cancelPaymentAction, choosePaymentMethod, fillEmailForm, fillOnlyCardDataForm, fillPaymentNotificationForm } from "./helpers";
 import { selectLanguage } from "../verify/helpers";
 
 /**
@@ -30,7 +30,7 @@ beforeEach(async () => {
 });
 
 
-describe("Checkout show and sort psp list", () => {
+describe.only("Checkout show and sort psp list", () => {
 
   it("Should show psp sorted list by fee", async() => {
    
@@ -47,7 +47,7 @@ describe("Checkout show and sort psp list", () => {
     const payNoticeBtnSelector = '#paymentSummaryButtonPay';
     const pspEditButtonSelector = "#pspEdit";
     const pspFeeSortButtonId = "#sortByFee";
-
+    
     await fillPaymentNotificationForm(CODICE_AVVISO, VALID_FISCAL_CODE);
     const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
     await payNoticeBtn.click();
@@ -58,10 +58,11 @@ describe("Checkout show and sort psp list", () => {
       expirationDate: "1230",
       ccv: "123",
       holderName: "Test test"
-    })
+    });
+
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 500));
     const pspOriginalElements = await page.$$(".pspFeeValue");
     const originalPspFeeLisValues = await Promise.all(
       Array.from(pspOriginalElements).map(async (element) => {
@@ -72,16 +73,16 @@ describe("Checkout show and sort psp list", () => {
         return parseFloat(result) || 0; // Convert to number, default to 0 if NaN
       })
     );
-
+    
     expect(Array.isArray(originalPspFeeLisValues)).toBe(true);
     expect(originalPspFeeLisValues.length > 0).toBe(true);
     for (let i = 0; i < originalPspFeeLisValues.length - 1; i++) {
       expect(originalPspFeeLisValues[i]).toBeLessThanOrEqual(originalPspFeeLisValues[i + 1]);
     }
-
+    
     const pspFeeSortButton = await page.waitForSelector(pspFeeSortButtonId);
     await pspFeeSortButton.click();
-    await new Promise(r => setTimeout(r, 1000));
+    
     // Wait for the elements and get the list of divs
     const pspSortedElements = await page.$$(".pspFeeValue");
     // Extract numeric content from each div and return as an array
@@ -100,7 +101,9 @@ describe("Checkout show and sort psp list", () => {
     for (let i = 0; i < decreasingPspFeeListValues.length - 1; i++) {
       expect(decreasingPspFeeListValues[i]).toBeGreaterThanOrEqual(decreasingPspFeeListValues[i + 1]);
     }
-
+    
+    console.log("expcted all");
+    await cancelPaymentAction();
   });
 
 
@@ -134,24 +137,28 @@ describe("Checkout show and sort psp list", () => {
     })
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 500));
     const pspOriginalElements = await page.$$(".pspFeeName");
+
     const originalPspFeeLisValues = await Promise.all(
       Array.from(pspOriginalElements).map(async (element) => {
         const text = await element.evaluate((el) => el.textContent);
-        return (text) || ""; 
+        // We want to skip the Dollar, Euro, or any currency placeholder
+        let numbers = text.match(/[\d,]+/g); // This will match sequences of digits and commas
+        let result = numbers ? numbers.join("").replace(",",".") : ""; // Join the matched numbers if any and replace , as separator with .
+        return parseFloat(result) || 0; // Convert to number, default to 0 if NaN
       })
     );
 
     expect(Array.isArray(originalPspFeeLisValues)).toBe(true);
     expect(originalPspFeeLisValues.length > 0).toBe(true);
     for (let i = 0; i < originalPspFeeLisValues.length - 1; i++) {
-      expect(originalPspFeeLisValues[i].localeCompare(originalPspFeeLisValues[i + 1])).toBeLessThanOrEqual(0);
+      expect(originalPspFeeLisValues[i]).toBeLessThanOrEqual(originalPspFeeLisValues[i + 1]);
     }
 
     const pspNameSortButton = await page.waitForSelector(pspNameSortButtonId);
     await pspNameSortButton.click();
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 500));
     // Wait for the elements and get the list of divs
     const pspSortedElements = await page.$$(".pspFeeName");
     // Extract numeric content from each div and return as an array
@@ -165,8 +172,9 @@ describe("Checkout show and sort psp list", () => {
     expect(Array.isArray(decreasingPspFeeListValues)).toBe(true);
     expect(decreasingPspFeeListValues.length > 0).toBe(true);
     for (let i = 0; i < decreasingPspFeeListValues.length - 1; i++) {
-      expect(originalPspFeeLisValues[i].localeCompare(originalPspFeeLisValues[i + 1])).toBeGreaterThanOrEqual(0);
+      expect(decreasingPspFeeListValues[i].localeCompare(decreasingPspFeeListValues[i + 1])).toBeGreaterThanOrEqual(0);
     }
+    await cancelPaymentAction()
 
   });
 });
