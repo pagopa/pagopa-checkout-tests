@@ -45,6 +45,7 @@ describe("Checkout payment activation tests", () => {
   
   verifyActivatePaymentTest();
 
+  // execute payment flow tests
   it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
     /*
      * 1. Payment with valid notice code
