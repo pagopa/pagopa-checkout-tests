@@ -30,7 +30,7 @@ beforeEach(async () => {
 });
 
 
-describe.only("Checkout show and sort psp list", () => {
+describe("Checkout show and sort psp list", () => {
 
   it("Should show psp sorted list by fee", async() => {
    
@@ -62,7 +62,7 @@ describe.only("Checkout show and sort psp list", () => {
 
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
-    await new Promise(r => setTimeout(r, 500));
+    await page.waitForSelector(".pspFeeValue");
     const pspOriginalElements = await page.$$(".pspFeeValue");
     const originalPspFeeLisValues = await Promise.all(
       Array.from(pspOriginalElements).map(async (element) => {
@@ -137,9 +137,10 @@ describe.only("Checkout show and sort psp list", () => {
     })
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
-    await new Promise(r => setTimeout(r, 500));
-    const pspOriginalElements = await page.$$(".pspFeeName");
-
+    
+    //Initially is sorted by fee ascending
+    await page.waitForSelector(".pspFeeValue");
+    const pspOriginalElements = await page.$$(".pspFeeValue");
     const originalPspFeeLisValues = await Promise.all(
       Array.from(pspOriginalElements).map(async (element) => {
         const text = await element.evaluate((el) => el.textContent);
@@ -158,15 +159,11 @@ describe.only("Checkout show and sort psp list", () => {
 
     const pspNameSortButton = await page.waitForSelector(pspNameSortButtonId);
     await pspNameSortButton.click();
-    await new Promise(r => setTimeout(r, 500));
     // Wait for the elements and get the list of divs
     const pspSortedElements = await page.$$(".pspFeeName");
     // Extract numeric content from each div and return as an array
     const decreasingPspFeeListValues = await Promise.all(
-      Array.from(pspSortedElements).map(async (element) => {
-        const text = await element.evaluate((el) => el.textContent);
-        return parseFloat(text) || ""; 
-      })
+      Array.from(pspSortedElements).map(async (element) => await element.evaluate((el) => el.textContent))
     );
 
     expect(Array.isArray(decreasingPspFeeListValues)).toBe(true);
