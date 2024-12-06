@@ -1,5 +1,5 @@
 export const selectKeyboardForm = async () => {
-  const selectFormXPath = '/html/body/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/div/div/div[1]';
+  const selectFormXPath = '/html/body/div[1]/div/main/div/div[2]/div[2]/div[1]/div/div/div[1]';
 
   const selectFormBtn = await page.waitForXPath(selectFormXPath);
   await selectFormBtn.click();
@@ -52,7 +52,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
     `,
   );
   const payNoticeBtnSelector = '#paymentSummaryButtonPay';
-  const resultMessageXPath = '/html/body/div[1]/div/div[2]/div/div/div/div/h6';
+  const resultMessageXPath = '/html/body/div[1]/div/main/div/div/div/div/h6';
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
@@ -140,7 +140,7 @@ export const fillCardDataForm = async (cardData, abi) => {
   const continueBtnXPath = 'button[type=submit]';
   const disabledContinueBtnXPath = 'button[type=submit][disabled=""]';
   const payBtnSelector = '#paymentCheckPageButtonPay';
-  const selectPSPXPath = '/html/body/div[1]/div/div[2]/div/div/div[5]/button';
+  const selectPSPXPath = '/html/body/div[1]/div/main/div/div/div[5]/button';
   let iteration = 0;
   let completed = false;
   while (!completed) {
