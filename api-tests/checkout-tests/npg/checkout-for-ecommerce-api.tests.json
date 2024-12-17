@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "c470cca5-0fe5-48d3-a543-46ecbf242367",
+		"_postman_id": "2a6e2973-2814-42f4-8a04-77c8f16c8a7e",
 		"name": "Ecommerce for Checkout API - NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23963988"
@@ -2335,6 +2335,152 @@
 						"transactions",
 						"{{TRANSACTION_ID}}",
 						"auth-requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get transactions v1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] GET transaction V1 returns tranasction data\", function(){",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.status).to.be.eq(\"AUTHORIZATION_REQUESTED\");",
+							"    pm.expect(response.clientId).to.be.eq(\"CHECKOUT\");",
+							"    pm.expect(response.gateway).to.be.eq(\"NPG\");",
+							"    pm.expect(response.payments.length).to.be.eq(1);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "lang",
+						"value": "{{OPERATION_LANGUAGE_IT}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v1",
+						"transactions",
+						"{{TRANSACTION_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get transactions v2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"[eCommerce for checkout] GET transaction V2 returns tranasction data\", function(){",
+							"    pm.response.to.have.status(200);",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.status).to.be.eq(\"AUTHORIZATION_REQUESTED\");",
+							"    pm.expect(response.clientId).to.be.eq(\"CHECKOUT\");",
+							"    pm.expect(response.gatewayInfo.gateway).to.be.eq(\"NPG\");",
+							"    pm.expect(response.payments.length).to.be.eq(1);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
+						"type": "text"
+					},
+					{
+						"key": "lang",
+						"value": "{{OPERATION_LANGUAGE_IT}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/transactions/{{TRANSACTION_ID}}",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"ecommerce",
+						"checkout",
+						"v2",
+						"transactions",
+						"{{TRANSACTION_ID}}"
 					]
 				}
 			},
