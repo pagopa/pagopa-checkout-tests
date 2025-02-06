@@ -58,7 +58,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
   await payNoticeBtn.click();
   await fillEmailForm(email);
-  await choosePaymentMethod('card');
+  await choosePaymentMethod('CP');
   await fillCardDataForm(cardData, abi);
 
   const message = await page.waitForXPath(resultMessageXPath);
