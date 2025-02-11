@@ -52,13 +52,7 @@ describe("Checkout show and sort psp list", () => {
     const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
     await payNoticeBtn.click();
     await fillEmailForm(EMAIL);
-    await choosePaymentMethod('CP');
-    await fillOnlyCardDataForm({
-      number: "4242424242424242",
-      expirationDate: "1230",
-      ccv: "123",
-      holderName: "Test test"
-    });
+    await choosePaymentMethod('PPAL');
 
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
@@ -128,13 +122,8 @@ describe("Checkout show and sort psp list", () => {
     const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
     await payNoticeBtn.click();
     await fillEmailForm(EMAIL);
-    await choosePaymentMethod('CP');
-    await fillOnlyCardDataForm({
-      number: "4242424242424242",
-      expirationDate: "1230",
-      ccv: "123",
-      holderName: "Test test"
-    })
+    await choosePaymentMethod('PPAL');
+
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
 
