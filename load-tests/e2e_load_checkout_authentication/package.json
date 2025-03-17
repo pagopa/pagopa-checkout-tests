@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "puppeteer": "^24.4.0",
+    "puppeteer-cluster": "^0.24.0"
+  },
+  "scripts": {
+    "test": "node src/load-test-checkout-authentication.js",
+    "test-conc": "concurrently \"node src/load-test-checkout-authentication.js node src/load-test-checkout-authentication.js\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
