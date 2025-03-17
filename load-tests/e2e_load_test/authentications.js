@@ -6,7 +6,7 @@ export const options = {
     checkout: {
       executor: 'shared-iterations',
       exec: 'checkout',
-      vus: 10,
+      vus: 5,
       iterations: 1000,
       maxDuration: '120s',
       options: {
