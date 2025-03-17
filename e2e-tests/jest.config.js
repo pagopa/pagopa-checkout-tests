@@ -17,6 +17,8 @@ function testRegex() {
         return "./*pgs.integration.test\\.ts$"
       case "NPG": 
         return "./*npg.integration.test\\.ts$"
+      case "AUTH":
+        return "./*auth.test\\.ts$"
       default: 
         throw new Error(`Error while execute test for PAYMENT_GATEWAY: ${paymentGateway}`)
     }
