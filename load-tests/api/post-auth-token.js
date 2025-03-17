@@ -10,8 +10,8 @@ export let options = {
 export default function () {
   let url = 'https://api.uat.platform.pagopa.it/checkout/auth-service/v1/auth/token';
   let payload = JSON.stringify({
-    authCode: 'A5ZZ7hiYjLonO0mnp-ctn6CR9hXsCdRyEUW3YVdYl_0',
-    state: '04afeac5-57ec-431c-a5ca-97d59a3ecca1',
+    authCode: 'test',
+    state: 'test',
   });
 
   let params = {
