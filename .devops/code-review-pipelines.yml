@@ -2,18 +2,18 @@ trigger: none
 pr: none
 
 parameters:
-  - name: "RUN_DEV"
+  - name: 'RUN_DEV'
     displayName: "Run on DEV"
     type: boolean
     default: true
 
-  - name: "RUN_UAT"
+  - name: 'RUN_UAT'
     displayName: "Run on UAT"
     type: boolean
     default: true
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: 'ubuntu-latest'
 
 stages:
   - stage: Setup_Project
@@ -21,57 +21,57 @@ stages:
     jobs:
       - job: setup
         pool:
-          vmImage: "ubuntu-latest"
+          vmImage: 'ubuntu-latest'
         steps:
-          - checkout: self
-            displayName: "Checkout"
+        - checkout: self
+          displayName: 'Checkout'
 
   - stage: API_Tests_Checkout
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: 'ubuntu-latest'
     dependsOn: Setup_Project
     jobs:
       - job: api_tests_dev
         condition: eq('${{parameters.RUN_DEV}}', true)
-        displayName: "Run API Tests on Checkout (DEV)"
+        displayName: 'Run API Tests on Checkout (DEV)'
         steps:
           - script: |
               yarn global add newman
-            displayName: "newman installation"
+            displayName: 'newman installation'
 
           - script: |
               newman run --ignore-redirects api-tests/checkout-tests/npg/checkout-for-ecommerce-api.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-api-TEST.xml
-            displayName: "Run API tests (DEV)"
+            displayName: 'Run API tests (DEV)'
 
           - task: PublishTestResults@2
             inputs:
               testRunTitle: "API Tests on Checkout (DEV)"
-              testResultsFormat: "JUnit"
-              testResultsFiles: "**/*-TEST.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
 
       - job: api_tests_uat
         condition: eq('${{parameters.RUN_UAT}}', true)
-        displayName: "Run API Tests on Checkout (UAT)"
+        displayName: 'Run API Tests on Checkout (UAT)'
         steps:
           - script: |
               yarn global add newman
-            displayName: "newman installation"
+            displayName: 'newman installation'
 
           - script: |
               newman run --ignore-redirects api-tests/checkout-tests/npg/checkout-for-ecommerce-api.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/checkout-for-ecommerce-api-TEST.xml
-            displayName: "Run API tests (UAT)"
+            displayName: 'Run API tests (UAT)'
 
           - task: PublishTestResults@2
             inputs:
               testRunTitle: "API Tests on Checkout (UAT)"
-              testResultsFormat: "JUnit"
-              testResultsFiles: "**/*-TEST.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
 
-  - stage: API_Tests_AuthService
+- stage: API_Tests_AuthService
     pool:
       vmImage: "ubuntu-latest"
     dependsOn: Setup_Project
@@ -98,77 +98,77 @@ stages:
 
       - job: api_tests_uat
         condition: eq('${{parameters.RUN_UAT}}', true)
-        displayName: "Run API Tests on Auth Service (UAT)"
+        displayName: 'Run API Tests on Auth Service (UAT)'
         steps:
           - script: |
               yarn global add newman
-            displayName: "newman installation"
+            displayName: 'newman installation'
 
           - script: |
               newman run --ignore-redirects api-tests/auth-service-tests/auth-service-api.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/auth-service-api-TEST.xml
-            displayName: "Run API tests (UAT)"
+            displayName: 'Run API tests (UAT)'
 
           - task: PublishTestResults@2
             inputs:
-              testRunTitle: "API Tests on Auth Service (UAT)"
-              testResultsFormat: "JUnit"
-              testResultsFiles: "**/*-TEST.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)"
+              testRunTitle: 'API Tests on Auth Service (UAT)'
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
 
   - stage: API_Tests_Carts
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: 'ubuntu-latest'
     dependsOn: Setup_Project
     jobs:
       - job: api_tests_dev
         condition: eq('${{parameters.RUN_DEV}}', true)
-        displayName: "Run API Tests on Checkout Carts (DEV)"
+        displayName: 'Run API Tests on Checkout Carts (DEV)'
         steps:
           - script: |
               yarn global add newman
-            displayName: "newman installation"
+            displayName: 'newman installation'
 
           - script: |
               newman run --ignore-redirects api-tests/cart-tests/cart-api-dev.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
-            displayName: "Run API tests (DEV)"
+            displayName: 'Run API tests (DEV)'
 
           - task: PublishTestResults@2
             inputs:
               testRunTitle: "API Tests on Checkout Carts (DEV)"
-              testResultsFormat: "JUnit"
-              testResultsFiles: "**/cart-api-TEST.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/cart-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
 
       - job: api_tests_uat
         condition: eq('${{parameters.RUN_UAT}}', true)
-        displayName: "Run API Tests on Checkout Carts (UAT)"
+        displayName: 'Run API Tests on Checkout Carts (UAT)'
         steps:
           - script: |
               yarn global add newman
-            displayName: "newman installation"
+            displayName: 'newman installation'
 
           - script: |
               newman run --ignore-redirects api-tests/cart-tests/cart-api-uat.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
-            displayName: "Run API tests (UAT)"
+            displayName: 'Run API tests (UAT)'
 
           - task: PublishTestResults@2
             inputs:
               testRunTitle: "API Tests on Checkout Carts (UAT)"
-              testResultsFormat: "JUnit"
-              testResultsFiles: "**/cart-api-TEST.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/cart-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
 
   - stage: E2E_Tests_Checkout
     pool:
-      vmImage: "ubuntu-latest"
+      vmImage: 'ubuntu-latest'
     dependsOn: Setup_Project
     jobs:
       - job: e2e_tests_dev
         condition: eq('${{parameters.RUN_DEV}}', true)
-        displayName: "Run E2E tests (DEV)"
+        displayName: 'Run E2E tests (DEV)'
         steps:
           - template: azure-templates/e2e-tests.yaml
             parameters:
@@ -176,7 +176,7 @@ stages:
               CHECKOUT_RESOURCE_REPO_NAME: self
       - job: e2e_tests_uat
         condition: eq('${{parameters.RUN_UAT}}', true)
-        displayName: "Run E2E tests (UAT)"
+        displayName: 'Run E2E tests (UAT)'
         steps:
           - template: azure-templates/e2e-tests.yaml
             parameters:
