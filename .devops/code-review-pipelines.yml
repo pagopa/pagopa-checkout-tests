@@ -70,51 +70,51 @@ stages:
               testResultsFiles: '**/*-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
-
-- stage: API_Tests_AuthService
-    pool:
-      vmImage: "ubuntu-latest"
-    dependsOn: Setup_Project
-    jobs:
-      - job: api_tests_dev
-        condition: eq('${{parameters.RUN_DEV}}', true)
-        displayName: "Run API Tests on Auth Service (DEV)"
-        steps:
-          - script: |
-              yarn global add newman
-            displayName: "newman installation"
-
-          - script: |
-              newman run --ignore-redirects api-tests/auth-service-tests/auth-service-api.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/auth-service-api-TEST.xml
-            displayName: "Run API tests (DEV)"
-
-          - task: PublishTestResults@2
-            inputs:
-              testRunTitle: "API Tests on Auth Service (DEV)"
-              testResultsFormat: "JUnit"
-              testResultsFiles: "**/*-TEST.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)"
-            condition: succeededOrFailed()
-
-      - job: api_tests_uat
-        condition: eq('${{parameters.RUN_UAT}}', true)
-        displayName: "Run API Tests on Auth Service (UAT)"
-        steps:
-          - script: |
-              yarn global add newman
-            displayName: "newman installation"
-
-          - script: |
-              newman run --ignore-redirects api-tests/auth-service-tests/auth-service-api.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/auth-service-api-TEST.xml
-            displayName: "Run API tests (UAT)"
-
-          - task: PublishTestResults@2
-            inputs:
-              testRunTitle: "API Tests on Auth Service (UAT)"
-              testResultsFormat: "JUnit"
-              testResultsFiles: "**/*-TEST.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)"
-            condition: succeededOrFailed()
+  
+  - stage: API_Tests_AuthService
+      pool:
+        vmImage: "ubuntu-latest"
+      dependsOn: Setup_Project
+      jobs:
+        - job: api_tests_dev
+          condition: eq('${{parameters.RUN_DEV}}', true)
+          displayName: "Run API Tests on Auth Service (DEV)"
+          steps:
+            - script: |
+                yarn global add newman
+              displayName: "newman installation"
+  
+            - script: |
+                newman run --ignore-redirects api-tests/auth-service-tests/auth-service-api.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/auth-service-api-TEST.xml
+              displayName: "Run API tests (DEV)"
+  
+            - task: PublishTestResults@2
+              inputs:
+                testRunTitle: "API Tests on Auth Service (DEV)"
+                testResultsFormat: "JUnit"
+                testResultsFiles: "**/*-TEST.xml"
+                searchFolder: "$(System.DefaultWorkingDirectory)"
+              condition: succeededOrFailed()
+  
+        - job: api_tests_uat
+          condition: eq('${{parameters.RUN_UAT}}', true)
+          displayName: "Run API Tests on Auth Service (UAT)"
+          steps:
+            - script: |
+                yarn global add newman
+              displayName: "newman installation"
+  
+            - script: |
+                newman run --ignore-redirects api-tests/auth-service-tests/auth-service-api.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/auth-service-api-TEST.xml
+              displayName: "Run API tests (UAT)"
+  
+            - task: PublishTestResults@2
+              inputs:
+                testRunTitle: "API Tests on Auth Service (UAT)"
+                testResultsFormat: "JUnit"
+                testResultsFiles: "**/*-TEST.xml"
+                searchFolder: "$(System.DefaultWorkingDirectory)"
+              condition: succeededOrFailed()
 
   - stage: API_Tests_Carts
     pool:
