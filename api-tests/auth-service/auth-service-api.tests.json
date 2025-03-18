@@ -1,11 +1,295 @@
 {
 	"info": {
-		"_postman_id": "2a6e2273-2814-42f4-8a04-77c8f16c8a7e",
-		"name": "Auth Service - API Tests",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_postman_id": "f222c6e4-dd41-4762-bcc2-020c30df0d70",
+		"name": "AuthServiceAPITest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36861410"
 	},
 	"item": [
-		
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test(\"Get login URL should return 200 with valid url redirect\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const urlRedirect = responseJson.urlRedirect;\r",
+							"    const queryParams = urlRedirect.split(\"?\")[1].split(\"&\");\r",
+							"    console.log(queryParams);\r",
+							"    const responseType = queryParams.find(q => q.includes(\"response_type\")).split(\"=\")[1];\r",
+							"    const scope = queryParams.find(q => q.includes(\"scope\")).split(\"=\")[1];\r",
+							"    const clientId = queryParams.find(q => q.includes(\"client_id\")).split(\"=\")[1];    \r",
+							"    const state = queryParams.find(q => q.includes(\"state\")).split(\"=\")[1];\r",
+							"    const nonce = queryParams.find(q => q.includes(\"nonce\")).split(\"=\")[1];\r",
+							"    const redirectUrl = queryParams.find(q => q.includes(\"redirect_uri\")).split(\"=\")[1];\r",
+							"    pm.expect(responseType).to.be.eq(\"CODE\");\r",
+							"    pm.expect(scope).to.be.eq(\"openid\");\r",
+							"    pm.expect(clientId).to.be.a(\"string\");\r",
+							"    pm.expect(state).to.be.a(\"string\");\r",
+							"    pm.expect(nonce).to.be.a(\"string\");\r",
+							"    pm.expect(redirectUrl).to.be.a(\"string\");\r",
+							"    pm.environment.set(\"STATE\", state);\r",
+							"    pm.environment.set(\"NONCE\", nonce);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/login?recaptcha=03AFcWeA5W",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dev",
+						"platform",
+						"pagopa",
+						"it"
+					],
+					"path": [
+						"checkout",
+						"auth-service",
+						"v1",
+						"auth",
+						"login"
+					],
+					"query": [
+						{
+							"key": "recaptcha",
+							"value": "03AFcWeA5W"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MockInit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseBody = response.json();\r",
+							"const authCode = responseBody.authCode;\r",
+							"pm.environment.set(\"AUTH_CODE\", authCode);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"use_nonce\": {{NONCE}},\r\n  \"forceFailure\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://weudev.checkout.internal.dev.platform.pagopa.it/pagopa-checkout-identity-provider-mock/initMock"
+			},
+			"response": []
+		},
+		{
+			"name": "AuthToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test(\"POST auth token 200 with auth code\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const authToken = responseJson.authToken;\r",
+							"    pm.expect(authToken).to.be.a(\"string\");\r",
+							"    pm.environment.set(\"SESSION_TOKEN\", authToken);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{SESSION_TOKEN}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"state\": \"{{STATE}}\",\r\n    \"authCode\": \"{{AUTH_CODE}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/token"
+			},
+			"response": []
+		},
+		{
+			"name": "PaymentRequests (Inner Validate)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function generateRandomNumberString(length) {\r",
+							"    let result = '';\r",
+							"    const characters = '0123456789';\r",
+							"    const charactersLength = characters.length;\r",
+							"    for (let i = 0; i < length; i++) {\r",
+							"        result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+							"    }\r",
+							"    return result;\r",
+							"}\r",
+							"\r",
+							"const randomNumberString = generateRandomNumberString(12);\r",
+							"pm.environment.set(\"RANDOM_PAYMENT\", randomNumberString);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{SESSION_TOKEN}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 12000,\r\n    \"description\": \"Pagamento di Test\",\r\n    \"dueDate\": \"2021-07-31\",\r\n    \"paFiscalCode\": \"77777777777\",\r\n    \"paName\": \"companyName\",\r\n    \"paymentContextCode\": \"0b1932fc0ba94405b0fb5ed5ea3c0eb6\",\r\n    \"rptId\": \"77777777777302016{{RANDOM_PAYMENT}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v3/auth/payment-requests/302016{{RANDOM_PAYMENT}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test(\"GET users return 200 with correct user information\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    const responseJson = pm.response.json();",
+							"    const userId = responseJson.userId;",
+							"    const name = responseJson.name;",
+							"    const familyName = responseJson.familyName;",
+							"    pm.expect(userId).to.be.eq(\"fiscalNumber\");",
+							"    pm.expect(name).to.be.eq(\"name\");",
+							"    pm.expect(familyName).to.be.eq(\"familyName\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{SESSION_TOKEN}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Logout - Success - Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{SESSION_TOKEN}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"url": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/logout"
+			},
+			"response": []
+		}
 	]
 }
