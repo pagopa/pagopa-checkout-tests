@@ -49,7 +49,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/login?recaptcha=03AFcWeA5W",
+					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login?recaptcha=03AFcWeA5W",
 					"protocol": "https",
 					"host": [
 						"api",
@@ -164,7 +164,7 @@
 						}
 					}
 				},
-				"url": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/token"
+				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/token"
 			},
 			"response": []
 		},
@@ -215,7 +215,7 @@
 						}
 					}
 				},
-				"url": "https://api.dev.platform.pagopa.it/ecommerce/checkout/v3/auth/payment-requests/302016{{RANDOM_PAYMENT}}"
+				"url": "{{CHECKOUT_HOST}}/ecommerce/checkout/v3/auth/payment-requests/302016{{RANDOM_PAYMENT}}"
 			},
 			"response": []
 		},
@@ -252,7 +252,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/users"
+				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/users"
 			},
 			"response": []
 		},
@@ -281,7 +281,7 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "https://api.dev.platform.pagopa.it/checkout/auth-service/v1/auth/logout"
+				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/logout"
 			},
 			"response": []
 		}
