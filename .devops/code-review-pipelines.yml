@@ -70,7 +70,7 @@ stages:
               testResultsFiles: '**/*-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
-  
+
   - stage: API_Tests_Carts
     pool:
       vmImage: 'ubuntu-latest'
