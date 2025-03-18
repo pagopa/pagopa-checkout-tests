@@ -33,6 +33,7 @@
 							"    pm.expect(redirectUrl).to.be.a(\"string\");\r",
 							"    pm.environment.set(\"STATE\", state);\r",
 							"    pm.environment.set(\"NONCE\", nonce);\r",
+							"    pm.environment.set(\"REDIRECT_URL\", urlRedirect);\r",
 							"});\r",
 							""
 						],
@@ -75,15 +76,26 @@
 			"response": []
 		},
 		{
-			"name": "MockInit",
+			"name": "OneIdentityRedirect",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"const responseBody = response.json();\r",
-							"const authCode = responseBody.authCode;\r",
-							"pm.environment.set(\"AUTH_CODE\", authCode);"
+							"// Extract the HTML response\r",
+							"var htmlResponse = pm.response.text();\r",
+							"\r",
+							"// Use regex to find the code in the HTML response\r",
+							"var codeMatch = htmlResponse.match(/code=([^&]+)/);\r",
+							"\r",
+							"if (codeMatch) {\r",
+							"    var code = codeMatch[1];\r",
+							"    // Set the code as an environment variable\r",
+							"    pm.environment.set(\"AUTH_CODE\", code);\r",
+							"    console.log(\"Code extracted and set as environment variable AUTH_CODE: \" + code);\r",
+							"} else {\r",
+							"    console.log(\"Code not found in the HTML response.\");\r",
+							"}"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -94,24 +106,9 @@
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"use_nonce\": {{NONCE}},\r\n  \"forceFailure\": false\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "https://weudev.checkout.internal.dev.platform.pagopa.it/pagopa-checkout-identity-provider-mock/initMock"
+				"method": "GET",
+				"header": [],
+				"url": "{{REDIRECT_URL}}"
 			},
 			"response": []
 		},
@@ -148,10 +145,7 @@
 			],
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": {
-						"token": "{{SESSION_TOKEN}}"
-					}
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [
