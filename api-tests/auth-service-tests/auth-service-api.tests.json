@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f222c6e4-dd41-4762-bcc2-020c30df0d70",
+		"_postman_id": "d4427f51-6761-44c2-8c73-6d5d48374e2e",
 		"name": "AuthServiceAPITest",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "36861410"
@@ -50,13 +50,8 @@
 				"header": [],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login?recaptcha=03AFcWeA5W",
-					"protocol": "https",
 					"host": [
-						"api",
-						"dev",
-						"platform",
-						"pagopa",
-						"it"
+						"{{CHECKOUT_HOST}}"
 					],
 					"path": [
 						"checkout",
