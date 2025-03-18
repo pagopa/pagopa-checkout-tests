@@ -5,8 +5,8 @@ import { URL } from 'https://jslib.k6.io/url/1.0.0/index.js';
 /*** Configs section ***/
 
 const LOG_ENABLED = false
-const ENV = "dev" // dev | uat
-const BASE_PATH = `https://weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it/pagopa-checkout-auth-service`;
+const ENV = "uat" // dev | uat
+const BASE_PATH = `https://weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it/beta/pagopa-checkout-auth-service`;
 
 const authServiceURLs = {
     loginUrl: `${BASE_PATH}/auth/login?recaptcha=auth-service-recaptcha`,
