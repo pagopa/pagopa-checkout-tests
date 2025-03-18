@@ -35,18 +35,18 @@ const k6Options = {
 /*** k6 setup and main function ***/
 
 const k6Setup = () => {
-    logStep(0, "k6Setup DONE")
+    logStep(0, "k6 setup function DONE")
 }
 
 const k6Main = () => {
-    logStep(0, "Main function START")
+    logStep(0, "k6 main function START")
 
     // 1) login request with recaptcha
     let response = step1PerformLogin()
 
     check(response, {
         'initial login request is successful': (r) => r.status === 200,
-        'redirect URL is present': (r) => r.json('urlRedirect') !== undefined,
+        'redirect URL is present': (r) => !!r.json('urlRedirect'),
     });
 
     let redirectUrl = response.json('urlRedirect');
@@ -112,7 +112,7 @@ const k6Main = () => {
 
     iterationCounter.add(1);
 
-    logStep(100, "Main function DONE")
+    logStep(100, "k6 main function DONE")
 }
 
 /*** Helpers functions ***/
