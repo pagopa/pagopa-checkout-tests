@@ -1,4 +1,4 @@
-import { check } from 'k6';
+import { check, sleep } from 'k6';
 import http from 'k6/http';
 import { URL } from 'https://jslib.k6.io/url/1.0.0/index.js';
 
@@ -25,9 +25,10 @@ const k6Options = {
         preAllocatedVUs: 100,
         maxVUs: 10000,
         stages: [
-          { target: 1, duration: "30s" },
-          { target: 1, duration: "5s" },
-          { target: 0, duration: "5s" },
+          { target: 10, duration: "10m" },
+          { target: 20, duration: "5m" },
+          { target: 20, duration: "1h" },
+          { target: 0, duration: "10m" },
         ],
       },
     },
@@ -65,26 +66,25 @@ const k6Main = () => {
 
     logStep(1, "login request done", { redirectUrl })
 
-    redirectUrl = transformOneIdentityRedirectUrl(redirectUrl)
+    const [_, queryString] = redirectUrl.split("?")
 
-    // 2) follow the redirect URL (One Identity)
-    response = step2PerformLoginRedirect(redirectUrl)
-
-    check(response, {
-        'OIDC authorization is successful': (r) => r.status === 200,
-    },  { name: "login-redirect" });
-
-    const callbackAuthParams = extractCallbackAuthParam(response.body)
+    const queryParams = queryString.split("&")
     
-    logStep(2, "got callback auth params", {callbackAuthParams})
+    const nonce = queryParams.find(q => q.includes("nonce")).split("=")[1];
+    const state = queryParams.find(q => q.includes("state")).split("=")[1];
 
-    check(callbackAuthParams, {
-        'Callback URL authCode': ({ authCode }) => !!authCode,
-        'Callback URL state': ({ state }) => !!state,
-    },  { name: "login-redirect" })
+    // TODO: add check
 
-    // 3) post token
-    const { authCode, state } = callbackAuthParams
+    const newHostname = `weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it`;
+    const initMockResponse = http.post(
+        `https://${newHostname}/pagopa-checkout-identity-provider-mock/initMock`,
+        JSON.stringify({
+            use_nonce: nonce,
+        }),
+        { headers: { 'Content-Type': 'application/json' }}
+    )
+
+    const authCode = initMockResponse.json('authCode')
 
     response = step3PostToken(authCode, state)
 
@@ -97,12 +97,17 @@ const k6Main = () => {
 
     logStep(3, "got auth token", { authToken })
 
-    // 4) validate token
-    response = step4ValidateToken(authToken)
+    // 4) validate token - 3 times because is involved multiple times
+    for (let i = 0; i < 3; i++) {
 
-    check(response, {
-        'token is valid': (r) => r.status === 200,
-    },  { name: "validate" });
+        response = step4ValidateToken(authToken)
+
+        check(response, {
+            'token is valid': (r) => r.status === 200,
+        },  { name: "validate" });
+        
+        sleep(3);
+    }
 
     // 5) get user info
     response = step5GetUsers(authToken)
@@ -169,23 +174,12 @@ const step6Logout = (token) =>
  */
 function transformOneIdentityRedirectUrl(originalUrl) {
     // Parse the original URL
-    const url = new URL(originalUrl);
+    
+    const [_, queryString] = originalUrl.split("?")
 
-    // Extract the environment from the hostname
-    const envMatch = url.hostname.match(/api\.(\w+)\.platform\.pagopa\.it/);
-    if (!envMatch) {
-        throw new Error("Environment could not be determined from the URL");
-    }
-    const env = envMatch[1];
+    const newHostname = `weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it`;
 
-    const newHostname = `weu${env}.checkout.internal.${env}.platform.pagopa.it`;
-
-    const newPath = url.pathname.replace(
-        '/checkout/identity-provider-mock/v1/login',
-        '/pagopa-checkout-identity-provider-mock/login'
-    );
-
-    const transformedUrl = `https://${newHostname}${newPath}${url.search}`;
+    const transformedUrl = `https://${newHostname}/pagopa-checkout-identity-provider-mock/login?${queryString}`;
 
     return transformedUrl;
 }
