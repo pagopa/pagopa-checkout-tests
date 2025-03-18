@@ -1,9 +1,6 @@
 import { check } from 'k6';
 import http from 'k6/http';
-import { Counter } from 'k6/metrics'
 import { URL } from 'https://jslib.k6.io/url/1.0.0/index.js';
-
-const iterationCounter = new Counter('iterations');
 
 /*** Configs section ***/
 
@@ -20,15 +17,30 @@ const authServiceURLs = {
 }
 
 const k6Options = {
-    stages: [
-        { target: 1, duration: '1s' }, // 30 minuti per arrivare a 200 iterazioni / secondo
-        { target: 1, duration: '1s' },  // 7 ore di traffico costante
-        { target: 0, duration: '1s' },   // 30 minuti per arrivare da 200 a 0 iterazioni al secondo
-    ],
+    scenarios: {
+      contacts: {
+        executor: 'ramping-arrival-rate',
+        startRate: 0,
+        timeUnit: '1s',
+        preAllocatedVUs: 100,
+        maxVUs: 10000,
+        stages: [
+          { target: 1, duration: "30s" },
+          { target: 1, duration: "5s" },
+          { target: 0, duration: "5s" },
+        ],
+      },
+    },
 
     thresholds: {
-        'http_req_duration': ['p(95)<2000'], // 95% of requests should be below 2s
-        'http_req_failed': ['rate<0.01'],    // Less than 1% can fail
+        http_req_duration: ["p(95)<=250"], // 95% of requests must complete below 250ms
+        checks: ['rate>0.9'], // 90% of the request must be completed
+        "http_req_duration{name:login}": ["p(95)<=250"],
+        "http_req_duration{name:login-redirect}": ["p(95)<=250"],
+        "http_req_duration{name:post-token}": ["p(95)<=250"],
+        "http_req_duration{name:validate}": ["p(95)<=250"],
+        "http_req_duration{name:get-users}": ["p(95)<=250"],
+        "http_req_duration{name:logout}": ["p(95)<=250"],
     },
 };
 
@@ -47,7 +59,7 @@ const k6Main = () => {
     check(response, {
         'initial login request is successful': (r) => r.status === 200,
         'redirect URL is present': (r) => !!r.json('urlRedirect'),
-    });
+    },  { name: "login" });
 
     let redirectUrl = response.json('urlRedirect');
 
@@ -60,7 +72,7 @@ const k6Main = () => {
 
     check(response, {
         'OIDC authorization is successful': (r) => r.status === 200,
-    });
+    },  { name: "login-redirect" });
 
     const callbackAuthParams = extractCallbackAuthParam(response.body)
     
@@ -69,7 +81,7 @@ const k6Main = () => {
     check(callbackAuthParams, {
         'Callback URL authCode': ({ authCode }) => !!authCode,
         'Callback URL state': ({ state }) => !!state,
-    })
+    },  { name: "login-redirect" })
 
     // 3) post token
     const { authCode, state } = callbackAuthParams
@@ -79,7 +91,7 @@ const k6Main = () => {
     check(response, {
         'token request is successful': (r) => r.status === 200,
         'token response contains token': (r) => !!r.json('authToken'),
-    });
+    },  { name: "post-token" });
 
     const authToken = response.json('authToken')
 
@@ -90,7 +102,7 @@ const k6Main = () => {
 
     check(response, {
         'token is valid': (r) => r.status === 200,
-    });
+    },  { name: "validate" });
 
     // 5) get user info
     response = step5GetUsers(authToken)
@@ -99,7 +111,7 @@ const k6Main = () => {
         'Has userId in response': (r) => !!r.json('userId'),
         'Has name in response': (r) => !!r.json('name'),
         'Has familyName in response': (r) => !!r.json('familyName'),
-    });
+    },  { name: "get-users" });
 
     logStep(5, "userId is", response.json('userId'))
 
@@ -108,9 +120,7 @@ const k6Main = () => {
 
     check(response, {
         'Logout successfully': (r) => r.status === 204,
-    });
-
-    iterationCounter.add(1);
+    },  { name: "logout" });
 
     logStep(100, "k6 main function DONE")
 }
@@ -120,35 +130,35 @@ const k6Main = () => {
 const step1PerformLogin = () => 
     http.get(
         authServiceURLs.loginUrl,
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { 'Content-Type': 'application/json' }, tags: { name: 'login'}, timeout: '10s' }
     );
 
-const step2PerformLoginRedirect = (redirectUrl) => http.get(redirectUrl);
+const step2PerformLoginRedirect = (redirectUrl) => http.get(redirectUrl, { tags: { name: 'login-redirect'}, timeout: '10s' })
 
 const step3PostToken = (authCode, state) => 
     http.post(
         authServiceURLs.postTokenUrl,
         JSON.stringify({ authCode: authCode, state: state }),
-        { headers: { 'Content-Type': 'application/json' }}
+        { headers: { 'Content-Type': 'application/json' }, tags: { name: 'post-token'}, timeout: '10s' }
     )
 
 const step4ValidateToken = (token) =>
     http.get(
         authServiceURLs.validateUrl,
-        { headers: { 'Authorization': `Bearer ${token}` }}
+        { headers: { 'Authorization': `Bearer ${token}`}, tags: { name: 'validate'}, timeout: '10s' }
     )
 
 const step5GetUsers = (token) =>
     http.get(
         authServiceURLs.getUsersUrl,
-        { headers: { 'Authorization': `Bearer ${token}` }}
+        { headers: { 'Authorization': `Bearer ${token}`}, tags: { name: 'get-users'}, timeout: '10s' }
     )
 
 const step6Logout = (token) =>
     http.post(
         authServiceURLs.logoutUrl,
         null,
-        { headers: { 'Authorization': `Bearer ${token}` }}
+        { headers: { 'Authorization': `Bearer ${token}`}, tags: { name: 'logout'}, timeout: '10s' }
     )
 
 /**
