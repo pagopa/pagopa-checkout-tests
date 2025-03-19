@@ -1,6 +1,6 @@
-import { fillPaymentNotificationForm } from "../npg/helpers"
-import { NAV_PAA_PAGAMENTO_DUPLICATO, TEST_CASES, VALID_FISCAL_CODE } from "./constants";
-import { Category, CodeCategory, TestCase } from "./types";
+import {fillPaymentNotificationForm} from "../npg/helpers"
+import {NAV_PAA_PAGAMENTO_DUPLICATO, TEST_CASES, VALID_FISCAL_CODE} from "./constants";
+import {Category, CodeCategory, TestCase} from "./types";
 
 export const  verifyActivatePaymentTest = () => {
     TEST_CASES.filter(t => !t.skipTest)
