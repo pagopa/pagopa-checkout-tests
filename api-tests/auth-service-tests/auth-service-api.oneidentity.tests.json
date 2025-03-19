@@ -1,1 +1,299 @@
-{}
+{
+	"info": {
+		"_postman_id": "e485d56d-64b3-49f9-90d4-f6cf22f050b1",
+		"name": "AuthServiceAPITest - OneIdentity",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36861410"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test(\"Get login URL should return 200 with valid url redirect\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    const urlRedirect = responseJson.urlRedirect;\r",
+							"    const queryParams = urlRedirect.split(\"?\")[1].split(\"&\");\r",
+							"    console.log(queryParams);\r",
+							"    const responseType = queryParams.find(q => q.includes(\"response_type\")).split(\"=\")[1];\r",
+							"    const scope = queryParams.find(q => q.includes(\"scope\")).split(\"=\")[1];\r",
+							"    const clientId = queryParams.find(q => q.includes(\"client_id\")).split(\"=\")[1];    \r",
+							"    const state = queryParams.find(q => q.includes(\"state\")).split(\"=\")[1];\r",
+							"    const nonce = queryParams.find(q => q.includes(\"nonce\")).split(\"=\")[1];\r",
+							"    const redirectUrl = queryParams.find(q => q.includes(\"redirect_uri\")).split(\"=\")[1];\r",
+							"    pm.expect(responseType).to.be.eq(\"CODE\");\r",
+							"    pm.expect(scope).to.be.eq(\"openid\");\r",
+							"    pm.expect(clientId).to.be.a(\"string\");\r",
+							"    pm.expect(state).to.be.a(\"string\");\r",
+							"    pm.expect(nonce).to.be.a(\"string\");\r",
+							"    pm.expect(redirectUrl).to.be.a(\"string\");\r",
+							"    pm.environment.set(\"STATE\", state);\r",
+							"    pm.environment.set(\"NONCE\", nonce);\r",
+							"    pm.environment.set(\"REDIRECT_URL\", urlRedirect);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login?recaptcha=03AFcWeA5W",
+					"host": [
+						"{{CHECKOUT_HOST}}"
+					],
+					"path": [
+						"checkout",
+						"auth-service",
+						"v1",
+						"auth",
+						"login"
+					],
+					"query": [
+						{
+							"key": "recaptcha",
+							"value": "03AFcWeA5W"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OneIdentityRedirect",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains the specified HTML title\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"<title>PagoPA One Identity – Login</title>\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{REDIRECT_URL}}"
+			},
+			"response": []
+		},
+		{
+			"name": "AuthToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"POST auth token 401 with bad auth code\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"\r",
+							"    const expectedResponse = {\r",
+							"        type: \"about:blank\",\r",
+							"        title: \"Unauthorized\",\r",
+							"        status: 401,\r",
+							"        detail: \"Cannot perform authentication process for state: [some-invalid-state]\",\r",
+							"        instance: null\r",
+							"    };\r",
+							"\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.deep.equal(expectedResponse);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"state\": \"some-invalid-state\",\r\n    \"authCode\": \"some-invalid-code\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/token"
+			},
+			"response": []
+		},
+		{
+			"name": "PaymentRequests (Inner Validate)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function generateRandomNumberString(length) {\r",
+							"    let result = '';\r",
+							"    const characters = '0123456789';\r",
+							"    const charactersLength = characters.length;\r",
+							"    for (let i = 0; i < length; i++) {\r",
+							"        result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+							"    }\r",
+							"    return result;\r",
+							"}\r",
+							"\r",
+							"const randomNumberString = generateRandomNumberString(12);\r",
+							"pm.environment.set(\"RANDOM_PAYMENT\", randomNumberString);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test(\"POST payment-requests should be 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{SESSION_TOKEN}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{CHECKOUT_HOST}}/ecommerce/checkout/v3/auth/payment-requests/77777777777302016{{RANDOM_PAYMENT}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET Users 401 with bad auth code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"",
+							"    const expectedResponse = {",
+							"        type: \"about:blank\",",
+							"        title: \"Unauthorized\",",
+							"        status: 401,",
+							"        detail: \"Session validation failed: [Invalid or missing session token]\",",
+							"        instance: null",
+							"    };",
+							"",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.deep.equal(expectedResponse);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{SESSION_TOKEN}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Logout - Success - Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{SESSION_TOKEN}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/logout"
+			},
+			"response": []
+		}
+	]
+}
