@@ -203,3 +203,5 @@ export const cancelPaymentAction = async () => {
   console.log('payment canceled');
   await page.waitForNavigation();
 };
+
+
