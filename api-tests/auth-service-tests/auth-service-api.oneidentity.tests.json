@@ -49,7 +49,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login?recaptcha=03AFcWeA5W",
+					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login?recaptcha={{FAKE_RECAPTCHA_NOT_VALIDATED}}",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -63,7 +63,7 @@
 					"query": [
 						{
 							"key": "recaptcha",
-							"value": "03AFcWeA5W"
+							"value": "{{FAKE_RECAPTCHA_NOT_VALIDATED}}"
 						}
 					]
 				}
