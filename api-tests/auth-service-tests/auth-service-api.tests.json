@@ -90,6 +90,10 @@
 							"    console.log(\"Code extracted and set as environment variable AUTH_CODE: \" + code);\r",
 							"} else {\r",
 							"    console.log(\"Code not found in the HTML response.\");\r",
+							"    // Fail the test if the code is not found\r",
+							"    pm.test(\"Code should be present in the HTML response\", function() {\r",
+							"        pm.expect(codeMatch).to.not.be.null;\r",
+							"    });\r",
 							"}"
 						],
 						"type": "text/javascript",
