@@ -27,7 +27,7 @@ const k6Options = {
         stages: [
           { target: 10, duration: "10m" },
           { target: 20, duration: "5m" },
-          { target: 20, duration: "1h" },
+          { target: 20, duration: "2h" },
           { target: 0, duration: "10m" },
         ],
       },
