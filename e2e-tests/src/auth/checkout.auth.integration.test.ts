@@ -5,7 +5,7 @@ import { selectLanguage } from "../verify/helpers";
 
 
 
-describe("Checkout authentication spid login", () => {
+describe("Checkout authentication spid", () => {
     /**
      * Test input and configuration
      */
@@ -40,4 +40,25 @@ describe("Checkout authentication spid login", () => {
         expect(button.length).toBeGreaterThan(0);
     });
 
+    it.only("Should logout checkout", async() => {
+        await page.waitForSelector('#login-header button');
+        await page.locator('#login-header button').click();
+
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
+        await page.waitForSelector('button');
+
+        await page.evaluate(() => {
+            const buttons = document.getElementsByTagName('button')
+            buttons[0].click()
+            const lis = document.getElementsByTagName('li')
+            lis[0].click()
+        });
+        const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
+        await timeout(200);
+
+        await page.waitForSelector('#login-header button', { visible: true }); // Assicurati che il bottone sia visibile di nuovo
+
+        const button = await page.$x("//button[contains(., 'Accedi')]");
+        expect(button.length).toBeGreaterThan(0);
+    });
 });
