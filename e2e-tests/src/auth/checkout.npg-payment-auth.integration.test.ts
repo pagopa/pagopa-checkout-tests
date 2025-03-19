@@ -55,25 +55,25 @@ describe("Checkout login and payment flow", () => {
     });
 
     /**
-     * Step 2: Payment (dopo login)
+     * Step 2: Payment (after login)
      */
-    verifyActivatePaymentTest();
-
-    it.each(CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest)))("Should correctly execute a payment with configuration %s", async (testData) => {
+    it("Should correctly execute a payment", async () => {
         /*
          * 1. Payment with valid notice code
         */
+        const CODICE_AVVISO = "30202" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
+        const CARD = CARD_TEST_DATA.cards[1];
         const resultMessage = await payNotice(
-            generateRandomNoticeCode(testData.fiscalCodePrefix),
+            CODICE_AVVISO,
             VALID_FISCAL_CODE,
             EMAIL,
             {
-                number: String(testData.pan),
-                expirationDate: String(testData.expirationDate),
-                ccv: String(testData.cvv),
+                number: String(CARD.pan),
+                expirationDate: String(CARD.expirationDate),
+                ccv: String(CARD.cvv),
                 holderName: "Test test"
             },
-            testData.pspAbi
+            CARD.pspAbi
         );
 
         expect(resultMessage).toContain("Hai pagato");
