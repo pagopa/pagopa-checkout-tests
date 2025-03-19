@@ -1,5 +1,6 @@
 
 import { selectLanguage } from "../verify/helpers";
+import puppeteer from "puppeteer";
 
 
 describe("Checkout authentication spid", () => {
@@ -11,18 +12,32 @@ describe("Checkout authentication spid", () => {
     const timeout = 80_000
     jest.setTimeout(timeout);
     jest.retryTimes(2);
-    page.setDefaultNavigationTimeout(timeout);
-    page.setDefaultTimeout(timeout)
+
+
+    let browser;
+    let page;
 
     beforeAll( async () => {
+        browser = await puppeteer.launch({ headless: "new" });
+        // Se vuoi un contesto “incognito”:
+        const context = await browser.createIncognitoBrowserContext();
+        page = await context.newPage();
         await page.goto(CHECKOUT_URL);
         await page.setViewport({ width: 1200, height: 907 });
+        page.setDefaultNavigationTimeout(timeout);
+        page.setDefaultTimeout(timeout)
         //await acceptCookiePolicy();
     })
 
     beforeEach(async () => {
         await page.goto(CHECKOUT_URL);
-        await selectLanguage("it");
+        await page.waitForSelector('#languageMenu', { timeout: 10000 });
+        await page.select('#languageMenu', "it")
+        //await selectLanguage("it");
+    });
+
+    afterAll(async () => {
+        await browser.close();
     });
 
 
