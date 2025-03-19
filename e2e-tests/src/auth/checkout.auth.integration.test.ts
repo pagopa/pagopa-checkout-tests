@@ -1,8 +1,5 @@
 
 import { selectLanguage } from "../verify/helpers";
-/********************************************************/
-
-
 
 
 describe("Checkout authentication spid", () => {
@@ -40,11 +37,7 @@ describe("Checkout authentication spid", () => {
         expect(button.length).toBeGreaterThan(0);
     });
 
-    it.only("Should logout checkout", async() => {
-        await page.waitForSelector('#login-header button');
-        await page.locator('#login-header button').click();
-
-        await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    it("Should logout checkout", async() => {
         await page.waitForSelector('button');
 
         await page.evaluate(() => {

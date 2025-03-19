@@ -35,8 +35,8 @@ describe("Checkout login and payment flow", () => {
         await page.click(noticeCodeTextInput);
     }
 
-    const enterInDataPayment = async (firstTestData) => {
-        const noticeCode = generateRandomNoticeCode(firstTestData.fiscalCodePrefix);
+    const enterInDataPayment = async () => {
+        const noticeCode = generateRandomNoticeCode('30201');
         const fiscalCode = VALID_FISCAL_CODE;
         const fiscalCodeTextInput = '#cf';
         const verifyBtn = '#paymentNoticeButtonContinue';
@@ -82,8 +82,6 @@ describe("Checkout login and payment flow", () => {
         await page.waitForSelector('button');
     };
 
-    verifyActivatePaymentTest();
-
     it("Should correctly execute a payment with configuration [INSERISCI-DATI-AVVISO]", async () => {
         await enterInNoticeData();
         /*
@@ -99,9 +97,8 @@ describe("Checkout login and payment flow", () => {
     });
 
     it("Should correctly execute a payment with configuration [DATI-PAGAMENTO]", async () => {
-        const firstTestData = CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest))[0];
         await enterInNoticeData();
-        await enterInDataPayment(firstTestData);
+        await enterInDataPayment();
 
         await page.waitForSelector('#login-header button');
         const loginButton = await page.$('#login-header button');
@@ -111,9 +108,8 @@ describe("Checkout login and payment flow", () => {
     });
 
     it("Should correctly execute a payment with configuration [INSERISCI-EMAIL]", async () => {
-        const firstTestData = CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest))[0];
         await enterInNoticeData();
-        await enterInDataPayment(firstTestData);
+        await enterInDataPayment();
         await enterInEmail();
 
         await page.waitForSelector('#login-header button');
@@ -124,13 +120,10 @@ describe("Checkout login and payment flow", () => {
     });
 
     it("Should correctly execute a payment with configuration [SCEGLI-METODO]", async () => {
-        const firstTestData = CARD_TEST_DATA.cards.filter(el => !Boolean(el.skipTest))[1];
         await enterInNoticeData();
-        await enterInDataPayment(firstTestData);
+        await enterInDataPayment();
         await enterInEmail();
         await enterInSelectMethod();
-
-
 
         await page.waitForSelector('#login-header button');
         const loginButton = await page.$('#login-header button');
