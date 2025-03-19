@@ -9,14 +9,7 @@ describe("Checkout login and payment flow", () => {
     const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
     const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
     const EMAIL = String(process.env.EMAIL);
-    const VALID_CARD_DATA = {
-        number: String(process.env.CARD_NUMBER),
-        expirationDate: String(process.env.CARD_EXPIRATION_DATE),
-        ccv: String(process.env.CARD_CCV),
-        holderName: String(process.env.CARD_HOLDER_NAME)
-    };
-
-    const NPG_PSP_ABI = String(process.env.NPG_PSP_ABI);
+    const VALID_CARD_DATA = JSON.parse(String(process.env.VALID_CARD_DATA));
     const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
 
     /**
@@ -61,19 +54,19 @@ describe("Checkout login and payment flow", () => {
         /*
          * 1. Payment with valid notice code
         */
-        const CODICE_AVVISO = "30202" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
-        const CARD = CARD_TEST_DATA.cards[1];
+        const CODICE_AVVISO = String(VALID_CARD_DATA.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
+        //const CARD = CARD_TEST_DATA.cards[1];
         const resultMessage = await payNotice(
             CODICE_AVVISO,
             VALID_FISCAL_CODE,
             EMAIL,
             {
-                number: String(CARD.pan),
-                expirationDate: String(CARD.expirationDate),
-                ccv: String(CARD.cvv),
+                number: String(VALID_CARD_DATA.pan),
+                expirationDate: String(VALID_CARD_DATA.expirationDate),
+                ccv: String(VALID_CARD_DATA.cvv),
                 holderName: "Test test"
             },
-            CARD.pspAbi
+            VALID_CARD_DATA.pspAbi
         );
 
         expect(resultMessage).toContain("Hai pagato");
