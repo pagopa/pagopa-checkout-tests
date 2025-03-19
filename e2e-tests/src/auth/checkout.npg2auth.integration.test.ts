@@ -1,7 +1,7 @@
 import { selectLanguage, verifyActivatePaymentTest } from "../verify/helpers";
 import { payNotice, generateRandomNoticeCode } from "../npg/helpers";
 
-describe("Checkout login and payment flow", () => {
+describe("Checkout Login Availability During Payment Flow", () => {
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
@@ -82,7 +82,7 @@ describe("Checkout login and payment flow", () => {
         await page.waitForSelector('button');
     };
 
-    it("Should correctly execute a payment with configuration [INSERISCI-DATI-AVVISO]", async () => {
+    it("Should show login option when entering notice data", async () => {
         await enterInNoticeData();
         /*
         await login();
@@ -96,7 +96,7 @@ describe("Checkout login and payment flow", () => {
         expect(buttonTitle).toBe('Accedi');
     });
 
-    it("Should correctly execute a payment with configuration [DATI-PAGAMENTO]", async () => {
+    it("Should show login option after entering Payment Data", async () => {
         await enterInNoticeData();
         await enterInDataPayment();
 
@@ -107,7 +107,7 @@ describe("Checkout login and payment flow", () => {
         expect(buttonTitle).toBe('Accedi');
     });
 
-    it("Should correctly execute a payment with configuration [INSERISCI-EMAIL]", async () => {
+    it("Should show login option after entering email", async () => {
         await enterInNoticeData();
         await enterInDataPayment();
         await enterInEmail();
@@ -119,7 +119,7 @@ describe("Checkout login and payment flow", () => {
         expect(buttonTitle).toBe('Accedi');
     });
 
-    it("Should correctly execute a payment with configuration [SCEGLI-METODO]", async () => {
+    it("Should show login option after selecting payment method", async () => {
         await enterInNoticeData();
         await enterInDataPayment();
         await enterInEmail();

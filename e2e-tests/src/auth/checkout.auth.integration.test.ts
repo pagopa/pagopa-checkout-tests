@@ -26,7 +26,7 @@ describe("Checkout authentication spid", () => {
     });
 
 
-    it("Should login success in checkout", async() => {
+    it("Should Login Successfully At Checkout", async() => {
         await page.waitForSelector('#login-header button');
         await page.locator('#login-header button').click();
 
@@ -37,7 +37,7 @@ describe("Checkout authentication spid", () => {
         expect(button.length).toBeGreaterThan(0);
     });
 
-    it("Should logout checkout", async() => {
+    it("Should Logout Successfully From Checkout", async() => {
         await page.waitForSelector('button');
 
         await page.evaluate(() => {
