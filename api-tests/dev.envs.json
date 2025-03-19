@@ -8,6 +8,11 @@
 			"enabled": true
 		},
 		{
+			"key": "FAKE_RECAPTCHA_NOT_VALIDATED",
+			"value": "123456789AAbbCC",
+			"enabled": true
+		},
+		{
 			"key": "AUTH_USER_EXPECT_NAME",
 			"value": "NomeTest",
 			"enabled": true
