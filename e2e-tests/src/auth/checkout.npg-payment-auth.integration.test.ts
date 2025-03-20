@@ -11,6 +11,7 @@ describe("Checkout login and payment flow", () => {
     const EMAIL = String(process.env.EMAIL);
     const VALID_CARD_DATA = JSON.parse(String(process.env.VALID_CARD_DATA));
     const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     /**
      * Increase default test timeout (60000ms)
@@ -36,15 +37,45 @@ describe("Checkout login and payment flow", () => {
     /**
      * Step 1: Login
      */
-    it("Should successfully login in checkout", async () => {
-        await page.waitForSelector('#login-header button');
-        await page.locator('#login-header button').click();
+    const uatLogin = async () => {
+        await page.waitForSelector('#spidButton', { visible: true });
+        await page.click("#spidButton");
+        await sleep(200)
+        await page.evaluate(() => {
+            document.getElementById('https://validator.dev.oneid.pagopa.it/demo').click()
+        })
+
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
+        await page.waitForSelector('form#formLogin');
+
+        await page.type('#username', 'oneidentity');
+        await page.type('#password', 'password123');
+        await page.click('button[type="submit"]');
+
+        await page.waitForSelector('form[name="formConfirm"]', { visible: true });
+        await page.click('form[name="formConfirm"] input[type="submit"]');
 
         await page.waitForNavigation({ waitUntil: 'networkidle0' });
         await page.waitForSelector('button');
+        const button = await page.$x("//button[contains(., 'Team OneIdentity')]");
 
-        const button = await page.$x("//button[contains(., 'NomeTest CognomeTest')]");
         expect(button.length).toBeGreaterThan(0);
+    }
+
+    const devLogin = async () => {
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
+        await page.waitForSelector('button');
+        const button = await page.$x("//button[contains(., 'NomeTest CognomeTest')]");
+
+        expect(button.length).toBeGreaterThan(0);
+    }
+
+
+    it("Should Login Successfully At Checkout", async() => {
+        await page.waitForSelector('#login-header button');
+        await page.locator('#login-header button').click();
+        if (CHECKOUT_URL.includes("uat")) await uatLogin();
+        else await devLogin();
     });
 
     /**
