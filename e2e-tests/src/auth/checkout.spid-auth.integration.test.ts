@@ -19,7 +19,7 @@ describe("Checkout authentication spid", () => {
     let page;
 
     beforeAll( async () => {
-        browser = await puppeteer.launch({ headless: false });
+        browser = await puppeteer.launch({ headless: "new" });
 
         const context = await browser.createIncognitoBrowserContext();
         page = await context.newPage();
