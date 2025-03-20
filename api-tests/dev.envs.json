@@ -9,7 +9,7 @@
 		},
 		{
 			"key": "USE_BETA_BACKEND_HEADER",
-			"value": "",
+			"value": "green",
 			"enabled": true
 		},
 		{
