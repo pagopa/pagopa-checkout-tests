@@ -47,7 +47,13 @@
 					"type": "noauth"
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{USE_BETA_BACKEND_HEADER}}",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login?recaptcha={{FAKE_RECAPTCHA_NOT_VALIDATED}}",
 					"host": [
@@ -106,7 +112,13 @@
 					"type": "noauth"
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{USE_BETA_BACKEND_HEADER}}",
+						"type": "text"
+					}
+				],
 				"url": "{{REDIRECT_URL}}"
 			},
 			"response": []
@@ -151,6 +163,11 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "deployment",
+						"value": "{{USE_BETA_BACKEND_HEADER}}",
 						"type": "text"
 					}
 				],
@@ -204,7 +221,13 @@
 					}
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{USE_BETA_BACKEND_HEADER}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "",
@@ -250,7 +273,13 @@
 					}
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{USE_BETA_BACKEND_HEADER}}",
+						"type": "text"
+					}
+				],
 				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/users"
 			},
 			"response": []
@@ -279,7 +308,13 @@
 					}
 				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "deployment",
+						"value": "{{USE_BETA_BACKEND_HEADER}}",
+						"type": "text"
+					}
+				],
 				"url": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/logout"
 			},
 			"response": []
