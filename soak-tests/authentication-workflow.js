@@ -6,14 +6,16 @@ import { URL } from 'https://jslib.k6.io/url/1.0.0/index.js';
 
 const LOG_ENABLED = false
 const ENV = "uat" // dev | uat
-const BASE_PATH = `https://weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it/beta/pagopa-checkout-auth-service`;
+const BASE_PATH = `https://weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it`;
+
+const AUTH_SERVICE_PATH = `${BASE_PATH}/beta/pagopa-checkout-auth-service`
 
 const authServiceURLs = {
-    loginUrl: `${BASE_PATH}/auth/login?recaptcha=auth-service-recaptcha`,
-    postTokenUrl: `${BASE_PATH}/auth/token`,
-    validateUrl: `${BASE_PATH}/auth/validate`,
-    getUsersUrl: `${BASE_PATH}/auth/users`,
-    logoutUrl: `${BASE_PATH}/auth/logout`,
+    loginUrl: `${AUTH_SERVICE_PATH}/auth/login?recaptcha=auth-service-recaptcha`,
+    postTokenUrl: `${AUTH_SERVICE_PATH}/auth/token`,
+    validateUrl: `${AUTH_SERVICE_PATH}/auth/validate`,
+    getUsersUrl: `${AUTH_SERVICE_PATH}/auth/users`,
+    logoutUrl: `${AUTH_SERVICE_PATH}/auth/logout`,
 }
 
 const k6Options = {
@@ -73,11 +75,9 @@ const k6Main = () => {
     const nonce = queryParams.find(q => q.includes("nonce")).split("=")[1];
     const state = queryParams.find(q => q.includes("state")).split("=")[1];
 
-    // TODO: add check
-
-    const newHostname = `weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it`;
+    const initMockUrl = `${BASE_PATH}/pagopa-checkout-identity-provider-mock/initMock`
     const initMockResponse = http.post(
-        `https://${newHostname}/pagopa-checkout-identity-provider-mock/initMock`,
+        initMockUrl,
         JSON.stringify({
             use_nonce: nonce,
         }),
