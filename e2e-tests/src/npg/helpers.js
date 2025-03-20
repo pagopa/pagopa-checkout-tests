@@ -122,7 +122,7 @@ export const fillOnlyCardDataForm = async (cardData) => {
     await page.click(holderNameInput, { clickCount: 3 });
     await page.keyboard.type(cardData.holderName);
     console.log('holder performed');
-    completed = !!!(await page.$(disabledContinueBtnXPath));
+    completed = !await page.$(disabledContinueBtnXPath);
     await page.waitForTimeout(80);
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });
@@ -162,7 +162,7 @@ export const fillCardDataForm = async (cardData, abi) => {
     await page.click(holderNameInput, { clickCount: 3 });
     await page.keyboard.type(cardData.holderName);
     console.log('holder performed');
-    completed = !!!(await page.$(disabledContinueBtnXPath));
+    completed = !await page.$(disabledContinueBtnXPath);
     await page.waitForTimeout(80);
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });
@@ -203,3 +203,5 @@ export const cancelPaymentAction = async () => {
   console.log('payment canceled');
   await page.waitForNavigation();
 };
+
+
