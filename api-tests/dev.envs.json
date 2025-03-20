@@ -8,6 +8,11 @@
 			"enabled": true
 		},
 		{
+			"key": "USE_BETA_BACKEND_HEADER",
+			"value": "",
+			"enabled": true
+		},
+		{
 			"key": "FAKE_RECAPTCHA_NOT_VALIDATED",
 			"value": "123456789AAbbCC",
 			"enabled": true
