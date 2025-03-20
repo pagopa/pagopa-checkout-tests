@@ -12,14 +12,15 @@ describe("Checkout authentication spid", () => {
     const timeout = 80_000
     jest.setTimeout(timeout);
     jest.retryTimes(2);
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 
     let browser;
     let page;
 
     beforeAll( async () => {
-        browser = await puppeteer.launch({ headless: "new" });
-        // Se vuoi un contesto “incognito”:
+        browser = await puppeteer.launch({ headless: false });
+
         const context = await browser.createIncognitoBrowserContext();
         page = await context.newPage();
         await page.goto(CHECKOUT_URL);
@@ -40,16 +41,45 @@ describe("Checkout authentication spid", () => {
         await browser.close();
     });
 
+    const uatLogin = async () => {
+        await page.waitForSelector('#spidButton', { visible: true });
+        await page.click("#spidButton");
+        await sleep(200)
+        await page.evaluate(() => {
+            document.getElementById('https://validator.dev.oneid.pagopa.it/demo').click()
+        })
 
-    it("Should Login Successfully At Checkout", async() => {
-        await page.waitForSelector('#login-header button');
-        await page.locator('#login-header button').click();
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
+        await page.waitForSelector('form#formLogin');
 
+        await page.type('#username', 'oneidentity');
+        await page.type('#password', 'password123');
+        await page.click('button[type="submit"]');
+
+        await page.waitForSelector('form[name="formConfirm"]', { visible: true });
+        await page.click('form[name="formConfirm"] input[type="submit"]');
+
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
+        await page.waitForSelector('button');
+        const button = await page.$x("//button[contains(., 'Team OneIdentity')]");
+
+        expect(button.length).toBeGreaterThan(0);
+    }
+
+    const devLogin = async () => {
         await page.waitForNavigation({ waitUntil: 'networkidle0' });
         await page.waitForSelector('button');
         const button = await page.$x("//button[contains(., 'NomeTest CognomeTest')]");
 
         expect(button.length).toBeGreaterThan(0);
+    }
+
+
+    it("Should Login Successfully At Checkout", async() => {
+        await page.waitForSelector('#login-header button');
+        await page.locator('#login-header button').click();
+        if (CHECKOUT_URL.includes("uat")) await uatLogin();
+        else await devLogin();
     });
 
     it("Should Logout Successfully From Checkout", async() => {
@@ -61,10 +91,9 @@ describe("Checkout authentication spid", () => {
             const lis = document.getElementsByTagName('li')
             lis[0].click()
         });
-        const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
-        await timeout(200);
+        await sleep(200);
 
-        await page.waitForSelector('#login-header button', { visible: true }); // Assicurati che il bottone sia visibile di nuovo
+        await page.waitForSelector('#login-header button', { visible: true });
 
         const button = await page.$x("//button[contains(., 'Accedi')]");
         expect(button.length).toBeGreaterThan(0);
