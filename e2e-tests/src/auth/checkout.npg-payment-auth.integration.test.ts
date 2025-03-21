@@ -10,8 +10,6 @@ describe("Checkout login and payment flow", () => {
     const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
     const EMAIL = String(process.env.EMAIL);
     const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
-    const cardData = CARD_TEST_DATA.cards.find(card => card.testingPsp == "Worldpay");
-    const noticeNumber = String(cardData.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12));
 
     /**
      * Increase default test timeout (60000ms)
@@ -51,6 +49,9 @@ describe("Checkout login and payment flow", () => {
         /*
          * 1. Payment with valid notice code
         */
+        const cardData = CARD_TEST_DATA.cards.find(card => card.testingPsp == "Worldpay");
+        const noticeNumber = String(cardData.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12));
+
         const resultMessage = await payNotice(
             noticeNumber,
             VALID_FISCAL_CODE,
