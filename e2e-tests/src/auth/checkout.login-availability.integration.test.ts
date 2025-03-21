@@ -1,14 +1,11 @@
-import { selectLanguage, verifyActivatePaymentTest } from "../verify/helpers";
-import { payNotice, generateRandomNoticeCode } from "../npg/helpers";
+import { selectLanguage } from "../verify/helpers";
+import { generateRandomNoticeCode } from "../npg/helpers";
 
 describe("Checkout Login Availability During Payment Flow", () => {
 
     const CHECKOUT_URL = String(process.env.CHECKOUT_URL);
     const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
     const EMAIL = String(process.env.EMAIL);
-    const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
-    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 
     const timeout = 80_000;
     jest.setTimeout(timeout);
