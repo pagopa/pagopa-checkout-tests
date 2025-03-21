@@ -10,7 +10,8 @@ describe("Checkout login and payment flow", () => {
     const VALID_FISCAL_CODE = String(process.env.VALID_FISCAL_CODE);
     const EMAIL = String(process.env.EMAIL);
     const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
-
+    const cardData = CARD_TEST_DATA.cards.find(card => card.testingPsp == "Worldpay");
+    const noticeNumber = String(cardData.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12));
 
     /**
      * Increase default test timeout (60000ms)
@@ -36,7 +37,7 @@ describe("Checkout login and payment flow", () => {
     /**
      * Step 1: Login
      */
-    it("Should Login Successfully At Checkout", async() => {
+    it("Should perform login successfully", async() => {
         await page.waitForSelector('#login-header button');
         await page.locator('#login-header button').click();
         if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
@@ -46,23 +47,21 @@ describe("Checkout login and payment flow", () => {
     /**
      * Step 2: Payment (after login)
      */
-    it("Should correctly execute a payment", async () => {
+    it("Should correctly execute a payment", async() => {
         /*
          * 1. Payment with valid notice code
         */
-        const CARD = CARD_TEST_DATA.cards[6];
-        const CODICE_AVVISO = String(CARD.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
         const resultMessage = await payNotice(
-            CODICE_AVVISO,
+            noticeNumber,
             VALID_FISCAL_CODE,
             EMAIL,
             {
-                number: String(CARD.pan),
-                expirationDate: String(CARD.expirationDate),
-                ccv: String(CARD.cvv),
+                number: String(cardData.pan),
+                expirationDate: String(cardData.expirationDate),
+                ccv: String(cardData.cvv),
                 holderName: "Test test"
             },
-            CARD.pspAbi
+            cardData.pspAbi
         );
 
         expect(resultMessage).toContain("Hai pagato");
