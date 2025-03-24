@@ -84,7 +84,7 @@ export const TEST_CASES: TestCase[] = [
             message: "Codice di errore per l'assistenza",
             selector: "#verifyPaymentBodyError"
         },
-        errorCodeXpath: "/html/body/div[2]/div[3]/div/div/div[2]/div[2]/div",
+        errorCodeXpath: "//*[@id=\"verifyPaymentErrorId\"]",
         skipTest: false
     },
     {
