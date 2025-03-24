@@ -28,11 +28,6 @@
 			"enabled": true
 		},
 		{
-			"key": "AUTH_USER_EXPECT_CF",
-			"value": "fiscalNumber",
-			"enabled": true
-		},
-		{
 			"key": "VALID_NOTICE_CODE",
 			"value": "10095545846194",
 			"enabled": true
