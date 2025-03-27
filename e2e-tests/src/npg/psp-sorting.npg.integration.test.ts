@@ -32,7 +32,7 @@ beforeEach(async () => {
 
 describe("Checkout show and sort psp list", () => {
 
-  it("Should show psp sorted list by fee", async() => {
+  it("Should show psp sorted list by fee on summary page", async() => {
    
     // notice code with 6000 euro as amount (according Mock EC)
     const CODICE_AVVISO = "30202" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
@@ -53,6 +53,17 @@ describe("Checkout show and sort psp list", () => {
     await payNoticeBtn.click();
     await fillEmailForm(EMAIL);
     await choosePaymentMethod('PPAL');
+
+    const pspPickerRadio = await page.waitForSelector("#psp-radio-button-unchecked", {
+      visible: true,
+    });
+    await pspPickerRadio.click(); 
+
+    const pspContinueBtn = await page.waitForSelector("#paymentPspListPageButtonContinue", {
+      visible: true,
+    });
+    await pspContinueBtn.click(); 
+    
 
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
@@ -102,7 +113,7 @@ describe("Checkout show and sort psp list", () => {
 
 
   
-  it("Should show psp sorted list by Name", async() => {
+  it("Should show psp sorted list by Name on summary page", async() => {
    
     // notice code with 6000 euro as amount (according Mock EC)
     const CODICE_AVVISO = "30202" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
@@ -123,6 +134,16 @@ describe("Checkout show and sort psp list", () => {
     await payNoticeBtn.click();
     await fillEmailForm(EMAIL);
     await choosePaymentMethod('PPAL');
+
+    const pspPickerRadio = await page.waitForSelector("#psp-radio-button-unchecked", {
+      visible: true,
+    });
+    await pspPickerRadio.click();
+
+    const pspContinueBtn = await page.waitForSelector("#paymentPspListPageButtonContinue", {
+      visible: true,
+    });
+    await pspContinueBtn.click(); 
 
     const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
     await pspEditButton.click();
@@ -163,5 +184,116 @@ describe("Checkout show and sort psp list", () => {
     }
     await cancelPaymentAction()
 
+  });
+
+  it("Should show psp sorted list by Name on psp page", async() => {
+   
+    // notice code with 6000 euro as amount (according Mock EC)
+    const CODICE_AVVISO = "30202" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
+
+    console.log(
+      `Testing psp list is sorted .
+      notice code: ${CODICE_AVVISO},
+      fiscal code: ${VALID_FISCAL_CODE}
+      `,
+    );
+
+    const payNoticeBtnSelector = '#paymentSummaryButtonPay';
+    const pspEditButtonSelector = "#sort-psp-list";
+    const pspRadioButtonByNameSelector = "#sort-psp-list-drawer-order-by-name";
+    const pspSortButtonId = "#sort-psp-list-drawer";
+
+    await fillPaymentNotificationForm(CODICE_AVVISO, VALID_FISCAL_CODE);
+    const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
+    await payNoticeBtn.click();
+    await fillEmailForm(EMAIL);
+    await choosePaymentMethod('PPAL');
+
+    await page.waitForSelector(".pspFeeName");
+
+    const pspEditButton = await page.waitForSelector(pspEditButtonSelector, {clickable: true, visible: true, enabled: true, timeout: 4000});
+    await pspEditButton.click();
+    console.log("Clicked on sort button")
+   
+    //Choose order by name
+    const pspNameSortRadioButton = await page.waitForSelector(pspRadioButtonByNameSelector);
+    await pspNameSortRadioButton.click();
+    console.log("Selected order by name radio button")
+
+    //Click on sort button (show results)
+    const pspSortButton = await page.waitForSelector(pspSortButtonId);
+    await pspSortButton.click();
+    console.log("Clicked show results button")
+   
+    await page.waitForSelector(".pspFeeName");
+    // Wait for the elements and get the list of divs
+    const pspSortedElementsByNameDesc = await page.$$(".pspFeeName");
+    // Extract value content from each div and return as an array
+    const increasingPspFeeListValues = await Promise.all(
+      Array.from(pspSortedElementsByNameDesc).map(async (element) => await element.evaluate((el) => el.textContent))
+    );
+
+    expect(Array.isArray(increasingPspFeeListValues)).toBe(true);
+    expect(increasingPspFeeListValues.length > 0).toBe(true);
+    for (let i = 0; i < increasingPspFeeListValues.length - 1; i++) {
+      expect(increasingPspFeeListValues[i].localeCompare(increasingPspFeeListValues[i + 1])).toBeLessThanOrEqual(0);
+    }
+
+  });
+
+  it("Should show psp sorted list by fee on psp page", async() => {
+   
+    // notice code with 6000 euro as amount (according Mock EC)
+    const CODICE_AVVISO = "30202" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
+
+    console.log(
+      `Testing psp list is sorted .
+      notice code: ${CODICE_AVVISO},
+      fiscal code: ${VALID_FISCAL_CODE}
+      `,
+    );
+
+    const payNoticeBtnSelector = '#paymentSummaryButtonPay';
+    const pspEditButtonSelector = "#sort-psp-list";
+    const pspRadioButtonByAmountSelector = "#sort-psp-list-drawer-order-by-amount";
+    const pspSortButtonId = "#sort-psp-list-drawer";
+    
+    await fillPaymentNotificationForm(CODICE_AVVISO, VALID_FISCAL_CODE);
+    const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
+    await payNoticeBtn.click();
+    await fillEmailForm(EMAIL);
+    await choosePaymentMethod('PPAL');
+
+    await page.waitForSelector(".pspFeeValue");
+
+    const pspEditButton = await page.waitForSelector(pspEditButtonSelector);
+    await pspEditButton.click();
+   
+    //Initially is sorted by default, so we click sort by fee instead
+    const pspAmountSortRadioButton = await page.waitForSelector(pspRadioButtonByAmountSelector);
+    await pspAmountSortRadioButton.click();
+
+    const pspSortButton = await page.waitForSelector(pspSortButtonId);
+    await pspSortButton.click();
+    
+    await page.waitForSelector(".pspFeeValue");
+    const pspOriginalElements = await page.$$(".pspFeeValue");
+    const originalPspFeeLisValues = await Promise.all(
+      Array.from(pspOriginalElements).map(async (element) => {
+        const text = await element.evaluate((el) => el.textContent);
+        // We want to skip the Dollar, Euro, or any currency placeholder
+        let numbers = text.match(/[\d,]+/g); // This will match sequences of digits and commas
+        let result = numbers ? numbers.join("").replace(",",".") : ""; // Join the matched numbers if any and replace , as separator with .
+        return parseFloat(result) || 0; // Convert to number, default to 0 if NaN
+      })
+    );
+    
+    expect(Array.isArray(originalPspFeeLisValues)).toBe(true);
+    expect(originalPspFeeLisValues.length > 0).toBe(true);
+    for (let i = 0; i < originalPspFeeLisValues.length - 1; i++) {
+      expect(originalPspFeeLisValues[i]).toBeLessThanOrEqual(originalPspFeeLisValues[i + 1]);
+    }
+    
+    console.log("expcted all");
   });
 });
