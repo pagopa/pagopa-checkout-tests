@@ -60,7 +60,7 @@ describe("Checkout payment activation tests", () => {
         ccv: String(testData.cvv),
         holderName: "Test test"
       },
-      testData.pspAbi
+      testData.pspId
     );
 
     expect(resultMessage).toContain("Hai pagato");

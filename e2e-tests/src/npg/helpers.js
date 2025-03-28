@@ -41,14 +41,14 @@ export const acceptCookiePolicy = async () => {
   await page.click(acceptPolicyBtn);
 };
 
-export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) => {
+export const payNotice = async (noticeCode, fiscalCode, email, cardData, pspId) => {
   console.log(
     `Testing happy path transaction.
     notice code: ${noticeCode},
     fiscal code: ${fiscalCode},
     email: ${email},
-    cardData: ${JSON.stringify(cardData)}
-    psp abi: ${abi}
+    cardData: ${JSON.stringify(cardData)},
+    psp id: ${pspId}
     `,
   );
   const payNoticeBtnSelector = '#paymentSummaryButtonPay';
@@ -59,7 +59,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, abi) =>
   await payNoticeBtn.click();
   await fillEmailForm(email);
   await choosePaymentMethod('CP');
-  await fillCardDataForm(cardData, abi);
+  await fillCardDataForm(cardData, pspId);
 
   const message = await page.waitForXPath(resultMessageXPath);
   return await message.evaluate(el => el.textContent);
@@ -132,7 +132,7 @@ export const fillOnlyCardDataForm = async (cardData) => {
   await page.waitForNavigation();
 };
 
-export const fillCardDataForm = async (cardData, abi) => {
+export const fillCardDataForm = async (cardData, pspId) => {
   const cardNumberInput = '#frame_CARD_NUMBER';
   const expirationDateInput = '#frame_EXPIRATION_DATE';
   const ccvInput = '#frame_SECURITY_CODE';
@@ -140,7 +140,7 @@ export const fillCardDataForm = async (cardData, abi) => {
   const continueBtnXPath = 'button[type=submit]';
   const disabledContinueBtnXPath = 'button[type=submit][disabled=""]';
   const payBtnSelector = '#paymentCheckPageButtonPay';
-  const selectPSPXPath = '/html/body/div[1]/div/main/div/div/div[5]/button';
+  const selectPSPRadioBtnXPath = `#${pspId}`;
   let iteration = 0;
   let completed = false;
   while (!completed) {
@@ -169,14 +169,15 @@ export const fillCardDataForm = async (cardData, abi) => {
   console.log('continueBtn found');
   await continueBtn.click();
 
-  const selectPSPBtn = await page.waitForXPath(selectPSPXPath);
-  console.log('selectPSPBtn found');
-  await selectPSPBtn.click();
+  const selectPSPRadioBtn = await page.waitForSelector(selectPSPRadioBtnXPath, { visible: true });
+  console.log('selectPSPRadioBtn found');
+  await selectPSPRadioBtn.click();
 
-  const pspButton = `//div[div[div[img[contains(@src, '${abi}')]]]]`;
-  const pspDiv = await page.waitForXPath(pspButton);
-  console.log('psp button found');
-  await pspDiv.click();
+  const pspContinueBtn = await page.waitForSelector("#paymentPspListPageButtonContinue", {
+    visible: true,
+  });
+  await pspContinueBtn.click(); 
+
   await page.waitForTimeout(4000)
   const payBtn = await page.waitForSelector(payBtnSelector, { visible: true, enabled: true });
   console.log('pay button found');
