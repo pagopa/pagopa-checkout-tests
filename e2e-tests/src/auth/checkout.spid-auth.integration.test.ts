@@ -13,16 +13,7 @@ describe("Checkout authentication spid", () => {
     jest.setTimeout(timeout);
     jest.retryTimes(2);
 
-    let browser;
-    let page;
-
     beforeAll( async () => {
-        browser = await puppeteer.launch({
-            headless: "new"
-        });
-
-        const context = await browser.createIncognitoBrowserContext();
-        page = await context.newPage();
         await page.goto(CHECKOUT_URL);
         await page.setViewport({ width: 1200, height: 907 });
         page.setDefaultNavigationTimeout(timeout);
@@ -36,11 +27,6 @@ describe("Checkout authentication spid", () => {
         await page.select('#languageMenu', "it")
         //await selectLanguage("it");
     });
-
-    afterAll(async () => {
-        await browser.close();
-    });
-
 
     it("Should Login Successfully At Checkout", async() => {
         await page.waitForSelector('#login-header button');
