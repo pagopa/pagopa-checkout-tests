@@ -58,10 +58,10 @@ describe("Checkout authentication spid", () => {
             const lis = document.getElementsByTagName('li')
             lis[0].click()
         });
-        await sleep(200);
-
+        await sleep(500);
+        const confirmButton = await page.waitForSelector("#logoutModalConfirmButton");
+        await confirmButton.click();
         await page.waitForSelector('#login-header button', { visible: true });
-
         const button = await page.$x("//button[contains(., 'Accedi')]");
         expect(button.length).toBeGreaterThan(0);
     });
