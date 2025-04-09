@@ -28,27 +28,29 @@ describe("Checkout authentication spid", () => {
         //await selectLanguage("it");
     });
 
-    it("Should Login Successfully At Checkout", async() => {
+    it("Should perform login and logout operation successfully", async() => {
+        //#1 perform login 
         await page.waitForSelector('#login-header button');
         await page.locator('#login-header button').click();
         if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
         else await identityProviderMock(page);
-    });
-
-    it("Should Logout Successfully From Checkout", async() => {
         await page.waitForSelector('button');
 
+        //#2 click on user button and search for exit sub menu  
         await page.evaluate(() => {
             const buttons = document.getElementsByTagName('button')
             buttons[0].click()
             const lis = document.getElementsByTagName('li')
             lis[0].click()
         });
-        await sleep(500);
+        //#3 confirm logout operation
         const confirmButton = await page.waitForSelector("#logoutModalConfirmButton");
         await confirmButton.click();
+        await sleep(500);
+        //#4 check that login button is visible again after logout
         await page.waitForSelector('#login-header button', { visible: true });
         const button = await page.$x("//button[contains(., 'Accedi')]");
         expect(button.length).toBeGreaterThan(0);
     });
+
 });
