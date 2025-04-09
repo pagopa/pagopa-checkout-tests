@@ -43,10 +43,10 @@ describe("Checkout authentication spid", () => {
             const lis = document.getElementsByTagName('li')
             lis[0].click()
         });
-        await sleep(500);
         //#3 confirm logout operation
         const confirmButton = await page.waitForSelector("#logoutModalConfirmButton");
         await confirmButton.click();
+        await sleep(500);
         //#4 check that login button is visible again after logout
         await page.waitForSelector('#login-header button', { visible: true });
         const button = await page.$x("//button[contains(., 'Accedi')]");
