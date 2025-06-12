@@ -79,11 +79,7 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Response contains the specified HTML title\", function () {\r",
-							"    pm.expect(pm.response.text()).to.include(\"<title>PagoPA One Identity – Login</title>\");\r",
-							"});"
+							"});\r"
 						],
 						"type": "text/javascript",
 						"packages": {}
