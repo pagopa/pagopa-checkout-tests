@@ -1,7 +1,6 @@
 export const selectKeyboardForm = async () => {
-  const selectFormXPath = '/html/body/div[1]/div/main/div/div[2]/div[2]/div[1]/div/div/div[1]';
-
-  const selectFormBtn = await page.waitForXPath(selectFormXPath);
+  const selectFormSelector = "[data-testid='KeyboardIcon']";
+  const selectFormBtn = await page.waitForSelector(selectFormSelector);
   await selectFormBtn.click();
 };
 
@@ -22,12 +21,11 @@ export const fillPaymentNotificationForm = async (noticeCode, fiscalCode) => {
   await page.waitForSelector(verifyBtn);
   await page.click(verifyBtn);
 };
-
 export const verifyPaymentAndGetError = async (noticeCode, fiscalCode) => {
-  const errorMessageXPath = '/html/body/div[3]/div[3]/div/div/div[2]/div[2]/div';
+  const errorMessageSelector = "#verifyPaymentErrorId";
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
-  const errorMessageElem = await page.waitForXPath(errorMessageXPath);
-  return await errorMessageElem.evaluate(el => el.textContent);
+  const errorMessageElem = await page.waitForSelector(errorMessageSelector);
+  return await errorMessageElem.evaluate((el) => el.textContent);
 };
 
 export const verifyPayment = async (noticeCode, fiscalCode) => {
@@ -123,7 +121,7 @@ export const fillOnlyCardDataForm = async (cardData) => {
     await page.keyboard.type(cardData.holderName);
     console.log('holder performed');
     completed = !await page.$(disabledContinueBtnXPath);
-    await page.waitForTimeout(80);
+    await new Promise(resolve => setTimeout(resolve, 80)); 
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });
   console.log('continueBtn found');
@@ -163,7 +161,7 @@ export const fillCardDataForm = async (cardData, pspId) => {
     await page.keyboard.type(cardData.holderName);
     console.log('holder performed');
     completed = !await page.$(disabledContinueBtnXPath);
-    await page.waitForTimeout(80);
+    await new Promise(resolve => setTimeout(resolve, 80)); 
   }
   const continueBtn = await page.waitForSelector(continueBtnXPath, { visible: true });
   console.log('continueBtn found');
@@ -178,7 +176,7 @@ export const fillCardDataForm = async (cardData, pspId) => {
   });
   await pspContinueBtn.click(); 
 
-  await page.waitForTimeout(4000)
+  await new Promise(resolve => setTimeout(resolve, 4000)); 
   const payBtn = await page.waitForSelector(payBtnSelector, { visible: true, enabled: true });
   console.log('pay button found');
   await payBtn.click();
