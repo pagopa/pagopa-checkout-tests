@@ -26,8 +26,8 @@ describe("Checkout Login Availability During Payment Flow", () => {
 
     const enterInNoticeData = async () => {
         const noticeCodeTextInput = '#billCode';
-        const selectFormXPath = '/html/body/div[1]/div/main/div/div[2]/div[2]/div[1]/div/div/div[1]';
-        const selectFormBtn = await page.waitForXPath(selectFormXPath);
+        const selectFormSelector = "[data-testid='KeyboardIcon']";
+        const selectFormBtn = await page.waitForSelector(selectFormSelector);
         await selectFormBtn.click();
         await page.waitForSelector(noticeCodeTextInput);
         await page.click(noticeCodeTextInput);
