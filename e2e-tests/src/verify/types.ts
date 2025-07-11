@@ -21,6 +21,6 @@ export interface TestCase {
     category: Category,
     header: Box | undefined,
     body: Box | undefined,
-    errorCodeXpath: string | undefined,
+    errorCodeId: string | undefined,
     skipTest: boolean
 }

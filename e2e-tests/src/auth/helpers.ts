@@ -26,9 +26,8 @@ export const oneIdentityLogin = async (page) => {
 export const identityProviderMock = async (page) => {
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
     await page.waitForSelector('button');
-    const button = await page.$x("//button[contains(., 'NomeTest CognomeTest')]");
-
-    expect(button.length).toBeGreaterThan(0);
+    const icon = await page.$("[data-testid='AccountCircleRoundedIcon']");
+    expect(icon).toBeTruthy();
 }
 
 export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));

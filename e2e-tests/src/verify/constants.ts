@@ -33,7 +33,7 @@ export const TEST_CASES: TestCase[] = [
             message: "L'avviso potrebbe essere stato già pagato. Per ricevere assistenza, contatta l’Ente Creditore.",
             selector: "#verifyPaymentBodyError"
         },
-        errorCodeXpath: undefined,
+        errorCodeId: undefined,
         skipTest: false
     },
     {
@@ -50,7 +50,7 @@ export const TEST_CASES: TestCase[] = [
             message: "Contatta l’Ente per maggiori informazioni.",
             selector: "#verifyPaymentBodyError"
         },
-        errorCodeXpath: undefined,
+        errorCodeId: undefined,
         skipTest: false
     },
     {
@@ -67,7 +67,7 @@ export const TEST_CASES: TestCase[] = [
             message: "Riprova, oppure contatta l’assistenza",
             selector: "#verifyPaymentBodyError"
         },
-        errorCodeXpath: undefined,
+        errorCodeId: undefined,
         skipTest: false
     },
     {
@@ -84,7 +84,7 @@ export const TEST_CASES: TestCase[] = [
             message: "Codice di errore per l'assistenza",
             selector: "#verifyPaymentBodyError"
         },
-        errorCodeXpath: "//*[@id=\"verifyPaymentErrorId\"]",
+        errorCodeId: "#verifyPaymentErrorId",
         skipTest: false
     },
     {
@@ -98,7 +98,7 @@ export const TEST_CASES: TestCase[] = [
             selector: "#verifyPaymentTitleError"
         },
         body: undefined,
-        errorCodeXpath: undefined,
+        errorCodeId: undefined,
         skipTest: false
     }
 ];

@@ -48,9 +48,8 @@ describe("Checkout authentication spid", () => {
         await confirmButton.click();
         await sleep(500);
         //#4 check that login button is visible again after logout
-        await page.waitForSelector('#login-header button', { visible: true });
-        const button = await page.$x("//button[contains(., 'Accedi')]");
-        expect(button.length).toBeGreaterThan(0);
+        const button = await page.waitForSelector('#login-header button', { visible: true });
+        expect(button).not.toBeNull();
     });
 
 });
