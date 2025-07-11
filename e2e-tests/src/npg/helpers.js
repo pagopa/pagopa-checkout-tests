@@ -50,7 +50,7 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, pspId) 
     `,
   );
   const payNoticeBtnSelector = '#paymentSummaryButtonPay';
-  const resultMessageXPath = '/html/body/div[1]/div/main/div/div/div/div/h6';
+  const resultTitleSelector = "#responsePageMessageTitle";
   await fillPaymentNotificationForm(noticeCode, fiscalCode);
 
   const payNoticeBtn = await page.waitForSelector(payNoticeBtnSelector);
@@ -58,8 +58,11 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, pspId) 
   await fillEmailForm(email);
   await choosePaymentMethod('CP');
   await fillCardDataForm(cardData, pspId);
-
-  const message = await page.waitForXPath(resultMessageXPath);
+  
+  // Wait for the result page to load and get the title, at the end of the transaction (max 60 seconds)
+  const message = await page.waitForSelector(resultTitleSelector, {
+    visible: true,
+    timeout: 60000,});
   return await message.evaluate(el => el.textContent);
 };
 
@@ -176,7 +179,6 @@ export const fillCardDataForm = async (cardData, pspId) => {
   });
   await pspContinueBtn.click(); 
 
-  await new Promise(resolve => setTimeout(resolve, 4000)); 
   const payBtn = await page.waitForSelector(payBtnSelector, { visible: true, enabled: true });
   console.log('pay button found');
   await payBtn.click();

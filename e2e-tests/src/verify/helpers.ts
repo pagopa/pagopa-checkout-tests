@@ -40,12 +40,12 @@ export async function runErrorModalTest(testCase: TestCase, noticeCode:string) {
     // Gets the messages from the modal.
     const messageHeader = testCase?.header?.selector && await page.waitForSelector(testCase?.header?.selector);
     const messageBody = testCase.body?.selector && await page.waitForSelector(testCase.body?.selector);
-    const messageErrorCode = testCase.errorCodeXpath && await page.waitForXPath(testCase.errorCodeXpath);
+    const messageErrorCode = testCase.errorCodeId && await page.waitForSelector(testCase.errorCodeId);
 
     // Compare the modal messages with the expected ones.
     messageHeader && expect(await messageHeader.evaluate(el => el.textContent)).toContain(testCase?.header?.message);
     messageBody && expect(await messageBody.evaluate(el => el.textContent)).toContain(testCase?.body?.message);
-    (testCase?.errorCodeXpath && messageErrorCode) && 
+    (testCase?.errorCodeId && messageErrorCode) && 
         expect(await messageErrorCode.evaluate(el => el.textContent)).toContain(testCase.category.codeCategory);  
 }
 /**
