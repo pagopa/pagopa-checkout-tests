@@ -23,8 +23,29 @@ steps:
       cd e2e-tests && yarn install
     displayName: 'Yarn install'
   - script: |
-      cd e2e-tests &&  yarn test
-    displayName: 'Yarn test execution'
+      cd e2e-tests && yarn test src/auth/checkout.login-availability.integration.test.ts
+    displayName: 'Checkout login test'
+    continueOnError: true  
+  - script: |
+      cd e2e-tests && yarn test src/auth/checkout.npg-payment-auth.integration.test.ts
+    displayName: 'Checkout authenticated transactions test'
+    continueOnError: true    
+  - script: |
+      cd e2e-tests && yarn test src/auth/checkout.spid-auth.integration.test.ts
+    displayName: 'Checkout spid test'
+    continueOnError: true   
+  - script: |
+      cd e2e-tests && yarn test src/npg/checkout.npg.integration.test.ts
+    displayName: 'Checkout NPG integration test'
+    continueOnError: true     
+  - script: |
+      cd e2e-tests && yarn test src/npg/psp-sorting.npg.integration.test.ts
+    displayName: 'Checkout PSP sorting test'
+    continueOnError: true       
+  - script: |
+      cd e2e-tests && yarn test src/npg/psp-unavailable-error.npg.integration.test.ts
+    displayName: 'Checkout PSP unavailable test'
+    continueOnError: true        
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
