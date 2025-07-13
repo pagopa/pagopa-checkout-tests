@@ -59,11 +59,13 @@ export const payNotice = async (noticeCode, fiscalCode, email, cardData, pspId) 
   await choosePaymentMethod('CP');
   await fillCardDataForm(cardData, pspId);
   
-  // Wait for the result page to load and get the title, at the end of the transaction (max 60 seconds)
+  console.log('Wait for the result page to load and get the title, at the end of the transaction (max 120 seconds)...');
   const message = await page.waitForSelector(resultTitleSelector, {
     visible: true,
-    timeout: 60000,});
-  return await message.evaluate(el => el.textContent);
+    timeout: 120000,});
+  const messageContent =  await message.evaluate(el => el.textContent)
+  console.log(`Message found! ${messageContent}`);
+  return messageContent;
 };
 
 export const fillEmailForm = async email => {
@@ -202,7 +204,7 @@ export const cancelPaymentAction = async () => {
   console.log('cancPayment found');
   await cancPayment.click();
   console.log('payment canceled');
-  await page.waitForNavigation();
+  await page.waitForSelector("#redirect-button");
 };
 
 
