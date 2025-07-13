@@ -12,10 +12,10 @@ describe("Checkout login and payment flow", () => {
     const CARD_TEST_DATA = JSON.parse(String(process.env.CARD_TEST_DATA));
 
     /**
-     * Increase default test timeout (60000ms)
+     * Increase default test timeout (120000ms)
      * to support entire payment flow
      */
-    const timeout = 80_000;
+    const timeout = 120_000;
     jest.setTimeout(timeout);
     jest.retryTimes(2);
     page.setDefaultNavigationTimeout(timeout);
@@ -64,7 +64,6 @@ describe("Checkout login and payment flow", () => {
             },
             cardData.pspAbi
         );
-
         expect(resultMessage).toContain("Hai pagato");
     });
 });

@@ -51,6 +51,7 @@ export async function runErrorModalTest(testCase: TestCase, noticeCode:string) {
 /**
 * Select desired language
 */
-export const selectLanguage = async (language) => {
-    await page.select('#languageMenu', language)
+export const selectLanguage = async (language: string) => {
+    await page.waitForSelector('#languageMenu', { visible: true, timeout: 5000 });
+    await page.select('#languageMenu', language);
 }
