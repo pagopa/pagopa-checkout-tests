@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "2a6e2973-2814-42f4-8a04-77c8f16c8a7e",
+		"_postman_id": "36817319-fdb4-4ed8-8d1a-bd5d4945736b",
 		"name": "Ecommerce for Checkout API - NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23963988"
+		"_exporter_id": "23305473"
 	},
 	"item": [
 		{
@@ -179,7 +179,32 @@
 							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -311,7 +336,32 @@
 							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -443,7 +493,32 @@
 							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -575,7 +650,32 @@
 							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -707,7 +807,32 @@
 							"",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -1493,7 +1618,32 @@
 							"    pm.expect(response.ranges).to.be.not.empty;",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -1547,7 +1697,32 @@
 							"    pm.expect(response.bundles).to.be.not.empty;",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -1992,7 +2167,32 @@
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -2050,7 +2250,32 @@
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -2108,7 +2333,32 @@
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -2166,7 +2416,32 @@
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -2224,7 +2499,32 @@
 							"    pm.response.to.have.status(401);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -2286,7 +2586,32 @@
 							"    pm.expect(response.authorizationRequestId).to.be.eq(expectedAuthorizationRequestId);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const getAllPaymentMethods = {",
+							"  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v1/payment-methods\",",
+							"  method: 'GET'",
+							"};",
+							"",
+							"pm.sendRequest(getAllPaymentMethods, (error, response) => {",
+							"  if (error) {",
+							"    throw error;",
+							"  } else {",
+							"    const responseJson = response.json();",
+							"    pm.environment.set(\"PAYMENT_METHOD_ID\", responseJson.paymentMethods.filter(p => p.paymentTypeCode === \"CP\")[0].id);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
