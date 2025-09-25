@@ -67,7 +67,7 @@ This configuration file will become:
 module.exports = {
     launch: {
         dumpio: true,
-        headless: false, //--> change here from true to false
+        headless: false, //--> change here from "new" to false
         product: 'chrome',
         args: ["--no-sandbox"] 
     },

@@ -82,12 +82,6 @@
 			"enabled": true
 		},
 		{
-			"key": "PAYMENT_METHOD_ID",
-			"value": "e7058cac-5e1a-4002-8994-5bab31e9f385",
-			"type": "default",
-			"enabled": true
-		},
-		{
 			"key": "PAYMENT_METHOD_DESCRIPTION",
 			"value": "",
 			"type": "default",
