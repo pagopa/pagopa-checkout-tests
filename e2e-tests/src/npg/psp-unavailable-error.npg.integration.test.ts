@@ -34,8 +34,8 @@ describe("Checkout fails to calculate fee", () => {
 
   it("Should fails calculate fee with 404 and show a dedicated error message", async() => {
    
-    // notice code with 6000 euro as amount (according Mock EC)
-    const PSP_NOT_FOUND_FAIL = "30212" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
+    // notice code with 3000 euro as amount during verification and 3010 during actualization(according Mock EC)
+    const PSP_NOT_FOUND_FAIL = "30227" + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12))
     const pspNotFoundTitleTextExpected = "Il metodo di pagamento selezionato non è disponibile";
     const pspNotFoundCtaTextExpected = "Scegli un altro metodo";
     const errorDescriptionTextExpected = "Può succedere quando l’importo da pagare è particolarmente elevato, o se stai cercando di pagare una marca da bollo digitale.";
