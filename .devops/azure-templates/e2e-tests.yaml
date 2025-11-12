@@ -8,6 +8,14 @@ parameters:
   - name: "CHECKOUT_RESOURCE_REPO_NAME"
     type: string
     default: self
+  - name: "RUN_TEST_FOR"
+    type: string
+    default: ALL
+    values:
+      - ALL
+      - PAYMENT
+      - PSP_LIST
+      - LOGIN
 
 steps:
   - checkout: ${{parameters.CHECKOUT_RESOURCE_REPO_NAME}}
@@ -26,26 +34,32 @@ steps:
       cd e2e-tests && yarn test src/auth/checkout.login-availability.integration.test.ts
     displayName: 'Checkout login test'
     continueOnError: true  
+    condition: or(eq('${{parameters.RUN_TEST_FOR}}', 'ALL'), eq('${{parameters.RUN_TEST_FOR}}', 'LOGIN')) 
   - script: |
       cd e2e-tests && yarn test src/auth/checkout.npg-payment-auth.integration.test.ts
     displayName: 'Checkout authenticated transactions test'
-    continueOnError: true    
+    continueOnError: true   
+    condition: or(eq('${{parameters.RUN_TEST_FOR}}', 'ALL'), eq('${{parameters.RUN_TEST_FOR}}', 'PAYMENT')) 
   - script: |
       cd e2e-tests && yarn test src/auth/checkout.spid-auth.integration.test.ts
     displayName: 'Checkout spid test'
     continueOnError: true   
+    condition: or(eq('${{parameters.RUN_TEST_FOR}}', 'ALL'), eq('${{parameters.RUN_TEST_FOR}}', 'LOGIN')) 
   - script: |
       cd e2e-tests && yarn test src/npg/checkout.npg.integration.test.ts
     displayName: 'Checkout NPG integration test'
     continueOnError: true     
+    condition: or(eq('${{parameters.RUN_TEST_FOR}}', 'ALL'), eq('${{parameters.RUN_TEST_FOR}}', 'PAYMENT')) 
   - script: |
       cd e2e-tests && yarn test src/npg/psp-sorting.npg.integration.test.ts
     displayName: 'Checkout PSP sorting test'
     continueOnError: true       
+    condition: or(eq('${{parameters.RUN_TEST_FOR}}', 'ALL'), eq('${{parameters.RUN_TEST_FOR}}', 'PSP_LIST')) 
   - script: |
       cd e2e-tests && yarn test src/npg/psp-unavailable-error.npg.integration.test.ts
     displayName: 'Checkout PSP unavailable test'
     continueOnError: true        
+    condition: or(eq('${{parameters.RUN_TEST_FOR}}', 'ALL'), eq('${{parameters.RUN_TEST_FOR}}', 'PSP_LIST')) 
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
