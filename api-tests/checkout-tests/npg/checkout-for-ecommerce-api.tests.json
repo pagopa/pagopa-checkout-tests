@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "36817319-fdb4-4ed8-8d1a-bd5d4945736b",
+		"_postman_id": "05471962-1fc7-4c73-b4b4-9b2ece35c710",
 		"name": "Ecommerce for Checkout API - NPG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23305473"
+		"_exporter_id": "23963988"
 	},
 	"item": [
 		{
@@ -2955,12 +2955,46 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"async function executeGetTransactionPollingUntilStatus(wantedStatus) {",
+							"    const transactionId = pm.environment.get(\"TRANSACTION_ID\");",
+							"    const authToken = pm.environment.get(\"AUTH_TOKEN\");",
+							"    const getTransaction = {",
+							"        url: `${pm.environment.get(\"CHECKOUT_HOST\")}/ecommerce/checkout/v2/transactions/${transactionId}`,",
+							"        method: 'GET',",
+							"        header: {",
+							"            'Content-Type': 'application/json',",
+							"            'Authorization': `Bearer ${authToken}`",
+							"        }",
+							"    };",
+							"    const maxAttempts = 10;",
+							"    var counter = 0;",
+							"    var transactionStatus = null;",
+							"    while (counter < maxAttempts && transactionStatus != wantedStatus) {",
+							"        await new Promise(r => setTimeout(r, 1000));",
+							"        await new Promise((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
+							"            if (error) {",
+							"                console.log(`Error retrieving transaction by id: ${error.code}`);",
+							"                reject(error)",
+							"            } else {",
+							"                const responseBody = response.json();",
+							"                transactionStatus = responseBody.status;",
+							"                console.log(`Transaction with id: [${transactionId}] status: [${transactionStatus}]`)",
+							"                resolve(transactionStatus);",
+							"            }",
+							"        }));",
+							"        counter++;",
+							"    }",
+							"    if (transactionStatus != wantedStatus) {",
+							"            throw new Error(`Transaction in wrong status after polling. Wanted: [${wantedStatus}], received: [${transactionStatus}]`)",
+							"        }",
+							"}",
 							"pm.test(\"[eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request (lang: it)\", function(){",
 							"    pm.response.to.have.status(200);",
 							"    const response = pm.response.json();",
 							"    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
 							"    const expectedAuthorizationRequestId = pm.environment.get(\"ORDER_ID\");",
 							"    pm.expect(response.authorizationRequestId).to.be.eq(expectedAuthorizationRequestId);",
+							"    executeGetTransactionPollingUntilStatus(\"AUTHORIZATION_REQUESTED\");",
 							"});"
 						],
 						"type": "text/javascript",
