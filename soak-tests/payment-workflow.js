@@ -17,7 +17,7 @@ const PAN = "4349940199004549";
 const CARD_DATA = {
     pan: PAN,
     bin: PAN.slice(0, 9),
-    expiration: "12/25",
+    expiration: "12/30",
     holder: "Test Test",
     cvv: "123"
 }
