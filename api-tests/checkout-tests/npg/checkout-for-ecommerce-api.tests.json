@@ -1174,11 +1174,11 @@
 						"exec": [
 							"pm.test(\"[eCommerce for checkout] 404 - PPT_DOMINIO_SCONOSCIUTO error retrieved for invalid notice code with GET payment-request/:rptId\", function(){",
 							"    ",
+							"    pm.response.to.have.status(404);",
+							"",
 							"    const responseJson = pm.response.json();",
 							"",
 							"    pm.expect(responseJson.faultCodeDetail).to.include(\"PPT_DOMINIO_SCONOSCIUTO\");",
-							"",
-							"    pm.response.to.have.status(404);",
 							"});"
 						],
 						"type": "text/javascript"
