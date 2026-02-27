@@ -87,12 +87,16 @@ stages:
           - script: |
               newman run --ignore-redirects api-tests/cart-tests/cart-api-dev.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-TEST.xml
             displayName: 'Run API tests (DEV)'
+          
+          - script: |
+              newman run --ignore-redirects api-tests/cart-tests/cart-api-dev-v2.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/cart-api-v2-TEST.xml
+            displayName: 'Run API tests (DEV v2)'
 
           - task: PublishTestResults@2
             inputs:
               testRunTitle: "API Tests on Checkout Carts (DEV)"
               testResultsFormat: 'JUnit'
-              testResultsFiles: '**/cart-api-TEST.xml'
+              testResultsFiles:  '**/cart-api*-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
 
