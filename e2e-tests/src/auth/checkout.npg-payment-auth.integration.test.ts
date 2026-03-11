@@ -62,7 +62,7 @@ describe("Checkout login and payment flow", () => {
                 ccv: String(cardData.cvv),
                 holderName: "Test test"
             },
-            cardData.pspAbi
+            cardData.pspId
         );
         expect(resultMessage).toContain("Hai pagato");
     });
