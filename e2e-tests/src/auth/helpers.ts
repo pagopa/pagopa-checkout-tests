@@ -1,20 +1,21 @@
 export const oneIdentityLogin = async (page) => {
     await page.waitForSelector('#spidButton', { visible: true });
     await page.click("#spidButton");
-    await sleep(200)
+
     await page.evaluate(() => {
-        document.getElementById('https://validator.dev.oneid.pagopa.it/demo').click()
+        document.getElementById('https://idp.uat.oneid.pagopa.it').click()
     })
 
+
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
-    await page.waitForSelector('form#formLogin');
+    await page.waitForSelector('form#login-form');
 
     await page.type('#username', 'oneidentity');
     await page.type('#password', 'password123');
     await page.click('button[type="submit"]');
 
-    await page.waitForSelector('form[name="formConfirm"]', { visible: true });
-    await page.click('form[name="formConfirm"] input[type="submit"]');
+    await page.waitForSelector('form#consent-form', { visible: true });
+    await page.click('form#consent-form input[type="submit"][value="true"]');//*[@id="consent-form"]/div[2]/button[2]
 
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
     await page.waitForSelector('button');
