@@ -1,6 +1,6 @@
 import {selectLanguage} from "../verify/helpers";
 import { payNotice } from "../npg/helpers";
-import {identityProviderMock, oneIdentityLogin} from "./helpers";
+import {identityProviderMock, oneIdentityLogin, sleep} from "./helpers";
 
 describe("Checkout login and payment flow", () => {
     /**
@@ -15,9 +15,9 @@ describe("Checkout login and payment flow", () => {
      * Increase default test timeout (120000ms)
      * to support entire payment flow
      */
-    const timeout = 120_000;
+    const timeout = 30_000;
     jest.setTimeout(timeout);
-    jest.retryTimes(2);
+    jest.retryTimes(1);
     page.setDefaultNavigationTimeout(timeout);
     page.setDefaultTimeout(timeout);
 
@@ -35,7 +35,8 @@ describe("Checkout login and payment flow", () => {
     /**
      * Step 1: Login
      */
-    it("Should perform login successfully", async() => {
+    it.skip("Should perform login successfully", async() => {
+        //Skipped since it is involved in the payment flow test
         await page.waitForSelector('#login-header button');
         await page.locator('#login-header button').click();
         if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
@@ -52,6 +53,13 @@ describe("Checkout login and payment flow", () => {
         const cardData = CARD_TEST_DATA.cards.find(card => card.testingPsp == "Worldpay");
         const noticeNumber = String(cardData.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12));
 
+
+        //#1 perform login 
+        await page.waitForSelector('#login-header button');
+        await page.locator('#login-header button').click();
+        if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
+        else await identityProviderMock(page);
+        await sleep(5000);
         const resultMessage = await payNotice(
             noticeNumber,
             VALID_FISCAL_CODE,
