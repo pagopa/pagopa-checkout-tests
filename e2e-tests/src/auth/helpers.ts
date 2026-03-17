@@ -14,8 +14,8 @@ export const oneIdentityLogin = async (page) => {
     await page.type('#password', 'password123');
     await page.click('button[type="submit"]');
 
-    await page.waitForSelector('form#consent-form', { visible: true });
-    await page.click('form#consent-form input[type="submit"][value="true"]');//*[@id="consent-form"]/div[2]/button[2]
+    await page.waitForSelector('#consent-form > div.md-btn-row.btn-loading-action-container > button.mdc-button.mdc-button--unelevated.btn-xl.login-btn.mdc-button--leading.btn-loading-action', { visible: true });
+    await page.click('#consent-form > div.md-btn-row.btn-loading-action-container > button.mdc-button.mdc-button--unelevated.btn-xl.login-btn.mdc-button--leading.btn-loading-action');//*[@id="consent-form"]/div[2]/button[2]
 
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
     await page.waitForSelector('button');
