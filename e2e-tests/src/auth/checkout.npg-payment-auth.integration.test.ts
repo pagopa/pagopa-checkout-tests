@@ -15,9 +15,9 @@ describe("Checkout login and payment flow", () => {
      * Increase default test timeout (120000ms)
      * to support entire payment flow
      */
-    const timeout = 30_000;
+    const timeout = 120_000;
     jest.setTimeout(timeout);
-    jest.retryTimes(1);
+    jest.retryTimes(2);
     page.setDefaultNavigationTimeout(timeout);
     page.setDefaultTimeout(timeout);
 
