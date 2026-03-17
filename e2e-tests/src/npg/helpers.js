@@ -143,7 +143,7 @@ export const fillCardDataForm = async (cardData, pspId) => {
   const continueBtnXPath = 'button[type=submit]';
   const disabledContinueBtnXPath = 'button[type=submit][disabled=""]';
   const payBtnSelector = '#paymentCheckPageButtonPay';
-  const selectPSPRadioBtnXPath = `#${pspId}`;
+  const selectPSPRadioBtnXPath = `#psp-radio-${pspId}`;
   let iteration = 0;
   let completed = false;
   while (!completed) {

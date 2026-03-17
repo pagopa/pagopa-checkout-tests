@@ -1,6 +1,6 @@
 import {selectLanguage} from "../verify/helpers";
 import { payNotice } from "../npg/helpers";
-import {identityProviderMock, oneIdentityLogin} from "./helpers";
+import {identityProviderMock, oneIdentityLogin, sleep} from "./helpers";
 
 describe("Checkout login and payment flow", () => {
     /**
@@ -33,16 +33,6 @@ describe("Checkout login and payment flow", () => {
     });
 
     /**
-     * Step 1: Login
-     */
-    it("Should perform login successfully", async() => {
-        await page.waitForSelector('#login-header button');
-        await page.locator('#login-header button').click();
-        if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
-        else await identityProviderMock(page);
-    });
-
-    /**
      * Step 2: Payment (after login)
      */
     it("Should correctly execute a payment", async() => {
@@ -52,6 +42,15 @@ describe("Checkout login and payment flow", () => {
         const cardData = CARD_TEST_DATA.cards.find(card => card.testingPsp == "Worldpay");
         const noticeNumber = String(cardData.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12));
 
+        //#1 perform login 
+        await page.waitForSelector('#login-header button');
+        await page.locator('#login-header button').click();
+        if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
+        else await identityProviderMock(page);
+        //await sleep(5000);
+
+        const selectFormSelector = "[data-testid='KeyboardIcon']";
+        await page.waitForSelector(selectFormSelector);
         const resultMessage = await payNotice(
             noticeNumber,
             VALID_FISCAL_CODE,
@@ -62,7 +61,7 @@ describe("Checkout login and payment flow", () => {
                 ccv: String(cardData.cvv),
                 holderName: "Test test"
             },
-            cardData.pspAbi
+            cardData.pspId
         );
         expect(resultMessage).toContain("Hai pagato");
     });

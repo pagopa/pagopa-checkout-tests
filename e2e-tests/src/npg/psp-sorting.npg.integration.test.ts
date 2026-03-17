@@ -54,7 +54,7 @@ describe("Checkout show and sort psp list", () => {
     await fillEmailForm(EMAIL);
     await choosePaymentMethod('PPAL');
 
-    const pspPickerRadio = await page.waitForSelector("#psp-radio-button-unchecked", {
+    const pspPickerRadio = await page.waitForSelector("#psp-radio-BCITITMM", {
       visible: true,
     });
     await pspPickerRadio.click(); 
@@ -135,7 +135,7 @@ describe("Checkout show and sort psp list", () => {
     await fillEmailForm(EMAIL);
     await choosePaymentMethod('PPAL');
 
-    const pspPickerRadio = await page.waitForSelector("#psp-radio-button-unchecked", {
+    const pspPickerRadio = await page.waitForSelector("#psp-radio-BCITITMM", {
       visible: true,
     });
     await pspPickerRadio.click();
