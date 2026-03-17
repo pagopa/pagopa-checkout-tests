@@ -33,17 +33,6 @@ describe("Checkout login and payment flow", () => {
     });
 
     /**
-     * Step 1: Login
-     */
-    it.skip("Should perform login successfully", async() => {
-        //Skipped since it is involved in the payment flow test
-        await page.waitForSelector('#login-header button');
-        await page.locator('#login-header button').click();
-        if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
-        else await identityProviderMock(page);
-    });
-
-    /**
      * Step 2: Payment (after login)
      */
     it("Should correctly execute a payment", async() => {
