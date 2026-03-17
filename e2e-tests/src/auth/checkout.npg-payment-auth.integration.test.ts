@@ -42,13 +42,15 @@ describe("Checkout login and payment flow", () => {
         const cardData = CARD_TEST_DATA.cards.find(card => card.testingPsp == "Worldpay");
         const noticeNumber = String(cardData.fiscalCodePrefix) + Math.floor(Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12));
 
-
         //#1 perform login 
         await page.waitForSelector('#login-header button');
         await page.locator('#login-header button').click();
         if (CHECKOUT_URL.includes("uat")) await oneIdentityLogin(page);
         else await identityProviderMock(page);
-        await sleep(5000);
+        //await sleep(5000);
+
+        const selectFormSelector = "[data-testid='KeyboardIcon']";
+        await page.waitForSelector(selectFormSelector);
         const resultMessage = await payNotice(
             noticeNumber,
             VALID_FISCAL_CODE,
