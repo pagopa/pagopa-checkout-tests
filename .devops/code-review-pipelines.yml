@@ -115,6 +115,51 @@ stages:
               testResultsFiles: '**/cart-api-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
+            
+  - stage: API_Tests_Carts_V2
+    pool:
+      vmImage: 'ubuntu-latest'
+    dependsOn: Setup_Project
+    jobs:
+      - job: api_tests_dev_v2
+        condition: eq('${{parameters.RUN_DEV}}', true)
+        displayName: 'Run API Tests on Checkout Carts (DEV) V2'
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
+
+          - script: |
+              newman run --ignore-redirects api-tests/cart-tests/cart-api-dev-v2.tests.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/v2-cart-api-TEST.xml
+            displayName: 'Run API tests (DEV) V2'
+
+          - task: PublishTestResults@2
+            inputs:
+              testRunTitle: "API Tests on Checkout Carts (DEV) V2"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/v2-cart-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
+
+      - job: api_tests_uat_v2
+        condition: eq('${{parameters.RUN_UAT}}', true)
+        displayName: 'Run API Tests on Checkout Carts (UAT) V2'
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
+
+          - script: |
+              newman run --ignore-redirects api-tests/cart-tests/cart-api-uat-v2.tests.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/v2-cart-api-TEST.xml
+            displayName: 'Run API tests (UAT) V2'
+
+          - task: PublishTestResults@2
+            inputs:
+              testRunTitle: "API Tests on Checkout Carts (UAT) V2"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/v2-cart-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
 
   - stage: E2E_Tests_Checkout
     pool:
