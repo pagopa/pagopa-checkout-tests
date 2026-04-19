@@ -30,7 +30,7 @@ Before(async function (this: CheckoutWorld) {
 
 After(async function (this: CheckoutWorld, scenario) {
     if (this.page) {
-        // Screenshot on failure: cattura lo stato della pagina quando uno scenario fallisce
+        // Screenshot on failure
         if (scenario.result?.status === 'FAILED') {
             const screenshot = await this.page.screenshot({ encoding: 'base64', fullPage: true });
             this.attach(screenshot, 'image/png');
