@@ -1,4 +1,5 @@
 {
+    "ignorePatterns": ["**/*.d.ts", "features/**"],
     "env": {
         "browser": true,
         "es2021": true,
