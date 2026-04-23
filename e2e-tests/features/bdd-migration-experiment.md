@@ -9,6 +9,8 @@ The goal was to maintain compatibility with the existing test logic, reusing the
 ---
 
 ## 1. Context: the previous situation
+In conducting this experiment, one test case in particular is examined — the SPID authentication flow in `checkout.spid-auth.integration.test.ts`. 
+This test was chosen because it encompasses multiple behaviors (authentication and session management) and involves interactions with the UI, making it an ideal candidate to demonstrate the benefits of a BDD approach.
 
 ### Original structure
 
@@ -271,12 +273,3 @@ npx dotenv -e uat.env -- npx cucumber-js
 | **Reports**                   | JUnit XML | Navigable HTML report + progress |
 | **Failure diagnosis**         | Stack trace reading | Clear which step failed in the flow |
 
----
-
-## 8. Suggested next steps
-
-1. **Transform the remaining test files** (`checkout.npg.integration.test.ts`, `psp-sorting`, `login-availability`, etc.) following the same approach;
-2. **Create feature files in subfolders** `features/npg/`, `features/verify/`;
-3. **Extract common steps** (e.g., navigation, language selection) into a shared `common.steps.ts` file;
-4. **Integrate into CI/CD** with tag-based execution: `@smoke` on every deploy, `@regression` in nightly runs;
-5. **Add screenshot on failure** in the `After` hook to facilitate debugging.
