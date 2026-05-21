@@ -1894,7 +1894,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/payment-methods/{{PAYMENT_METHOD_ID}}/fees",
+					"raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/payment-methods/{{PAYMENT_METHOD_ID}}/fees?maxOccurrences=214748",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -1905,6 +1905,12 @@
 						"payment-methods",
 						"{{PAYMENT_METHOD_ID}}",
 						"fees"
+					],
+					"query": [
+						{
+							"key": "maxOccurrences",
+							"value": "214748"
+						}
 					]
 				}
 			},
