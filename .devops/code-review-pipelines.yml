@@ -160,6 +160,51 @@ stages:
               testResultsFiles: '**/v2-cart-api-TEST.xml'
               searchFolder: '$(System.DefaultWorkingDirectory)'
             condition: succeededOrFailed()
+            
+  - stage: API_Tests_eCommerce_cdc
+    pool:
+      vmImage: 'ubuntu-latest'
+    dependsOn: Setup_Project
+    jobs:
+      - job: api_tests_dev_v2
+        condition: eq('${{parameters.RUN_DEV}}', true)
+        displayName: 'Run API Tests on eCommerce CDC (DEV)'
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
+
+          - script: |
+              newman run --ignore-redirects api-tests/eCommerce-cdc/eCommerce-cdc-service.postman_collection.json --environment=api-tests/dev.envs.json --reporters cli,junit --reporter-junit-export Results/eCommerce-cdc-api-TEST.xml
+            displayName: 'Run API tests (DEV)'
+
+          - task: PublishTestResults@2
+            inputs:
+              testRunTitle: "API Tests on eCommerce CDC (DEV)"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/eCommerce-cdc-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
+
+      - job: api_tests_uat_v2
+        condition: eq('${{parameters.RUN_UAT}}', true)
+        displayName: 'Run API Tests on eCommerce CDC (UAT)'
+        steps:
+          - script: |
+              yarn global add newman
+            displayName: 'newman installation'
+
+          - script: |
+              newman run --ignore-redirects api-tests/eCommerce-cdc/eCommerce-cdc-service.postman_collection.json --environment=api-tests/uat.envs.json --reporters cli,junit --reporter-junit-export Results/eCommerce-cdc-api-TEST.xml
+            displayName: 'Run API tests (UAT)'
+
+          - task: PublishTestResults@2
+            inputs:
+              testRunTitle: "API Tests on eCommerce CDC (UAT)"
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/eCommerce-cdc-api-TEST.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)'
+            condition: succeededOrFailed()
 
   - stage: E2E_Tests_Checkout
     pool:
