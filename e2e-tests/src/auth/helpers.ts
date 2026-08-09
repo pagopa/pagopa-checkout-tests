@@ -2,6 +2,7 @@ export const oneIdentityLogin = async (page) => {
     await page.waitForSelector('#spidButton', { visible: true });
     await page.click("#spidButton");
 
+    await page.waitForSelector('[id="https://idp.uat.oneid.pagopa.it"]', { visible: true });
     await page.evaluate(() => {
         document.getElementById('https://idp.uat.oneid.pagopa.it').click()
     })
