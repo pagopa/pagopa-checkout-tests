@@ -124,6 +124,12 @@
 			"enabled": true
 		},
 		{
+			"key": "EXPECTED_COMPANY_NAME",
+			"value": "company PA",
+			"type": "default",
+			"enabled": true
+		},
+		{
 			"key": "PSP_ID",
 			"value": "BCITITMM",
 			"type": "default",
