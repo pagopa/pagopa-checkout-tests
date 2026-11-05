@@ -1408,77 +1408,10 @@
         {
           "listen": "test",
           "script": {
+            "type": "text/javascript",
             "exec": [
-              "pm.test(\"[eCommerce for checkout] New transaction is activated successfully with POST /transactions\", function () {",
-              "    pm.response.to.have.status(200);",
-              "",
-              "    const response = pm.response.json();",
-              "    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
-              "    const expectedReason = pm.environment.get(\"EXPECTED_PAYMENT_REASON\");",
-              "    const expectedPaymentTokens = new Set([\"rptId\",\"reason\",\"amount\",\"isAllCCP\"]);",
-              "    const expectedTransferListTokens = new Set([\"paFiscalCode\", \"digitalStamp\", \"transferAmount\", \"transferCategory\"]);",
-              "    const expectedWithoutAuthTokenAndTransactionId = {",
-              "        \"status\": \"ACTIVATED\",",
-              "        \"payments\": [",
-              "            {",
-              "                \"rptId\": requestRptId,",
-              "                \"reason\": expectedReason,",
-              "                \"isAllCCP\": false,",
-              "",
-              "            }",
-              "        ],",
-              "        \"clientId\": \"CHECKOUT\",",
-              "    };",
-              "",
-              "",
-              "    const paymentsWithoutPaymentToken = response.payments.map(p => {",
-              "        const { paymentToken, ...rest } = p;",
-              "        return rest;",
-              "    });",
-              "    const paymentsWithoutPaymentTokenAndTransferList = paymentsWithoutPaymentToken.map(p => {",
-              "        const { transferList, ...rest } = p;",
-              "        return rest;",
-              "    });",
-              "    const paymentTokens = response.payments.map(e => e.paymentToken);",
-              "    ",
-              "    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);",
-              "    pm.expect(paymentsWithoutPaymentTokenAndTransferList.length).eql(1);",
-              "    pm.expect(paymentsWithoutPaymentTokenAndTransferList).to.satisfy((payments) => payments.every(paymentsItem =>",
-              "        Object.keys(paymentsItem).every(property => expectedPaymentTokens.has(property))",
-              "        && pm.expect(paymentsItem.amount).to.be.a(\"number\")",
-              "        && pm.expect(paymentsItem.rptId).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].rptId)",
-              "        && pm.expect(paymentsItem.reason).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].reason)",
-              "        && pm.expect(paymentsItem.isAllCCP).to.be.a(\"boolean\") ",
-              "    ));",
-              "    ",
-              "    ",
-              "    pm.expect(paymentTokens).to.satisfy((tokens) => tokens.every(token => typeof token === \"string\"));",
-              "    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);",
-              "    pm.expect(response.authToken).to.be.a(\"string\");",
-              "    pm.expect(response.transactionId).to.be.a(\"string\");",
-              "    pm.expect(paymentsWithoutPaymentToken[0].transferList).to.satisfy((transferList) => transferList.every(transferListItem =>",
-              "        Object.keys(transferListItem).every(property => expectedTransferListTokens.has(property))",
-              "        && pm.expect(transferListItem.paFiscalCode).to.be.a(\"string\")",
-              "        && pm.expect(transferListItem.digitalStamp).to.be.a(\"boolean\")",
-              "        && pm.expect(transferListItem.transferAmount).to.be.a(\"number\")",
-              "        && pm.expect(typeof transferListItem.transferCategory).to.be.oneOf([\"string\",\"undefined\"])",
-              "        ",
-              "    ));",
-              "    pm.environment.set(\"TRANSACTION_ID\", response.transactionId);",
-              "    pm.environment.set(\"AMOUNT\", response.payments.reduce((total, payment) => total + payment.amount, 0))",
-              "    pm.environment.set(\"AUTH_TOKEN\", response.authToken);",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        },
-        {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              ""
-            ],
-            "type": "text/javascript"
+              "pm.test(\"[eCommerce for checkout] New transaction is activated successfully with POST /transactions\", function () {\n    pm.response.to.have.status(200);\n\n    const response = pm.response.json();\n    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");\n    const expectedReason = pm.environment.get(\"EXPECTED_PAYMENT_REASON\");\n    const expectedCompanyName = pm.environment.get(\"EXPECTED_COMPANY_NAME\");\n    const expectedPaymentTokens = new Set([\"rptId\",\"reason\",\"amount\",\"isAllCCP\",\"companyName\"]);\n    const expectedTransferListTokens = new Set([\"paFiscalCode\", \"digitalStamp\", \"transferAmount\", \"transferCategory\"]);\n    const expectedWithoutAuthTokenAndTransactionId = {\n        \"status\": \"ACTIVATED\",\n        \"payments\": [\n            {\n                \"rptId\": requestRptId,\n                \"reason\": expectedReason,\n                \"companyName\": expectedCompanyName,\n                \"isAllCCP\": false,\n\n            }\n        ],\n        \"clientId\": \"CHECKOUT\",\n    };\n\n\n    const paymentsWithoutPaymentToken = response.payments.map(p => {\n        const { paymentToken, ...rest } = p;\n        return rest;\n    });\n    const paymentsWithoutPaymentTokenAndTransferList = paymentsWithoutPaymentToken.map(p => {\n        const { transferList, ...rest } = p;\n        return rest;\n    });\n    const paymentTokens = response.payments.map(e => e.paymentToken);\n    \n    pm.expect(response.status).eql(expectedWithoutAuthTokenAndTransactionId.status);\n    pm.expect(paymentsWithoutPaymentTokenAndTransferList.length).eql(1);\n    pm.expect(paymentsWithoutPaymentTokenAndTransferList).to.satisfy((payments) => payments.every(paymentsItem =>\n        Object.keys(paymentsItem).every(property => expectedPaymentTokens.has(property))\n        && pm.expect(paymentsItem.amount).to.be.a(\"number\")\n        && pm.expect(paymentsItem.rptId).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].rptId)\n        && pm.expect(paymentsItem.reason).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].reason)\n        && pm.expect(paymentsItem.companyName).eql(expectedWithoutAuthTokenAndTransactionId.payments[0].companyName)\n        && pm.expect(paymentsItem.isAllCCP).to.be.a(\"boolean\") \n    ));\n    \n    \n    pm.expect(paymentTokens).to.satisfy((tokens) => tokens.every(token => typeof token === \"string\"));\n    pm.expect(response.clientId).eql(expectedWithoutAuthTokenAndTransactionId.clientId);\n    pm.expect(response.authToken).to.be.a(\"string\");\n    pm.expect(response.transactionId).to.be.a(\"string\");\n    pm.expect(paymentsWithoutPaymentToken[0].transferList).to.satisfy((transferList) => transferList.every(transferListItem =>\n        Object.keys(transferListItem).every(property => expectedTransferListTokens.has(property))\n        && pm.expect(transferListItem.paFiscalCode).to.be.a(\"string\")\n        && pm.expect(transferListItem.digitalStamp).to.be.a(\"boolean\")\n        && pm.expect(transferListItem.transferAmount).to.be.a(\"number\")\n        && pm.expect(typeof transferListItem.transferCategory).to.be.oneOf([\"string\",\"undefined\"])\n        \n    ));\n    pm.environment.set(\"TRANSACTION_ID\", response.transactionId);\n    pm.environment.set(\"AMOUNT\", response.payments.reduce((total, payment) => total + payment.amount, 0))\n    pm.environment.set(\"AUTH_TOKEN\", response.authToken);\n});"
+            ]
           }
         }
       ],
@@ -1490,13 +1423,11 @@
         "header": [
           {
             "key": "deployment",
-            "value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-            "type": "text"
+            "value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}"
           },
           {
             "key": "x-correlation-id",
-            "value": "{{CORRELATION_ID}}",
-            "type": "text"
+            "value": "{{CORRELATION_ID}}"
           }
         ],
         "body": {

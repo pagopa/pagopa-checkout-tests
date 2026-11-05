@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Ecommerce for Checkout API - NPG" tests="31" time="8.438">
+  <testsuite name="Delete transaction" id="53c9162a-2130-4995-9609-e81df3bf552f" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.077">
+    <testcase name="[eCommerce for checkout] Transaction in ACTIVATED status is canceled successfully with DELETE /transactions/:idTransaction" time="0.077" classname="DeleteTransaction"/>
+  </testsuite>
+  <testsuite name="Create session (lang: it)" id="6f1248fa-82b8-468c-ad76-bcf27a7d9021" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.552">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: it)" time="0.552" classname="CreateSessionLangIt"/>
+  </testsuite>
+  <testsuite name="Create session (lang: fr)" id="93ff5581-6cf9-4d39-9fda-c5d0b0cea675" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.509">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: fr)" time="0.509" classname="CreateSessionLangFr"/>
+  </testsuite>
+  <testsuite name="Create session (lang: de)" id="1009281c-ec0d-4d84-b149-d021681f5576" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.304">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: de)" time="0.304" classname="CreateSessionLangDe"/>
+  </testsuite>
+  <testsuite name="Create session (lang: sl)" id="20bb094c-693f-415f-974e-994951b49e3e" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.494">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: sl)" time="0.494" classname="CreateSessionLangSl"/>
+  </testsuite>
+  <testsuite name="Create session (lang: en)" id="864b8f4c-29e5-450c-ad32-6dd43268a092" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.507">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: en)" time="0.507" classname="CreateSessionLangEn"/>
+  </testsuite>
+  <testsuite name="Get NPG field (populate NPG cookies)" id="bbf0b01e-3fcc-42fc-bd5d-d3768319e7d3" timestamp="2026-11-05T14:19:28.895Z" tests="0" failures="0" errors="0" time="0.288"/>
+  <testsuite name="Payment Verify - Success" id="5cfe0820-6695-4499-b342-080e9b6f7234" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.233">
+    <testcase name="[eCommerce for checkout] Valid payment request successfully retrieved with GET payment-request/:rptId" time="0.233" classname="PaymentVerifySuccess"/>
+  </testsuite>
+  <testsuite name="Payment Verify - PPT_DOMINIO_SCONOSCIUTO" id="095117f5-c5fe-420d-8a9a-dc204ef1f822" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.104">
+    <testcase name="[eCommerce for checkout] 404 - PPT_DOMINIO_SCONOSCIUTO error retrieved for invalid notice code with GET payment-request/:rptId" time="0.104" classname="PaymentVerifyPptDominioSconosciuto"/>
+  </testsuite>
+  <testsuite name="Payment Verify - PPT_STAZIONE_INT_PA_SCONOSCIUTA" id="dd5c2bc0-0b9e-4650-b6bd-0e182b5486f1" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.110">
+    <testcase name="[eCommerce for checkout] 404 - PPT_STAZIONE_INT_PA_SCONOSCIUTA error retrieved for invalid notice code with GET payment-request/:rptId" time="0.110" classname="PaymentVerifyPptStazioneIntPaSconosciuta"/>
+  </testsuite>
+  <testsuite name="Create transaction mail case insensitive" id="528a8c32-e10e-492a-8f60-9dc8c508d6d6" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="1" errors="0" time="0.348">
+    <testcase name="[eCommerce for checkout] New transaction is activated successfully with POST /transactions with email in both upper and lower case" time="0.348" classname="CreateTransactionMailCaseInsensitive">
+      <failure type="AssertionFailure" message="expected undefined to deeply equal 'company PA'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 207cf119-f9fb-4b0a-a5a3-42c67f4345ca.]]>
+        <![CDATA[Collection name: Ecommerce for Checkout API - NPG.]]>
+        <![CDATA[Request name: Create transaction mail case insensitive.]]>
+        <![CDATA[Test description: [eCommerce for checkout] New transaction is activated successfully with POST /transactions with email in both upper and lower case.]]>
+        <![CDATA[Error message: expected undefined to deeply equal 'company PA'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected undefined to deeply equal 'company PA'
+   at Object.eval sandbox-script.js:1:11).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Create transaction KO for missing order id" id="2bcfa6e6-20bf-4508-9938-ca29d343065b" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.099">
+    <testcase name="[eCommerce for checkout] 400 creating new transaction for missing order id" time="0.099" classname="CreateTransactionKoForMissingOrderId"/>
+  </testsuite>
+  <testsuite name="Create transaction" id="ee2e6025-d5bd-449f-8cae-b76a74ede6e8" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="1" errors="0" time="0.123">
+    <testcase name="[eCommerce for checkout] New transaction is activated successfully with POST /transactions" time="0.123" classname="CreateTransaction">
+      <failure type="AssertionFailure" message="expected undefined to deeply equal 'company PA'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 207cf119-f9fb-4b0a-a5a3-42c67f4345ca.]]>
+        <![CDATA[Collection name: Ecommerce for Checkout API - NPG.]]>
+        <![CDATA[Request name: Create transaction.]]>
+        <![CDATA[Test description: [eCommerce for checkout] New transaction is activated successfully with POST /transactions.]]>
+        <![CDATA[Error message: expected undefined to deeply equal 'company PA'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected undefined to deeply equal 'company PA'
+   at Object.eval sandbox-script.js:1:13).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Payment Verify - Success Cache hit" id="caee3564-b656-4376-a670-702fe3500ed7" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.057">
+    <testcase name="[eCommerce for checkout] Cache hit with valid payment request successfully retrieved with GET payment-request/:rptId" time="0.057" classname="PaymentVerifySuccessCacheHit"/>
+  </testsuite>
+  <testsuite name="Get payment method details for credit cards" id="6c475785-5e59-4a9f-ada1-6aba185945cb" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.050">
+    <testcase name="[eCommerce for checkout] Card payment method successfully retrieved with GET payment-methods/:methodId" time="0.050" classname="GetPaymentMethodDetailsForCreditCards"/>
+  </testsuite>
+  <testsuite name="Compute fee for credit card payment" id="e2306a81-62f1-411a-abd1-98306c9bd7fc" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.102">
+    <testcase name="[eCommerce for checkout] Psp and fees retrieved with POST fees" time="0.102" classname="ComputeFeeForCreditCardPayment"/>
+  </testsuite>
+  <testsuite name="Get all payment methods (handler)" id="a2f0138b-d7ee-4ac5-be45-0cf759c923d1" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.053">
+    <testcase name="[eCommerce for checkout] All payment methods successfully retrieved with POST payment-methods/ :methodId (handler)" time="0.053" classname="GetAllPaymentMethodsHandler"/>
+  </testsuite>
+  <testsuite name="Fill NPG text data (populate iframe card data fields)" id="6d63d20c-27a4-42b4-83a6-54a0e7876e8e" timestamp="2026-11-05T14:19:28.895Z" tests="0" failures="0" errors="0" time="0.317"/>
+  <testsuite name="Get card data" id="49f6e67a-2db1-48d4-b33d-1ae512434456" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="1" errors="0" time="0.044">
+    <testcase name="[eCommerce for checkout] Card data successfully retrieved with GET payment-methods/:methodId/sessions/:orderId" time="0.044" classname="GetCardData">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 401">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 207cf119-f9fb-4b0a-a5a3-42c67f4345ca.]]>
+        <![CDATA[Collection name: Ecommerce for Checkout API - NPG.]]>
+        <![CDATA[Request name: Get card data.]]>
+        <![CDATA[Test description: [eCommerce for checkout] Card data successfully retrieved with GET payment-methods/:methodId/sessions/:orderId.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 401.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 401
+   at Object.eval sandbox-script.js:1:19).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Get card data KO for mismatch order id" id="018973dc-4082-48a2-adc5-01c4b7729e36" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for mismatching order id with jwt token" time="0.041" classname="GetCardDataKoForMismatchOrderId"/>
+  </testsuite>
+  <testsuite name="Get card data KO for mismatch transaction id" id="2ab30591-7371-4551-8f49-9e7735a3da45" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for mismatching transaction id with jwt token" time="0.041" classname="GetCardDataKoForMismatchTransactionId"/>
+  </testsuite>
+  <testsuite name="Get card data KO for missing auth token" id="a7e01402-5e87-4b07-b2ba-13d153b920f1" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.040">
+    <testcase name="[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for missing auth token" time="0.040" classname="GetCardDataKoForMissingAuthToken"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: it)" id="c0fe18a6-ffec-4087-9ca5-fdcff0ff6e4d" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.075">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: it)" time="0.075" classname="RequestAuthorizationKoForMissingJwtTokenLangIt"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: fr)" id="d2c52846-a5ec-45e1-9d12-49ff6fe9203f" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: fr)" time="0.041" classname="RequestAuthorizationKoForMissingJwtTokenLangFr"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: sl)" id="b424ed29-ffff-41b9-8d97-f5d7110612dc" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.040">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: sl)" time="0.040" classname="RequestAuthorizationKoForMissingJwtTokenLangSl"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: de)" id="bf2b5d78-7b00-49fa-9361-1db68ec2f3be" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: de)" time="0.041" classname="RequestAuthorizationKoForMissingJwtTokenLangDe"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: en)" id="2e12779e-86d9-4a5f-9172-04a81fdb7de0" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.040">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: en)" time="0.040" classname="RequestAuthorizationKoForMissingJwtTokenLangEn"/>
+  </testsuite>
+  <testsuite name="Request authorization (lang: it)" id="2b9517c9-480a-4370-94d5-826099b20dc5" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="2" errors="0" time="0.299">
+    <testcase name="[eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request (lang: it)" time="0.299" classname="RequestAuthorizationLangIt">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 409">
+        <![CDATA[Failed 2 times.]]>
+        <![CDATA[Collection JSON ID: 207cf119-f9fb-4b0a-a5a3-42c67f4345ca.]]>
+        <![CDATA[Collection name: Ecommerce for Checkout API - NPG.]]>
+        <![CDATA[Request name: Request authorization (lang: it).]]>
+        <![CDATA[Test description: [eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request (lang: it).]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 409.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 409
+   at Object.eval sandbox-script.js:1:28).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Get transactions v1" id="02e3b7ef-d5df-4c2a-932e-11939a36f0ab" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="1" errors="0" time="0.051">
+    <testcase name="[eCommerce for checkout] GET transaction V1 returns tranasction data" time="0.051" classname="GetTransactionsV1">
+      <failure type="AssertionFailure" message="expected 'CANCELED' to equal 'AUTHORIZATION_REQUESTED'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 207cf119-f9fb-4b0a-a5a3-42c67f4345ca.]]>
+        <![CDATA[Collection name: Ecommerce for Checkout API - NPG.]]>
+        <![CDATA[Request name: Get transactions v1.]]>
+        <![CDATA[Test description: [eCommerce for checkout] GET transaction V1 returns tranasction data.]]>
+        <![CDATA[Error message: expected 'CANCELED' to equal 'AUTHORIZATION_REQUESTED'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected 'CANCELED' to equal 'AUTHORIZATION_REQUESTED'
+   at Object.eval sandbox-script.js:1:29).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Get transaction outcomes v1" id="ae0411e2-6985-41a8-91a9-22577e70cc4f" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="0" errors="0" time="0.053">
+    <testcase name="[eCommerce for checkout] GET transaction outcomes V1 returns outcome data" time="0.053" classname="GetTransactionOutcomesV1"/>
+  </testsuite>
+  <testsuite name="Get transactions v2" id="63dc5d1c-32f7-43dc-bea3-bd4f34df5c7a" timestamp="2026-11-05T14:19:28.895Z" tests="1" failures="1" errors="0" time="0.052">
+    <testcase name="[eCommerce for checkout] GET transaction V2 returns tranasction data" time="0.052" classname="GetTransactionsV2">
+      <failure type="AssertionFailure" message="expected 'CANCELED' to equal 'AUTHORIZATION_REQUESTED'">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 207cf119-f9fb-4b0a-a5a3-42c67f4345ca.]]>
+        <![CDATA[Collection name: Ecommerce for Checkout API - NPG.]]>
+        <![CDATA[Request name: Get transactions v2.]]>
+        <![CDATA[Test description: [eCommerce for checkout] GET transaction V2 returns tranasction data.]]>
+        <![CDATA[Error message: expected 'CANCELED' to equal 'AUTHORIZATION_REQUESTED'.]]>
+        <![CDATA[Stacktrace: AssertionError: expected 'CANCELED' to equal 'AUTHORIZATION_REQUESTED'
+   at Object.eval sandbox-script.js:1:31).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

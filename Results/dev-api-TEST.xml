@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Ecommerce for Checkout API - NPG" tests="31" time="9.276">
+  <testsuite name="Delete transaction" id="e8d3f2eb-c0d2-4fce-9c9e-ae439924db6a" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.136">
+    <testcase name="[eCommerce for checkout] Transaction in ACTIVATED status is canceled successfully with DELETE /transactions/:idTransaction" time="0.136" classname="DeleteTransaction"/>
+  </testsuite>
+  <testsuite name="Create session (lang: it)" id="405ac329-b4d4-4e57-b395-8d1846a8709c" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.387">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: it)" time="0.387" classname="CreateSessionLangIt"/>
+  </testsuite>
+  <testsuite name="Create session (lang: fr)" id="0f0a5ad1-320c-495e-a45e-19fdfb8db206" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.520">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: fr)" time="0.520" classname="CreateSessionLangFr"/>
+  </testsuite>
+  <testsuite name="Create session (lang: de)" id="da320c48-42ea-407d-b169-470b978bbb09" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.466">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: de)" time="0.466" classname="CreateSessionLangDe"/>
+  </testsuite>
+  <testsuite name="Create session (lang: sl)" id="915907a1-b763-4371-9298-479392ba86c4" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.479">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: sl)" time="0.479" classname="CreateSessionLangSl"/>
+  </testsuite>
+  <testsuite name="Create session (lang: en)" id="8dd41858-ada2-42fa-9c82-ded907e839cd" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.455">
+    <testcase name="[eCommerce for checkout] Create Session - NPG card build session is created successfully with POST payment-methods/:paymentMethodId/sessions (lang: en)" time="0.455" classname="CreateSessionLangEn"/>
+  </testsuite>
+  <testsuite name="Get NPG field (populate NPG cookies)" id="eeb09a55-a142-484a-9c50-4c055788318a" timestamp="2026-11-05T14:18:28.233Z" tests="0" failures="0" errors="0" time="0.301"/>
+  <testsuite name="Payment Verify - Success" id="948c5b57-7832-4968-b928-7dc86e78dd95" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.620">
+    <testcase name="[eCommerce for checkout] Valid payment request successfully retrieved with GET payment-request/:rptId" time="0.620" classname="PaymentVerifySuccess"/>
+  </testsuite>
+  <testsuite name="Payment Verify - PPT_DOMINIO_SCONOSCIUTO" id="001cd1fb-20e9-40df-9cbc-c9c70c11dee1" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.118">
+    <testcase name="[eCommerce for checkout] 404 - PPT_DOMINIO_SCONOSCIUTO error retrieved for invalid notice code with GET payment-request/:rptId" time="0.118" classname="PaymentVerifyPptDominioSconosciuto"/>
+  </testsuite>
+  <testsuite name="Payment Verify - PPT_STAZIONE_INT_PA_SCONOSCIUTA" id="5d6c6713-2928-44a6-a941-dd6f7078a8a5" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.121">
+    <testcase name="[eCommerce for checkout] 404 - PPT_STAZIONE_INT_PA_SCONOSCIUTA error retrieved for invalid notice code with GET payment-request/:rptId" time="0.121" classname="PaymentVerifyPptStazioneIntPaSconosciuta"/>
+  </testsuite>
+  <testsuite name="Create transaction mail case insensitive" id="f15ecec5-081b-4087-87b6-71aed9e11334" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.896">
+    <testcase name="[eCommerce for checkout] New transaction is activated successfully with POST /transactions with email in both upper and lower case" time="0.896" classname="CreateTransactionMailCaseInsensitive"/>
+  </testsuite>
+  <testsuite name="Create transaction KO for missing order id" id="f5a77781-a1a6-46a7-92c4-4437f22fb3e9" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.103">
+    <testcase name="[eCommerce for checkout] 400 creating new transaction for missing order id" time="0.103" classname="CreateTransactionKoForMissingOrderId"/>
+  </testsuite>
+  <testsuite name="Create transaction" id="dbfa772b-3f54-4353-93e6-3b7cbe99a489" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.178">
+    <testcase name="[eCommerce for checkout] New transaction is activated successfully with POST /transactions" time="0.178" classname="CreateTransaction"/>
+  </testsuite>
+  <testsuite name="Payment Verify - Success Cache hit" id="eedfdd28-a94a-40ca-aac2-35970063f171" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.073">
+    <testcase name="[eCommerce for checkout] Cache hit with valid payment request successfully retrieved with GET payment-request/:rptId" time="0.073" classname="PaymentVerifySuccessCacheHit"/>
+  </testsuite>
+  <testsuite name="Get payment method details for credit cards" id="4ca6eedc-aabf-42c6-b535-00caee537e64" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.055">
+    <testcase name="[eCommerce for checkout] Card payment method successfully retrieved with GET payment-methods/:methodId" time="0.055" classname="GetPaymentMethodDetailsForCreditCards"/>
+  </testsuite>
+  <testsuite name="Compute fee for credit card payment" id="b672bbdd-66fc-41ff-b5a0-0836484a4d34" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.085">
+    <testcase name="[eCommerce for checkout] Psp and fees retrieved with POST fees" time="0.085" classname="ComputeFeeForCreditCardPayment"/>
+  </testsuite>
+  <testsuite name="Get all payment methods (handler)" id="2a521412-b4d3-48bd-b352-b492e526e869" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.063">
+    <testcase name="[eCommerce for checkout] All payment methods successfully retrieved with POST payment-methods/ :methodId (handler)" time="0.063" classname="GetAllPaymentMethodsHandler"/>
+  </testsuite>
+  <testsuite name="Fill NPG text data (populate iframe card data fields)" id="3df02a5b-2d51-4387-8ee8-ce44ca1c8571" timestamp="2026-11-05T14:18:28.233Z" tests="0" failures="0" errors="0" time="0.374"/>
+  <testsuite name="Get card data" id="254f18d2-d4d2-4b8a-97b7-e5846df2fb44" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.270">
+    <testcase name="[eCommerce for checkout] Card data successfully retrieved with GET payment-methods/:methodId/sessions/:orderId" time="0.270" classname="GetCardData"/>
+  </testsuite>
+  <testsuite name="Get card data KO for mismatch order id" id="7352b7b9-669b-4e1a-8d21-08a17bddfbae" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.043">
+    <testcase name="[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for mismatching order id with jwt token" time="0.043" classname="GetCardDataKoForMismatchOrderId"/>
+  </testsuite>
+  <testsuite name="Get card data KO for mismatch transaction id" id="f2c90ff9-8931-4e29-97f5-2c6e5c48588c" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.042">
+    <testcase name="[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for mismatching transaction id with jwt token" time="0.042" classname="GetCardDataKoForMismatchTransactionId"/>
+  </testsuite>
+  <testsuite name="Get card data KO for missing auth token" id="a7c3bae0-4f74-4963-8e24-8facf2f720db" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 GET payment-methods/:methodId/sessions/:orderId for missing auth token" time="0.041" classname="GetCardDataKoForMissingAuthToken"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: it)" id="637b1be1-3f09-40fe-b6ae-c23320833350" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: it)" time="0.041" classname="RequestAuthorizationKoForMissingJwtTokenLangIt"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: fr)" id="28ba0747-b7fc-474d-a942-fafd1698b745" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: fr)" time="0.041" classname="RequestAuthorizationKoForMissingJwtTokenLangFr"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: sl)" id="fa450259-fd9a-4507-8420-8d93a3448ba0" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.040">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: sl)" time="0.040" classname="RequestAuthorizationKoForMissingJwtTokenLangSl"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: de)" id="b7bb0719-0752-4cad-b6b7-0185d3509e30" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.040">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: de)" time="0.040" classname="RequestAuthorizationKoForMissingJwtTokenLangDe"/>
+  </testsuite>
+  <testsuite name="Request authorization KO for missing jwt token (lang: en)" id="acf01287-8b8c-42f4-809b-f70c4e6ec082" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.041">
+    <testcase name="[eCommerce for checkout] 401 creating new NPG authorization request for missing jwt token (lang: en)" time="0.041" classname="RequestAuthorizationKoForMissingJwtTokenLangEn"/>
+  </testsuite>
+  <testsuite name="Request authorization (lang: it)" id="6574b926-1a7e-47a9-af07-f507e8d67004" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.084">
+    <testcase name="[eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request (lang: it)" time="0.084" classname="RequestAuthorizationLangIt"/>
+  </testsuite>
+  <testsuite name="Get transactions v1" id="9bae3ff9-13a7-442c-aa4a-1313603d6f84" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.082">
+    <testcase name="[eCommerce for checkout] GET transaction V1 returns tranasction data" time="0.082" classname="GetTransactionsV1"/>
+  </testsuite>
+  <testsuite name="Get transaction outcomes v1" id="47f1e157-1f72-4b11-b779-015ab62922ee" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.084">
+    <testcase name="[eCommerce for checkout] GET transaction outcomes V1 returns outcome data" time="0.084" classname="GetTransactionOutcomesV1"/>
+  </testsuite>
+  <testsuite name="Get transactions v2" id="6a5d3a7c-e3b1-4bb3-a90f-3984e849351b" timestamp="2026-11-05T14:18:28.233Z" tests="1" failures="0" errors="0" time="0.085">
+    <testcase name="[eCommerce for checkout] GET transaction V2 returns tranasction data" time="0.085" classname="GetTransactionsV2"/>
+  </testsuite>
+</testsuites>
