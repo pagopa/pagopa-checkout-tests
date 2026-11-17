@@ -2810,38 +2810,35 @@
           "listen": "test",
           "script": {
             "exec": [
-              "async function executeGetTransactionPollingUntilStatus(wantedStatus) {",
+              "async function executeGetTransactionOutcomesPollingUntilOutcome(wantedOutcome) {",
               "    const transactionId = pm.environment.get(\"TRANSACTION_ID\");",
               "    const authToken = pm.environment.get(\"AUTH_TOKEN\");",
-              "    const getTransaction = {",
-              "        url: `${pm.environment.get(\"CHECKOUT_HOST\")}/ecommerce/checkout/v2/transactions/${transactionId}`,",
+              "    const getTransactionOutcomes = {",
+              "        url: `${pm.environment.get(\"CHECKOUT_HOST\")}/ecommerce/checkout/v1/transactions/${transactionId}/outcomes`,",
               "        method: 'GET',",
               "        header: {",
               "            'Content-Type': 'application/json',",
-              "            'Authorization': `Bearer ${authToken}`",
+              "            'Authorization': `Bearer ${authToken}`,",
+              "            'deployment': pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
               "        }",
               "    };",
               "    const maxAttempts = 10;",
               "    var counter = 0;",
-              "    var transactionStatus = null;",
-              "    while (counter < maxAttempts && transactionStatus != wantedStatus) {",
+              "    var outcomeInfo = null;",
+              "    while (counter < maxAttempts && (outcomeInfo == null || outcomeInfo.outcome !== wantedOutcome)) {",
               "        await new Promise(r => setTimeout(r, 1000));",
-              "        await new Promise((resolve, reject) => pm.sendRequest(getTransaction, (error, response) => {",
+              "        outcomeInfo = await new Promise((resolve, reject) => pm.sendRequest(getTransactionOutcomes, (error, response) => {",
               "            if (error) {",
-              "                console.log(`Error retrieving transaction by id: ${error.code}`);",
+              "                console.log(`Error retrieving transaction outcomes by id: ${error.code}`);",
               "                reject(error)",
               "            } else {",
-              "                const responseBody = response.json();",
-              "                transactionStatus = responseBody.status;",
-              "                console.log(`Transaction with id: [${transactionId}] status: [${transactionStatus}]`)",
-              "                resolve(transactionStatus);",
+              "                resolve(response.code === 200 ? response.json() : null);",
               "            }",
               "        }));",
+              "        console.log(`Transaction with id: [${transactionId}] outcome info: [${JSON.stringify(outcomeInfo)}]`)",
               "        counter++;",
               "    }",
-              "    if (transactionStatus != wantedStatus) {",
-              "            throw new Error(`Transaction in wrong status after polling. Wanted: [${wantedStatus}], received: [${transactionStatus}]`)",
-              "        }",
+              "    return outcomeInfo;",
               "}",
               "pm.test(\"[eCommerce for checkout] New NPG authorization request with POST transactions/:transactionId/auth-request (lang: it)\", function(){",
               "    pm.response.to.have.status(200);",
@@ -2849,8 +2846,17 @@
               "    pm.expect(response.authorizationUrl).to.be.a(\"string\");",
               "    const expectedAuthorizationRequestId = pm.environment.get(\"ORDER_ID\");",
               "    pm.expect(response.authorizationRequestId).to.be.eq(expectedAuthorizationRequestId);",
-              "    executeGetTransactionPollingUntilStatus(\"AUTHORIZATION_REQUESTED\");",
-              "});"
+              "});",
+              "// 17 + not final = AUTHORIZATION_REQUESTED; newman never completes the NPG authorizationUrl step, so no final outcome is reachable",
+              "executeGetTransactionOutcomesPollingUntilOutcome(17)",
+              "    .then(outcomeInfo => pm.test(\"[eCommerce for checkout] GET transaction outcomes after authorization request returns outcome 17 (taken in charge), not final\", function () {",
+              "        pm.expect(outcomeInfo, \"no 200 response from GET outcomes\").to.not.be.null;",
+              "        pm.expect(outcomeInfo.outcome).to.be.eq(17);",
+              "        pm.expect(outcomeInfo.isFinalStatus).to.be.false;",
+              "    }))",
+              "    .catch(error => pm.test(\"[eCommerce for checkout] GET transaction outcomes after authorization request returns outcome 17 (taken in charge), not final\", function () {",
+              "        throw error;",
+              "    }));"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -2950,79 +2956,6 @@
       "response": []
     },
     {
-      "name": "Get transactions v1",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"[eCommerce for checkout] GET transaction V1 returns tranasction data\", function(){",
-              "    pm.response.to.have.status(200);",
-              "    const response = pm.response.json();",
-              "    pm.expect(response.status).to.be.eq(\"AUTHORIZATION_REQUESTED\");",
-              "    pm.expect(response.clientId).to.be.eq(\"CHECKOUT\");",
-              "    pm.expect(response.gateway).to.be.eq(\"NPG\");",
-              "    pm.expect(response.payments.length).to.be.eq(1);",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {}
-          }
-        }
-      ],
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{AUTH_TOKEN}}",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [
-          {
-            "key": "deployment",
-            "value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-            "type": "text"
-          },
-          {
-            "key": "lang",
-            "value": "{{OPERATION_LANGUAGE_IT}}",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/transactions/{{TRANSACTION_ID}}",
-          "host": [
-            "{{CHECKOUT_HOST}}"
-          ],
-          "path": [
-            "ecommerce",
-            "checkout",
-            "v1",
-            "transactions",
-            "{{TRANSACTION_ID}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
       "name": "Get transaction outcomes v1",
       "event": [
         {
@@ -3096,79 +3029,6 @@
             "transactions",
             "{{TRANSACTION_ID}}",
             "outcomes"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get transactions v2",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"[eCommerce for checkout] GET transaction V2 returns tranasction data\", function(){",
-              "    pm.response.to.have.status(200);",
-              "    const response = pm.response.json();",
-              "    pm.expect(response.status).to.be.eq(\"AUTHORIZATION_REQUESTED\");",
-              "    pm.expect(response.clientId).to.be.eq(\"CHECKOUT\");",
-              "    pm.expect(response.gatewayInfo.gateway).to.be.eq(\"NPG\");",
-              "    pm.expect(response.payments.length).to.be.eq(1);",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {}
-          }
-        }
-      ],
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{AUTH_TOKEN}}",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [
-          {
-            "key": "deployment",
-            "value": "{{DEPLOYMENT_TRANSACTION_SERVICE}}",
-            "type": "text"
-          },
-          {
-            "key": "lang",
-            "value": "{{OPERATION_LANGUAGE_IT}}",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/transactions/{{TRANSACTION_ID}}",
-          "host": [
-            "{{CHECKOUT_HOST}}"
-          ],
-          "path": [
-            "ecommerce",
-            "checkout",
-            "v2",
-            "transactions",
-            "{{TRANSACTION_ID}}"
           ]
         }
       },
