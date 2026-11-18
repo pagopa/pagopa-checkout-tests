@@ -467,7 +467,7 @@
               "    const response = pm.response.json();",
               "    const requestRptId = pm.environment.get(\"VALID_FISCAL_CODE_PA\") + pm.environment.get(\"VALID_NOTICE_CODE\");",
               "    const expectedReason = pm.environment.get(\"EXPECTED_PAYMENT_REASON\");",
-              "    const expectedPaymentTokens = new Set([\"rptId\", \"reason\", \"amount\", \"isAllCCP\"]);",
+              "    const expectedPaymentTokens = new Set([\"rptId\", \"reason\", \"amount\", \"isAllCCP\", \"companyName\"]);",
               "    const expectedTransferListTokens = new Set([\"paFiscalCode\", \"digitalStamp\", \"transferAmount\", \"transferCategory\"]);",
               "    const expectedWithoutAuthTokenAndTransactionId = {",
               "        \"status\": \"ACTIVATED\",",
@@ -727,11 +727,21 @@
             "key": "x-transaction-id-from-client",
             "value": "{{TRANSACTION_ID}}",
             "type": "text"
+          },
+          {
+            "key": "x-client-id",
+            "value": "CHECKOUT",
+            "type": "text"
+          },
+          {
+            "key": "x-language",
+            "value": "IT",
+            "type": "text"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"paymentAmount\": 100,\n    \"isAllCCP\": false,\n    \"primaryCreditorInstitution\": \"77777777777\",\n    \"transferList\": [\n        {\n            \"creditorInstitution\": \"77777777777\",\n            \"digitalStamp\": false\n        }\n    ]\n}\n",
+          "raw": "{\n    \"bin\": \"511111\",\n    \"touchpoint\": \"CHECKOUT\",\n    \"isAllCCP\": false,\n    \"paymentNotices\": [\n        {\n            \"paymentAmount\": 100,\n            \"primaryCreditorInstitution\": \"77777777777\",\n            \"transferList\": [\n                {\n                    \"creditorInstitution\": \"77777777777\",\n                    \"digitalStamp\": false\n                }\n            ]\n        }\n    ]\n}\n",
           "options": {
             "raw": {
               "language": "json"
@@ -739,17 +749,23 @@
           }
         },
         "url": {
-          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/fees",
+          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/payment-methods/{{PAYMENT_METHOD_ID}}/fees?maxOccurrences=214748",
           "host": [
             "{{CHECKOUT_HOST}}"
           ],
           "path": [
             "ecommerce",
             "checkout",
-            "v1",
+            "v2",
             "payment-methods",
             "{{PAYMENT_METHOD_ID}}",
             "fees"
+          ],
+          "query": [
+            {
+              "key": "maxOccurrences",
+              "value": "214748"
+            }
           ]
         }
       },

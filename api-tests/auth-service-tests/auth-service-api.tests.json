@@ -208,6 +208,19 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" pm.test(\"GET payment-requests should be 200 with session token\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"protocolProfileBehavior": {
@@ -237,7 +250,7 @@
 						}
 					}
 				},
-				"url": "{{CHECKOUT_HOST}}/ecommerce/checkout/v3/auth/payment-requests/77777777777302016{{RANDOM_PAYMENT}}"
+				"url": "{{CHECKOUT_HOST}}/ecommerce/checkout/auth/v1/payment-requests/77777777777302016{{RANDOM_PAYMENT}}"
 			},
 			"response": []
 		},
