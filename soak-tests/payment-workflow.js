@@ -33,17 +33,17 @@ export function setup() {
 }
 
 function getPaymentInfo(paFiscalCode, noticeCode, tags) {
-    const url = `${BASE_PATH}/ecommerce/checkout/v1/payment-requests/${paFiscalCode}${noticeCode}?recaptchaResponse=token`;
+    const url = `${BASE_PATH}/ecommerce/checkout/v1/payment-requests/${paFiscalCode}${noticeCode}`;
     return http.get(url, { headers: HEADERS, tags });
 }
 
 function createSession(tags) {
-    const url = `${BASE_PATH}/ecommerce/checkout/v1/payment-methods/${PAYMENT_METHOD_ID}/sessions?recaptchaResponse=test`;
+    const url = `${BASE_PATH}/ecommerce/checkout/v1/payment-methods/${PAYMENT_METHOD_ID}/sessions`;
     return http.post(url, "", { headers: HEADERS, tags });
 }
 
 function createTransaction(orderId, paFiscalCode, noticeCode, amount, tags) {
-    const url = `${BASE_PATH}/ecommerce/checkout/v2/transactions?recaptchaResponse=token`;
+    const url = `${BASE_PATH}/ecommerce/checkout/v2/transactions`;
 
     return http.post(url,
         JSON.stringify({

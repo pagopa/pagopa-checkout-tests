@@ -90,7 +90,7 @@
               "const deploymentHeader = pm.environment.get(\"DEPLOYMENT_TRANSACTION_SERVICE\")",
               "",
               "const requestObject = {",
-              "  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions?recaptchaResponse=token\",",
+              "  url: pm.environment.get(\"CHECKOUT_HOST\") + \"/ecommerce/checkout/v2/transactions\",",
               "  method: 'POST',",
               "  header: {",
               "    'Content-Type': 'application/json',",
@@ -307,7 +307,7 @@
           }
         },
         "url": {
-          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions?recaptchaResponse=test",
+          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v1/payment-methods/{{PAYMENT_METHOD_ID}}/sessions",
           "host": [
             "{{CHECKOUT_HOST}}"
           ],
@@ -318,12 +318,6 @@
             "payment-methods",
             "{{PAYMENT_METHOD_ID}}",
             "sessions"
-          ],
-          "query": [
-            {
-              "key": "recaptchaResponse",
-              "value": "test"
-            }
           ]
         }
       },
@@ -581,7 +575,7 @@
           }
         },
         "url": {
-          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/transactions?recaptchaResponse=token",
+          "raw": "{{CHECKOUT_HOST}}/ecommerce/checkout/v2/transactions",
           "host": [
             "{{CHECKOUT_HOST}}"
           ],
@@ -590,12 +584,6 @@
             "checkout",
             "v2",
             "transactions"
-          ],
-          "query": [
-            {
-              "key": "recaptchaResponse",
-              "value": "token"
-            }
           ]
         }
       },
