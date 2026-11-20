@@ -11,7 +11,7 @@ const BASE_PATH = `https://weu${ENV}.checkout.internal.${ENV}.platform.pagopa.it
 const AUTH_SERVICE_PATH = `${BASE_PATH}/beta/pagopa-checkout-auth-service`
 
 const authServiceURLs = {
-    loginUrl: `${AUTH_SERVICE_PATH}/auth/login?recaptcha=auth-service-recaptcha`,
+    loginUrl: `${AUTH_SERVICE_PATH}/auth/login`,
     postTokenUrl: `${AUTH_SERVICE_PATH}/auth/token`,
     validateUrl: `${AUTH_SERVICE_PATH}/auth/validate`,
     getUsersUrl: `${AUTH_SERVICE_PATH}/auth/users`,
@@ -56,7 +56,7 @@ const k6Setup = () => {
 const k6Main = () => {
     logStep(0, "k6 main function START")
 
-    // 1) login request with recaptcha
+    // 1) login request
     let response = step1PerformLogin()
 
     check(response, {
