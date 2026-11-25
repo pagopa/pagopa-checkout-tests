@@ -55,7 +55,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login?recaptcha={{FAKE_RECAPTCHA_NOT_VALIDATED}}",
+					"raw": "{{CHECKOUT_HOST}}/checkout/auth-service/v1/auth/login",
 					"host": [
 						"{{CHECKOUT_HOST}}"
 					],
@@ -65,12 +65,6 @@
 						"v1",
 						"auth",
 						"login"
-					],
-					"query": [
-						{
-							"key": "recaptcha",
-							"value": "{{FAKE_RECAPTCHA_NOT_VALIDATED}}"
-						}
 					]
 				}
 			},
